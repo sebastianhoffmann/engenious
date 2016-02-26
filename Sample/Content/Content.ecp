@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>Content</Name>
+  <Contents>
+    <ContentItem xsi:type="ContentFile">
+      <Name>test.fnt</Name>
+    </ContentItem>
+  </Contents>
+  <Configuration>Debug</Configuration>
+  <OutputDir>bin/{Configuration}/</OutputDir>
+</Content>
