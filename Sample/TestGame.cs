@@ -20,8 +20,8 @@ namespace Sample
             //vb.SetData<VertexPositionNormalTexture>(new VertexPositionNormalTexture[]{ new VertexPositionColor(new Vector3(),Color.AliceBlue });
 
 
-            texture = Content.Load<Texture2D>("textures/brick");
-            font = Content.Load<SpriteFont>("Fonts/test");
+            texture = Content.Load<Texture2D>("brick");
+            font = Content.Load<SpriteFont>("test");
 
 
             spriteBatch = new SpriteBatch(GraphicsDevice);

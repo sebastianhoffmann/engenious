@@ -5,7 +5,11 @@
     <ContentItem xsi:type="ContentFile">
       <Name>test.fnt</Name>
     </ContentItem>
+    <ContentItem xsi:type="ContentFile">
+      <Name>brick.jpg</Name>
+    </ContentItem>
   </Contents>
   <Configuration>Debug</Configuration>
   <OutputDir>bin/{Configuration}/</OutputDir>
+  <References />
 </Content>
