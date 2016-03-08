@@ -7,7 +7,6 @@ namespace Sample
 {
     public class TestGame : engenious.Game
     {
-        private Effect effect;
         private Texture2D texture;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
@@ -17,17 +16,16 @@ namespace Sample
         public TestGame()
         {
             //effect = new BasicEffect(GraphicsDevice);
-            //vb = new VertexBuffer(GraphicsDevice, VertexPositionColor.VertexDeclaration, 3);
-            //vb.SetData<VertexPositionColor>(new VertexPositionColor[]{ new VertexPositionColor(new Vector3(),Color.AliceBlue });
+            //vb = new VertexBuffer(GraphicsDevice, VertexPositionNormalTexture.VertexDeclaration, 3);
+            //vb.SetData<VertexPositionNormalTexture>(new VertexPositionNormalTexture[]{ new VertexPositionColor(new Vector3(),Color.AliceBlue });
 
 
             texture = Content.Load<Texture2D>("textures/brick");
             font = Content.Load<SpriteFont>("Fonts/test");
 
-            effect = Content.Load<Effect>("simple");
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            engenious.Input.Keyboard.GetState();
+            //engenious.Input.Keyboard.GetState();
 
             Matrix projection;
             float tangent = (float)System.Math.Tan(MathHelper.PiOver4 / 2); // tangent of half fovY
@@ -59,7 +57,6 @@ namespace Sample
             base.Draw(gameTime);
 
 
-
             rot += 0.001f;
             GraphicsDevice.SetRenderTarget(target);
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -73,7 +70,7 @@ namespace Sample
            
             spriteBatch.Draw(texture, new Rectangle(101, 0, 100, 100), Color.White);
 
-            spriteBatch.DrawString(font, engenious.Input.Mouse.GetState().X.ToString() + ", " + engenious.Input.Mouse.GetState().Y, new engenious.Vector2(0, 0), Color.Red);
+            spriteBatch.DrawString(font, 0.ToString(), new engenious.Vector2(0, 0), Color.Red);
             //spriteBatch.Draw(texture, new engenious.Vector2(50, 0), null, Color.White, rot, new engenious.Vector2(), 1.0f / texture.Width * 100, SpriteBatch.SpriteEffects.FlipHorizontally);
             spriteBatch.End();
 
@@ -83,11 +80,6 @@ namespace Sample
 
             spriteBatch.Draw(target, new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height), Color.White);
             spriteBatch.End();
-
-            GraphicsDevice.Present();
-
-            
-
         }
     }
 }
