@@ -34,9 +34,6 @@
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="engenious">
-      <HintPath>..\..\octoawesome\OctoAwesome\bin\Debug\engenious.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -51,6 +48,10 @@
   <ItemGroup>
     <ProjectReference Include="..\engenious\engenious.csproj">
       <Project>{E1FF7BDB-D631-4D4D-B5A1-988778AD15B6}</Project>
+      <Name>engenious</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\engenious\engenious.csproj">
+      <Project>{e1ff7bdb-d631-4d4d-b5a1-988778ad15b6}</Project>
       <Name>engenious</Name>
     </ProjectReference>
   </ItemGroup>
