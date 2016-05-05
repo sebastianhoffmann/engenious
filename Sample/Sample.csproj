@@ -45,6 +45,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <None Include="Content\Content.ecp" />
+    <None Include="Content\test.fnt" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -57,5 +59,9 @@
       <Project>{e1ff7bdb-d631-4d4d-b5a1-988778ad15b6}</Project>
       <Name>engenious</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\brick.jpg" />
+    <Content Include="Content\test.png" />
   </ItemGroup>
 </Project>
