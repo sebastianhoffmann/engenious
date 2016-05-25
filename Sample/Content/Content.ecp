@@ -1,15 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Content xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Name>Content</Name>
-  <Contents>
-    <ContentItem xsi:type="ContentFile">
-      <Name>test.fnt</Name>
-    </ContentItem>
-    <ContentItem xsi:type="ContentFile">
-      <Name>brick.jpg</Name>
-    </ContentItem>
-  </Contents>
+﻿<Content>
+  <References />
   <Configuration>Debug</Configuration>
   <OutputDir>bin/{Configuration}/</OutputDir>
-  <References />
+  <Name>Content</Name>
+  <Contents>
+    <ContentFile>
+      <Name>brick.jpg</Name>
+      <Processor>BitmapProcessor</Processor>
+      <Settings>
+        <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
+        <MipMapCount>1</MipMapCount>
+        <Format>Jpg</Format>
+      </Settings>
+    </ContentFile>
+    <ContentFile>
+      <Name>test.fnt</Name>
+      <Processor>FontProcessor</Processor>
+    </ContentFile>
+  </Contents>
 </Content>
