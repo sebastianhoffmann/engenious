@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace engenious.Pipeline
+namespace engenious.Graphics
 {
     public class ModelContent
     {
@@ -9,7 +9,7 @@ namespace engenious.Pipeline
         {
         }
 
-        internal MeshContent[] Meshes{ get; set; }
+        public MeshContent[] Meshes{ get; set; }
 
         internal NodeContent RootNode{ get; set; }
 

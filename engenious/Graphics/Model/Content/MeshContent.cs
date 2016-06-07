@@ -1,9 +1,9 @@
 ﻿using System;
 using engenious.Graphics;
 
-namespace engenious.Pipeline
+namespace engenious.Graphics
 {
-    internal class MeshContent
+    public class MeshContent
     {
         public MeshContent()
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace engenious.Pipeline
+namespace engenious.Graphics
 {
     internal class AnimationContent
     {
