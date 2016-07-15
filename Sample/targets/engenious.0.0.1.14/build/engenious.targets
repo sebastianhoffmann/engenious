@@ -37,19 +37,21 @@
 
       <Header>/outputDir:&quot;$(ParentOutputDir)&quot; /intermediateDir:&quot;$(ParentIntermediateDir)&quot; /projectDir:&quot;$(ProjectDir)/&quot; /hidden:true</Header>
 
+      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/Library/Frameworks/Mono.framework/Versions/Current/bin/mono') ">/Library/Frameworks/Mono.framework/Versions/Current/bin/mono</MonoExe>
+      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/local/bin/mono') ">/usr/local/bin/mono</MonoExe>
+      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/bin/mono') ">/usr/bin/mono</MonoExe>
+      <MonoExe Condition=" '$(OS)' != 'Windows_NT' And '$(MonoExe)' == '' ">mono</MonoExe>
     </PropertyGroup>
 
     <MakeDir Directories="$(ParentIntermediateDir)"/>
     <MakeDir Directories="$(ParentOutputDir)"/>
+
   </Target>
 
   <Target Name="BuildContent"
         BeforeTargets="BeforeBuild;BeforeRebuild;PreBuildEvent;Rebuild"
         DependsOnTargets="Prepare">
-    <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/Library/Frameworks/Mono.framework/Versions/Current/bin/mono') ">/Library/Frameworks/Mono.framework/Versions/Current/bin/mono</MonoExe>
-    <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/local/bin/mono') ">/usr/local/bin/mono</MonoExe>
-    <MonoExe Condition=" '$(OS)' != 'Windows_NT' And Exists ('/usr/bin/mono') ">/usr/bin/mono</MonoExe>
-    <MonoExe Condition=" '$(OS)' != 'Windows_NT' And '$(MonoExe)' == '' ">mono</MonoExe>
+
 
     <!--<Exec Command="chmod +x &quot;$(EngeniousContentBuilderExe)&quot;" Condition=" '$(OS)' == 'Unix' " />-->
     <Exec Command="$(MonoExe) &quot;$(EngeniousContentBuilderExe)&quot; /@:&quot;%(ContentReferences.FullPath)&quot; $(Header)"
