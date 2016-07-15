@@ -10,7 +10,7 @@
       <Settings>
         <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
         <MipMapCount>1</MipMapCount>
-        <Format>Jpg</Format>
+        <Format>1</Format>
       </Settings>
     </ContentFile>
     <ContentFile>

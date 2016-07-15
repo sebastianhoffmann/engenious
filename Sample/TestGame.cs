@@ -16,7 +16,7 @@ namespace Sample
         public TestGame()
         {
             texture = Content.Load<Texture2D>("brick");
-            font = Content.Load<SpriteFont>("HeadlineFont");
+            font = Content.Load<SpriteFont>("test");
 
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
