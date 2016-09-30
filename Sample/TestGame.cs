@@ -44,7 +44,7 @@ namespace Sample
 
             spriteBatch.Begin();
             spriteBatch.Draw(texture,new Rectangle(0,0,100,100),Color.White);
-            spriteBatch.DrawString(font,"test:" + state.Scroll.Y.ToString(),new Vector2(),Color.White);
+            spriteBatch.DrawString(font,"täst:" + state.ScrollWheelValue.ToString(),new Vector2(),Color.White);
 
             spriteBatch.End();
         }
