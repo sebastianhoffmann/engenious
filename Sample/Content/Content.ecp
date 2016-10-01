@@ -17,5 +17,9 @@
       <Name>test.fnt</Name>
       <Processor>FontProcessor</Processor>
     </ContentFile>
+    <ContentFile>
+      <Name>test.spritefont</Name>
+      <Processor />
+    </ContentFile>
   </Contents>
 </Content>
