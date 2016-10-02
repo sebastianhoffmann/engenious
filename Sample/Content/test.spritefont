@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <EngeniousFont>
 	<FontName>Arial</FontName>
-	<Size>12</Size>
+	<Size>20</Size>
 	<Spacing>0</Spacing>
 	<UseKerning>true</UseKerning>
 	<Style>Bold Italic</Style>
 	<DefaultCharacter>*</DefaultCharacter>
 	<CharacterRegions>
+		<CharacterRegion>
+		    <Start>9</Start>
+			<End>9</End>
+		</CharacterRegion>
 		<!-- Character Region für das lateinische Alphabet -->
 		<CharacterRegion>
 		    <Start>32</Start>
