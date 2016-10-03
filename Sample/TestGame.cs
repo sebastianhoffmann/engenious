@@ -44,7 +44,7 @@ namespace Sample
 
             spriteBatch.Begin();
             spriteBatch.Draw(texture,new Rectangle(0,0,100,100),Color.White);
-            spriteBatch.DrawString(font,"täst:\nxyHAV" ,new Vector2(),Color.Black);
+            spriteBatch.DrawString(font,"Taxi.\nTT\nTx\nTe\nTA" ,new Vector2(),Color.Black);
             spriteBatch.End();
         }
     }
