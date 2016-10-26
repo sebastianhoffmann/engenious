@@ -35,6 +35,7 @@ Setup(context =>
 ///     Task to build the solution. Using MSBuild on Windows and MDToolBuild on OSX / Linux
 /// </summary>
 Task("build")
+    .IsDependentOn("patch-version")
     .Does(() =>
     {
         DotNetBuild(Solution, cfg =>
@@ -88,11 +89,11 @@ Task("patch-version")
     .Does(() =>
     {
         // TODO: modify solution to use a shared assembly info
-        Information("Skipped due to: Modify solution to use a shared assembly info");
-        return;
+        //Information("Skipped due to: Modify solution to use a shared assembly info");
+        //return;
 
         // Patch assembly info
-        var solutionInfoFile = "./src/SolutionInfo.cs";
+        var solutionInfoFile = "./SolutionInfo.cs";
         CreateAssemblyInfo(solutionInfoFile, new AssemblyInfoSettings
         {
             Product = "engenious",
