@@ -17,7 +17,8 @@ var IsPrerelease = HasArgument("pre");
 // *********************
 var Solution = File("engenious.sln");
 var BuildVerbosity = Verbosity.Minimal;
-var Version = GitVersion();
+CreateDirectory(Directory("./logs"));
+var Version = GitVersion(new GitVersionSettings {LogFilePath = new FilePath("./logs/gitver.log")});
 
 // *********************
 //      SETUP

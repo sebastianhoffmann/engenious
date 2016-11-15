@@ -7,6 +7,8 @@ before_script:
   - sleep 3 # give xvfb some time to start
 script:
   - ./build.sh
+after_failure:
+  - "cat ./logs/gitver.log"
 os:
   - linux
   - osx
