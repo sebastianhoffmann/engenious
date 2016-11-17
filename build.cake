@@ -3,7 +3,7 @@
 /// </summary>
 
 // Install tools
-#tool GitVersion.CommandLine
+#tool GitVersion.CommandLine&prerelease
 
 // *********************
 //      ARGUMENTS
