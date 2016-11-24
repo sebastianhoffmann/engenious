@@ -151,10 +151,17 @@ namespace engenious.Graphics
             Vector2 offset = new Vector2(0.0f, 0.0f);
             for (int i = 0; i < text.Length; i++)
             {
+
                 char c = text[i];
                 FontCharacter fontChar;
                 if (!spriteFont.characterMap.TryGetValue(c, out fontChar))
                 {
+                    if (c == '\n')
+                    {
+                        offset.X = 0;
+                        offset.Y += spriteFont.LineSpacing;
+                        continue;
+                    }
                     if (!spriteFont.DefaultCharacter.HasValue || !spriteFont.characterMap.TryGetValue(spriteFont.DefaultCharacter.Value, out fontChar))
                     {
                         continue;
@@ -163,7 +170,7 @@ namespace engenious.Graphics
                 if (fontChar == null)
                     continue;
                 
-                Draw(spriteFont.texture, position + offset + new Vector2(fontChar.Offset.X,spriteFont.BaseLine+fontChar.Offset.Y), fontChar.TextureRegion, color, rotation, origin - offset, 1.0f, SpriteEffects.None, layerDepth);
+                Draw(spriteFont.texture, position + offset + fontChar.Offset, fontChar.TextureRegion, color, rotation, origin - offset, 1.0f, SpriteEffects.None, layerDepth);
                 offset.X += fontChar.Advance;
                 if (i < text.Length - 1)
                 {

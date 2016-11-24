@@ -14,8 +14,8 @@
       </Settings>
     </ContentFile>
     <ContentFile>
-      <Name>test.fnt</Name>
-      <Processor>FontProcessor</Processor>
+      <Name>test.spritefont</Name>
+      <Processor>SpriteFontProcessor</Processor>
     </ContentFile>
   </Contents>
 </Content>

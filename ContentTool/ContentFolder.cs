@@ -15,7 +15,7 @@ namespace ContentTool
             this.Contents.PropertyChanged += Contents_PropertyChanged;
         }
 
-        public ContentFolder(string name, ContentItem parent = null)
+        public ContentFolder(string name, ContentFolder parent = null)
             : base(parent)
         {
             this.Name = name;
@@ -32,6 +32,28 @@ namespace ContentTool
         void Contents_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             InvokeCollectionChange(sender, e);
+        }
+
+        public ContentItem getElement(string path)
+        {
+            string trailingPath=null;
+            int ind = path.IndexOf("/");
+            if (ind != -1)
+            {
+                trailingPath = path.Substring(ind+1);
+                path = path.Substring(0,ind);
+            }
+            foreach(var c in Contents)
+            {
+                if (c.Name == path)
+                {
+                    if (c is ContentFolder && trailingPath != null)
+                        return ((ContentFolder)c).getElement(trailingPath);
+                    else
+                        return c;
+                }
+            }
+            return null;
         }
 
         [System.ComponentModel.Browsable(false)]

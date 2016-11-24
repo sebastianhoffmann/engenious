@@ -30,14 +30,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="mscorlib" />
     <Reference Include="NVorbis">
       <HintPath>..\packages\NVorbis.0.8.4.0\lib\NVorbis.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs" />
+    <Compile Include="Graphics\Effect\IEffect.cs" />
+    <Compile Include="Graphics\Model\IModelEffect.cs" />
+    <Compile Include="Graphics\Effect\ITextureEffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,5 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="OpenTK.dll.config" />
   </ItemGroup>
 </Project>

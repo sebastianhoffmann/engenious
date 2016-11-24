@@ -8,17 +8,20 @@ namespace engenious.Content.Pipeline
 {
     public class TextureContent
     {
+        private GraphicsDevice graphicsDevice;
         private int texture;
 
-        public TextureContent(bool generateMipMaps, int mipMapCount, byte[] inputData, int width, int height, TextureContentFormat inputFormat, TextureContentFormat outputFormat)
+        public TextureContent(GraphicsDevice graphicsDevice,bool generateMipMaps, int mipMapCount, byte[] inputData, int width, int height, TextureContentFormat inputFormat, TextureContentFormat outputFormat)
         {
+            this.graphicsDevice = graphicsDevice;
             System.Runtime.InteropServices.GCHandle handle = System.Runtime.InteropServices.GCHandle.Alloc(inputData, System.Runtime.InteropServices.GCHandleType.Pinned);
             createTexture(generateMipMaps, mipMapCount, handle.AddrOfPinnedObject(), width, height, inputFormat, outputFormat);
             handle.Free();
         }
 
-        public TextureContent(bool generateMipMaps, int mipMapCount, IntPtr inputData, int width, int height, TextureContentFormat inputFormat, TextureContentFormat outputFormat)
+        public TextureContent(GraphicsDevice graphicsDevice,bool generateMipMaps, int mipMapCount, IntPtr inputData, int width, int height, TextureContentFormat inputFormat, TextureContentFormat outputFormat)
         {
+            this.graphicsDevice = graphicsDevice;
             createTexture(generateMipMaps, mipMapCount, inputData, width, height, inputFormat, outputFormat);
         }
 
@@ -35,16 +38,28 @@ namespace engenious.Content.Pipeline
                     texture = GL.GenTexture();
 
                     GL.BindTexture(TextureTarget.Texture2D, texture);
-                    setDefaultTextureParameters();
+                    bool doGenerate = generateMipMaps && mipMapCount > 1;
 
+                    setDefaultTextureParameters();
                     //GL.TexStorage2D(TextureTarget2d.Texture2D,(GenerateMipMaps ? 1 : MipMapCount),SizedInternalFormat.Rgba8,width,height);
                     //GL.TexSubImage2D(TextureTarget.Texture2D,0,0,0,width,height,
-                    GL.TexImage2D(TextureTarget.Texture2D, 0, (hwCompressedOutput ? (OpenTK.Graphics.OpenGL4.PixelInternalFormat)outputFormat : OpenTK.Graphics.OpenGL4.PixelInternalFormat.Rgba), width, height, 0, (hwCompressedInput ? (OpenTK.Graphics.OpenGL4.PixelFormat)inputFormat : OpenTK.Graphics.OpenGL4.PixelFormat.Bgra), PixelType.UnsignedByte, inputData);
-                    if (!generateMipMaps)
+                    if (doGenerate)
                     {
+                        if (graphicsDevice.majorVersion < 3 &&
+                            ((graphicsDevice.majorVersion == 1 && graphicsDevice.minorVersion >= 4) ||
+                             graphicsDevice.majorVersion > 1))
+                            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, 1);
+                        else if (graphicsDevice.majorVersion < 3)
+                            throw new NotSupportedException("Can't generate MipMaps on this Hardware");
+                    }
+                    GL.TexImage2D(TextureTarget.Texture2D, 0, (hwCompressedOutput ? (OpenTK.Graphics.OpenGL4.PixelInternalFormat)outputFormat : OpenTK.Graphics.OpenGL4.PixelInternalFormat.Rgba), width, height, 0, (hwCompressedInput ? (OpenTK.Graphics.OpenGL4.PixelFormat)inputFormat : OpenTK.Graphics.OpenGL4.PixelFormat.Bgra), PixelType.UnsignedByte, inputData);
+                    if (doGenerate)
+                    {
+                        //TOODO non power of 2 Textures?
                         GL.TexParameter(TextureTarget.Texture2D,TextureParameterName.TextureMaxLevel,mipMapCount);
                         GL.Hint(HintTarget.GenerateMipmapHint,HintMode.Nicest);
-                        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+                        if (graphicsDevice.majorVersion >= 3)
+                            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                     }
                 });
 
