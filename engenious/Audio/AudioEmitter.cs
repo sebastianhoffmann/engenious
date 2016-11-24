@@ -1,7 +1,4 @@
-﻿using System;
-using OpenTK;
-
-namespace engenious.Audio
+﻿namespace engenious.Audio
 {
     public class AudioEmitter
     {
@@ -14,7 +11,7 @@ namespace engenious.Audio
             DopplerScale = 1.0f;
         }
 
-        public float DopplerScale{ get; set; }
+        public float DopplerScale { get; set; }
 
         public Vector3 Forward { get; set; }
 
@@ -25,4 +22,3 @@ namespace engenious.Audio
         public Vector3 Velocity { get; set; }
     }
 }
-

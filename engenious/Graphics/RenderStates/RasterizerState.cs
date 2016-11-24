@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public class RasterizerState : GraphicsResource
     {
@@ -10,34 +8,37 @@ namespace engenious.Graphics
 
         static RasterizerState()
         {
-            CullNone = new RasterizerState();
-            CullNone.CullMode = CullMode.None;
-            CullNone.FillMode = PolygonMode.Fill;
+            CullNone = new RasterizerState
+            {
+                CullMode = CullMode.None,
+                FillMode = PolygonMode.Fill
+            };
 
-            CullClockwise = new RasterizerState();
-            CullClockwise.CullMode = CullMode.Clockwise;
-            CullClockwise.FillMode = PolygonMode.Fill;
+            CullClockwise = new RasterizerState
+            {
+                CullMode = CullMode.Clockwise,
+                FillMode = PolygonMode.Fill
+            };
 
-            CullCounterClockwise = new RasterizerState();
-            CullCounterClockwise.CullMode = CullMode.CounterClockwise;
-            CullCounterClockwise.FillMode = PolygonMode.Fill;
-
-
+            CullCounterClockwise = new RasterizerState
+            {
+                CullMode = CullMode.CounterClockwise,
+                FillMode = PolygonMode.Fill
+            };
         }
 
         public RasterizerState()
         {
-            this.CullMode = CullMode.None;
-            this.FillMode = PolygonMode.Fill;
+            CullMode = CullMode.None;
+            FillMode = PolygonMode.Fill;
         }
 
-        public CullMode CullMode{ get; set; }
+        public CullMode CullMode { get; set; }
 
-        public PolygonMode FillMode{ get; set; }
+        public PolygonMode FillMode { get; set; }
 
-        public bool MultiSampleAntiAlias{ get; set; }
+        public bool MultiSampleAntiAlias { get; set; }
 
-        public bool ScissorTestEnable{ get; set; }
+        public bool ScissorTestEnable { get; set; }
     }
 }
-

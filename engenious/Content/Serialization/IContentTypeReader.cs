@@ -1,12 +1,7 @@
-﻿using System;
-
-namespace engenious.Content.Serialization
+﻿namespace engenious.Content.Serialization
 {
-	public interface IContentTypeReader
-	{
-		object Read (ContentManager manager, ContentReader reader);
-
-
-	}
+    public interface IContentTypeReader
+    {
+        object Read(ContentManager manager, ContentReader reader);
+    }
 }
-

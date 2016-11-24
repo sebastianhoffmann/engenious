@@ -1,7 +1,4 @@
-﻿using System;
-using OpenTK;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public struct Viewport
     {
@@ -18,51 +15,46 @@ namespace engenious.Graphics
         internal Viewport(System.Drawing.Rectangle bounds)
             : this(bounds.X, bounds.Y, bounds.Width, bounds.Height)
         {
-			
         }
 
         public Viewport(Rectangle bounds)
             : this(bounds.X, bounds.Y, bounds.Width, bounds.Height)
         {
-
         }
 
-        public float AspectRatio
-        {
-            get{ return (float)Width / Height; }
-        }
+        public float AspectRatio => (float) Width / Height;
 
-        public int Width{ get; internal set; }
+        public int Width { get; internal set; }
 
-        public int Height{ get; internal set; }
+        public int Height { get; internal set; }
 
-        public int X{ get; internal set; }
+        public int X { get; internal set; }
 
-        public int Y{ get; internal set; }
+        public int Y { get; internal set; }
 
-        public float MaxDepth{ get; internal set; }
+        public float MaxDepth { get; internal set; }
 
-        public float MinDepth{ get; internal set; }
+        public float MinDepth { get; internal set; }
 
         public Rectangle Bounds
         {
-            get{ return new Rectangle(X, Y, Width, Height); }
+            get { return new Rectangle(X, Y, Width, Height); }
             internal set
             {
-                this.X = value.X;
-                this.Y = value.Y;
-                this.Width = value.Width;
-                this.Height = value.Height;
+                X = value.X;
+                Y = value.Y;
+                Width = value.Width;
+                Height = value.Height;
             }
         }
 
         public Vector3 Unproject(Vector3 source, Matrix matrix)
         {
             matrix = Matrix.Invert(matrix);
-            source.X = (((source.X - this.X) / ((float)this.Width)) * 2f) - 1f;
-            source.Y = -((((source.Y - this.Y) / ((float)this.Height)) * 2f) - 1f);
-            source.Z = (source.Z - this.MinDepth) / (this.MaxDepth - this.MinDepth);
-            Vector3 vector = Vector3.Transform(source, matrix);
+            source.X = (((source.X - X) / ((float) Width)) * 2f) - 1f;
+            source.Y = -((((source.Y - Y) / ((float) Height)) * 2f) - 1f);
+            source.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
+            var vector = Vector3.Transform(source, matrix);
             float a = (((source.X * matrix.M14) + (source.Y * matrix.M24)) + (source.Z * matrix.M34)) + matrix.M44;
             //float a = (((source.X * matrix.M41) + (source.Y * matrix.M42)) + (source.Z * matrix.M43)) + matrix.M44;
             vector.X = vector.X / a;
@@ -79,8 +71,7 @@ namespace engenious.Graphics
 
         public Vector3 Project(Vector3 source, Matrix matrix)
         {
-
-            Vector3 vector = Vector3.Transform(source, matrix);
+            var vector = Vector3.Transform(source, matrix);
             float a = (((source.X * matrix.M41) + (source.Y * matrix.M42)) + (source.Z * matrix.M43)) + matrix.M44;
 
             vector.X = vector.X / a;
@@ -96,12 +87,11 @@ namespace engenious.Graphics
         public Vector3 Project(Vector3 source, Matrix projection, Matrix view, Matrix world)
         {
             return Project(source, world * view * projection);
-
         }
 
         public override string ToString()
         {
-            return string.Format("[Viewport: X={0}, Y={1}, Width={2}, Height={3}]", X, Y, Width, Height);
+            return $"[Viewport: X={X}, Y={Y}, Width={Width}, Height={Height}]";
         }
 
         /*public override bool Equals (object obj)
@@ -118,7 +108,5 @@ namespace engenious.Graphics
 		public static bool operator!=(Viewport v1,Viewport v2){
 			return v1.X != v2.X || v1.Y != v2.Y || v1.Width != v2.Width ||  v1.Height != v2.Height;
 		}*/
-
     }
-			
 }

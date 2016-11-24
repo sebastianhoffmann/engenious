@@ -1,66 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace engenious.Content.Pipeline
 {
-    public abstract class ContentProcessor<TInput,TOutput,TSettings> : IContentProcessor where TSettings:ProcessorSettings,new()
+    public abstract class ContentProcessor<TInput, TOutput, TSettings> : IContentProcessor
+        where TSettings : ProcessorSettings, new()
     {
-        public ContentProcessor()
+        protected ContentProcessor()
         {
-            settings = new TSettings();
+            _settings = new TSettings();
         }
-        private static Type importType = null;
-        public static Type ImportType
-        {
-            get
-            {
-                if (importType == null)
-                    importType = typeof(TInput);
-                return importType;
-            }
-        }
-        private static Type exportType = null;
-        public static Type ExportType
-        {
-            get
-            {
-                if (exportType == null)
-                    exportType = typeof(TOutput);
-                return exportType;
-            }
-        }
+
+        private static Type _importType;
+        public static Type ImportType => _importType ?? (_importType = typeof(TInput));
+        private static Type _exportType;
+        public static Type ExportType => _exportType ?? (_exportType = typeof(TOutput));
 
         /*public TSettings Settings
         {
             get;set;
         }*/
-        [System.Xml.Serialization.XmlIgnore()]
-        protected TSettings settings;
+        [System.Xml.Serialization.XmlIgnore()] protected TSettings _settings;
 
-        public ProcessorSettings Settings{
-            get
-            {
-                return settings;
-            }
-            set
-            {
-                settings = (TSettings)value;
-            }
+        public ProcessorSettings Settings
+        {
+            get { return _settings; }
+            set { _settings = (TSettings) value; }
         }
 
-        public abstract TOutput Process(TInput input,string filename, ContentProcessorContext context);
+        public abstract TOutput Process(TInput input, string filename, ContentProcessorContext context);
 
         object IContentProcessor.Process(object input, string filename, ContentProcessorContext context)
         {
-            return Process((TInput)input,filename, context);
+            return Process((TInput) input, filename, context);
         }
     }
-    public abstract class ContentProcessor<TInput,TOutput> : ContentProcessor<TInput,TOutput,ProcessorSettings>
+
+    public abstract class ContentProcessor<TInput, TOutput> : ContentProcessor<TInput, TOutput, ProcessorSettings>
     {
-        public ContentProcessor()
+        protected ContentProcessor()
         {
             Settings = null;
         }
     }
 }
-

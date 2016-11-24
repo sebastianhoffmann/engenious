@@ -1,23 +1,17 @@
 ﻿using System;
-using engenious.Content.Serialization;
-using engenious.Content;
-using engenious.Graphics;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using OpenTK;
-using OpenTK.Graphics;
 using ContentTool.Builder;
 
 namespace ContentTool
 {
-    class Program
+    internal class Program
     {
         internal static string MakePathRelative(string filename)
         {
             try
             {
-                Uri root = new Uri(System.IO.Path.GetFullPath(Arguments.ProjectDir), UriKind.Absolute);
-                Uri uri = new Uri(System.IO.Path.GetFullPath(filename), UriKind.Absolute);
+                var root = new Uri(Path.GetFullPath(Arguments.ProjectDir), UriKind.Absolute);
+                var uri = new Uri(Path.GetFullPath(filename), UriKind.Absolute);
                 return root.MakeRelativeUri(uri).ToString();
             }
             catch
@@ -25,17 +19,18 @@ namespace ContentTool
                 return filename;
             }
         }
+
         public static Arguments Arguments { get; private set; }
+
         [STAThread()]
         public static int Main(string[] args)
         {
-
             Arguments = new Arguments();
             Arguments.ParseArguments(args);
 
             if (Arguments.Hidden)
             {
-                ContentBuilder builder = new ContentBuilder(ContentProject.Load(Arguments.ContentProject));
+                var builder = new ContentBuilder(ContentProject.Load(Arguments.ContentProject));
                 if (Arguments.Configuration.HasValue)
                     builder.Project.Configuration = Arguments.Configuration.Value;
                 if (Arguments.OutputDirectory != null)
@@ -43,20 +38,20 @@ namespace ContentTool
                 builder.BuildMessage += (sender, e) =>
                 {
                     if (e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error)
-                        Console.Error.WriteLine(Program.MakePathRelative(e.FileName) + e.Message);
+                        Console.Error.WriteLine(MakePathRelative(e.FileName) + e.Message);
                     else
-                        Console.WriteLine(Program.MakePathRelative(e.FileName) + e.Message);
+                        Console.WriteLine(MakePathRelative(e.FileName) + e.Message);
                 };
                 builder.BuildStatusChanged += (sender, buildStep) =>
                 {
                     string message = (buildStep & (BuildStep.Build | BuildStep.Clean)).ToString() + " ";
                     bool error = false;
-                    if (buildStep.HasFlag(Builder.BuildStep.Abort))
+                    if (buildStep.HasFlag(BuildStep.Abort))
                     {
                         message += "aborted!";
                         error = true;
                     }
-                    else if (buildStep.HasFlag(Builder.BuildStep.Finished))
+                    else if (buildStep.HasFlag(BuildStep.Finished))
                     {
                         message += "finished!";
                         if (builder.FailedBuilds != 0)
@@ -72,15 +67,16 @@ namespace ContentTool
                 };
                 builder.ItemProgress += (sender, e) =>
                 {
-                    string message = e.Item + " " + (e.BuildStep & (BuildStep.Build | BuildStep.Clean)).ToString().ToLower() + "ing ";
+                    string message = e.Item + " " +
+                                     (e.BuildStep & (BuildStep.Build | BuildStep.Clean)).ToString().ToLower() + "ing ";
 
                     bool error = false;
-                    if (e.BuildStep.HasFlag(Builder.BuildStep.Abort))
+                    if (e.BuildStep.HasFlag(BuildStep.Abort))
                     {
                         message += "failed!";
                         error = true;
                     }
-                    else if (e.BuildStep.HasFlag(Builder.BuildStep.Finished))
+                    else if (e.BuildStep.HasFlag(BuildStep.Finished))
                     {
                         message += "finished!";
                     }
@@ -97,9 +93,10 @@ namespace ContentTool
                 if (builder.FailedBuilds != 0)
                     return -1;
             }
-            else {
+            else
+            {
                 System.Windows.Forms.Application.EnableVisualStyles();
-                using (frmMain mainForm = new frmMain())
+                using (var mainForm = new FrmMain())
                 {
                     System.Windows.Forms.Application.Run(mainForm);
                 }

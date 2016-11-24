@@ -13,4 +13,3 @@ namespace engenious.Input
         RightTrigger = 1 << 5,
     }
 }
-

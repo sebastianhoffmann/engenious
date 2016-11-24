@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 
@@ -21,12 +20,13 @@ namespace engenious
             //System.Threading.Thread.CurrentThread.Syn
         }
 
-        public static void Initialize(OpenTK.Platform.IWindowInfo windowInfo, int major, int minor, GraphicsContextFlags contextFlags)
+        public static void Initialize(OpenTK.Platform.IWindowInfo windowInfo, int major, int minor,
+            GraphicsContextFlags contextFlags)
         {
             //GraphicsContextFlags flags = GraphicsContextFlags.
-            ThreadingHelper.context = new GraphicsContext(GraphicsMode.Default, windowInfo, major, minor, contextFlags);
-            ThreadingHelper.context.MakeCurrent(windowInfo);
-            (ThreadingHelper.context as IGraphicsContextInternal).LoadAll();
+            context = new GraphicsContext(GraphicsMode.Default, windowInfo, major, minor, contextFlags);
+            context.MakeCurrent(windowInfo);
+            (context as IGraphicsContextInternal).LoadAll();
             ThreadingHelper.windowInfo = windowInfo;
         }
 
@@ -54,13 +54,9 @@ namespace engenious
 
             lock (context)
             {
-               
                 if (needsUI)
                 {
-                    sync.Post(new System.Threading.SendOrPostCallback(delegate(object state)
-                            {
-                                action();
-                            }), null);
+                    sync.Post(new System.Threading.SendOrPostCallback(delegate(object state) { action(); }), null);
                     return;
                 }
                 try
@@ -83,8 +79,6 @@ namespace engenious
                 {
                 }
             }
-
         }
     }
 }
-

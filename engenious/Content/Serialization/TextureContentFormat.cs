@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Content
+﻿namespace engenious.Content
 {
     public enum TextureContentFormat
     {
@@ -11,4 +9,3 @@ namespace engenious.Content
         DXT5 = OpenTK.Graphics.OpenGL4.PixelInternalFormat.CompressedRgbaS3tcDxt5Ext,
     }
 }
-

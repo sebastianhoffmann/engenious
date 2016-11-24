@@ -1,4 +1,5 @@
 ﻿#region License
+
 //
 // MouseWheel.cs
 //
@@ -25,9 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+
 #endregion
 
 using System;
+
+// ReSharper disable CompareOfFloatsByEqualityOperator
 
 namespace engenious.Input
 {
@@ -37,11 +41,13 @@ namespace engenious.Input
     public struct MouseScroll : IEquatable<MouseScroll>
     {
         #region Public Members
-        public MouseScroll(float x,float y)
+
+        public MouseScroll(float x, float y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
+
         /// <summary>
         /// Gets the absolute horizontal offset of the wheel,
         /// or 0 if no horizontal scroll wheel exists.
@@ -76,7 +82,7 @@ namespace engenious.Input
         /// <returns>A <see cref="System.String"/> that represents the current <see cref="OpenTK.Input.MouseScroll"/>.</returns>
         public override string ToString()
         {
-            return string.Format("[X={0:0.00}, Y={1:0.00}]", X, Y);
+            return $"[X={X:0.00}, Y={Y:0.00}]";
         }
 
         /// <summary>
@@ -99,7 +105,7 @@ namespace engenious.Input
         {
             return
                 obj is MouseScroll &&
-            Equals((MouseScroll)obj);
+                Equals((MouseScroll) obj);
         }
 
         #endregion

@@ -1,7 +1,4 @@
-﻿using System;
-using OpenTK;
-
-namespace engenious
+﻿namespace engenious
 {
     public struct Plane
     {
@@ -22,4 +19,3 @@ namespace engenious
         }
     }
 }
-

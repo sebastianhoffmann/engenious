@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public enum DrawElementsType
     {
@@ -9,4 +7,3 @@ namespace engenious.Graphics
         UnsignedInt = 5125
     }
 }
-

@@ -2,13 +2,12 @@
 
 namespace engenious.Content.Serialization
 {
-	public interface IContentTypeWriter
-	{
-		void Write (ContentWriter writer, object value);
+    public interface IContentTypeWriter
+    {
+        void Write(ContentWriter writer, object value);
 
-		string RuntimeReaderName{ get; }
+        string RuntimeReaderName { get; }
 
-		Type RuntimeType{ get; }
-	}
+        Type RuntimeType { get; }
+    }
 }
-

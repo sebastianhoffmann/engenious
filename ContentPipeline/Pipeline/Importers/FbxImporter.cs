@@ -5,11 +5,10 @@ using System.Reflection;
 
 namespace engenious.Pipeline
 {
-    [ContentImporterAttribute(".fbx",".dae", DisplayName = "Model Importer", DefaultProcessor = "ModelProcessor")]
+    [ContentImporterAttribute(".fbx", ".dae", DisplayName = "Model Importer", DefaultProcessor = "ModelProcessor")]
     public class FbxImporter : ContentImporter<Assimp.Scene>
     {
-
-        private static Exception dllLoadExc;
+        private static readonly Exception DllLoadExc;
 
         static FbxImporter()
         {
@@ -34,7 +33,7 @@ namespace engenious.Pipeline
             }
             catch (Exception ex)
             {
-                dllLoadExc = ex;
+                DllLoadExc = ex;
             }
         }
 
@@ -44,19 +43,20 @@ namespace engenious.Pipeline
 
         public override Assimp.Scene Import(string filename, ContentImporterContext context)
         {
-            if (dllLoadExc != null)
-                context.RaiseBuildMessage("FBXIMPORT" , dllLoadExc.Message, BuildMessageEventArgs.BuildMessageType.Error);
+            if (DllLoadExc != null)
+                context.RaiseBuildMessage("FBXIMPORT", DllLoadExc.Message, BuildMessageEventArgs.BuildMessageType.Error);
             try
             {
-                Assimp.AssimpContext c = new Assimp.AssimpContext();
-                return c.ImportFile(filename,Assimp.PostProcessSteps.Triangulate | Assimp.PostProcessSteps.OptimizeMeshes | Assimp.PostProcessSteps.OptimizeGraph);
+                var c = new Assimp.AssimpContext();
+                return c.ImportFile(filename,
+                    Assimp.PostProcessSteps.Triangulate | Assimp.PostProcessSteps.OptimizeMeshes |
+                    Assimp.PostProcessSteps.OptimizeGraph);
             }
             catch (Exception ex)
             {
-                context.RaiseBuildMessage(filename , ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
+                context.RaiseBuildMessage(filename, ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
             }
             return null;
         }
     }
 }
-

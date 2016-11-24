@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 namespace engenious
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     [System.ComponentModel.TypeConverter(typeof(Vector3Converter))]
-    public struct Vector3:IEquatable<Vector3>
+    public struct Vector3 : IEquatable<Vector3>
     {
-        public float X{get;set;}
-        public float Y{get;set;}
-        public float Z{get;set;}
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
 
         public Vector3(float w)
         {
@@ -17,7 +19,8 @@ namespace engenious
             Y = w;
             Z = w;
         }
-        public Vector3(float x, float y, float z=0.0f)
+
+        public Vector3(float x, float y, float z = 0.0f)
         {
             X = x;
             Y = y;
@@ -35,22 +38,12 @@ namespace engenious
                 Z * value2.X - X * value2.Z,
                 X * value2.Y - Y * value2.X);
         }
+
         [System.ComponentModel.Browsable(false)]
-        public float Length
-        {
-            get
-            {
-                return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
-            }
-        }
+        public float Length => (float) Math.Sqrt(X * X + Y * Y + Z * Z);
+
         [System.ComponentModel.Browsable(false)]
-        public float LengthSquared
-        {
-            get
-            {
-                return X * X + Y * Y + Z * Z;
-            }
-        }
+        public float LengthSquared => X * X + Y * Y + Z * Z;
 
         public void Normalize()
         {
@@ -72,7 +65,8 @@ namespace engenious
 
         public override string ToString()
         {
-            return string.Format("[{0}, {1}, {2}]", X.ToString(System.Globalization.NumberFormatInfo.InvariantInfo), Y.ToString(System.Globalization.NumberFormatInfo.InvariantInfo), Z.ToString(System.Globalization.NumberFormatInfo.InvariantInfo));
+            return
+                $"[{X.ToString(System.Globalization.NumberFormatInfo.InvariantInfo)}, {Y.ToString(System.Globalization.NumberFormatInfo.InvariantInfo)}, {Z.ToString(System.Globalization.NumberFormatInfo.InvariantInfo)}]";
         }
 
         #region IEquatable implementation
@@ -80,7 +74,7 @@ namespace engenious
         public override bool Equals(object obj)
         {
             if (obj is Vector3)
-                return Equals((Vector3)obj);
+                return Equals((Vector3) obj);
             return false;
         }
 
@@ -139,7 +133,7 @@ namespace engenious
             return value * scalar;
         }
 
-        public static Vector3 operator *(Vector3 value1, Vector3 value2)//TODO: ugly as hell
+        public static Vector3 operator *(Vector3 value1, Vector3 value2) //TODO: ugly as hell
         {
             value1.X *= value2.X;
             value1.Y *= value2.Y;
@@ -155,7 +149,7 @@ namespace engenious
             return value;
         }
 
-        public static Vector3 operator /(Vector3 value1, Vector3 value2)//TODO: ugly as hell?
+        public static Vector3 operator /(Vector3 value1, Vector3 value2) //TODO: ugly as hell?
         {
             value1.X /= value2.X;
             value1.Y /= value2.Y;
@@ -180,8 +174,8 @@ namespace engenious
         public static void Clamp(Vector3 value, Vector3 min, Vector3 max, out Vector3 output)
         {
             output = new Vector3(Math.Min(Math.Max(min.X, value.X), max.X),
-                                    Math.Min(Math.Max(min.Y, value.Y), max.Y),
-                                    Math.Min(Math.Max(min.Z, value.Z), max.Z));
+                Math.Min(Math.Max(min.Y, value.Y), max.Y),
+                Math.Min(Math.Max(min.Z, value.Z), max.Z));
         }
 
         public static float Dot(Vector3 value1, Vector3 value2)
@@ -235,4 +229,3 @@ namespace engenious
         public static readonly Vector3 UnitZ = new Vector3(0, 0, 1);
     }
 }
-

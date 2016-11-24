@@ -1,20 +1,17 @@
 ﻿using System;
-using OpenTK.Graphics.OpenGL4;
 
 namespace engenious.Graphics
 {
-	public class DynamicIndexBuffer : IndexBuffer
-	{
-		public DynamicIndexBuffer (GraphicsDevice graphicsDevice, Type indexType, int indexCount)
-			: base (graphicsDevice, indexType, indexCount, BufferUsageHint.DynamicDraw)
-		{
+    public class DynamicIndexBuffer : IndexBuffer
+    {
+        public DynamicIndexBuffer(GraphicsDevice graphicsDevice, Type indexType, int indexCount)
+            : base(graphicsDevice, indexType, indexCount, BufferUsageHint.DynamicDraw)
+        {
+        }
 
-		}
-
-		public DynamicIndexBuffer (GraphicsDevice graphicsDevice, DrawElementsType indexElementSize, int indexCount)
-			: base (graphicsDevice, indexElementSize, indexCount, BufferUsageHint.DynamicDraw)
-		{
-		}
-	}
+        public DynamicIndexBuffer(GraphicsDevice graphicsDevice, DrawElementsType indexElementSize, int indexCount)
+            : base(graphicsDevice, indexElementSize, indexCount, BufferUsageHint.DynamicDraw)
+        {
+        }
+    }
 }
-

@@ -7,42 +7,35 @@ namespace engenious.Content.Serialization
 {
     public class SerializationManager
     {
-        private static SerializationManager instance;
+        private static SerializationManager _instance;
 
-        public static SerializationManager Instance
-        { 
-            get
-            {
-                if (instance == null)
-                    instance = new SerializationManager();
-                return instance;
-            } 
-        }
+        public static SerializationManager Instance => _instance ?? (_instance = new SerializationManager());
 
 
         //private Dictionary<string ,IContentTypeReader> typeReaders;
-        private Dictionary<string ,IContentTypeWriter> typeWriters;
+        private readonly Dictionary<string, IContentTypeWriter> _typeWriters;
 
         protected SerializationManager()
         {
             //typeReaders = new Dictionary<string, IContentTypeReader> ();
-            typeWriters = new Dictionary<string, IContentTypeWriter>();
+            _typeWriters = new Dictionary<string, IContentTypeWriter>();
             AddAssembly(Assembly.GetExecutingAssembly());
         }
 
         public void AddAssembly(Assembly assembly)
         {
-            foreach (Type t in assembly.GetTypes())
+            foreach (var t in assembly.GetTypes())
             {
                 /*if (t.GetInterfaces ().Contains (typeof(IContentTypeReader)) && t.GetCustomAttribute<ContentTypeReaderAttribute> () != null) {
 					IContentTypeReader reader = Activator.CreateInstance (t) as IContentTypeReader;
 					typeReaders.Add (t.Namespace + "." + t.Name, reader);
 				} else*/
-                if (t.GetInterfaces().Contains(typeof(IContentTypeWriter)) && t.GetCustomAttributes(typeof(ContentTypeWriterAttribute), true).FirstOrDefault() != null)
+                if (t.GetInterfaces().Contains(typeof(IContentTypeWriter)) &&
+                    t.GetCustomAttributes(typeof(ContentTypeWriterAttribute), true).FirstOrDefault() != null)
                 {
-                    IContentTypeWriter writer = Activator.CreateInstance(t) as IContentTypeWriter;
-
-                    typeWriters.Add(writer.RuntimeType.Namespace + "." + writer.RuntimeType.Name, writer);
+                    var writer = Activator.CreateInstance(t) as IContentTypeWriter;
+                    if (writer == null) continue;
+                    _typeWriters.Add(writer.RuntimeType.Namespace + "." + writer.RuntimeType.Name, writer);
                 }
             }
         }
@@ -59,10 +52,7 @@ namespace engenious.Content.Serialization
         public IContentTypeWriter GetWriter(Type writerType)
         {
             IContentTypeWriter res;
-            if (!typeWriters.TryGetValue(writerType.FullName, out res))
-                return null;
-            return res;
-		
+            return !_typeWriters.TryGetValue(writerType.FullName, out res) ? null : res;
         }
     }
 }

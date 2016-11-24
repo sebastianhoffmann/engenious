@@ -5,7 +5,6 @@ namespace engenious.Content.Serialization
 {
     public sealed class ContentWriter : BinaryWriter
     {
-
         public ContentWriter(Stream output)
             : base(output)
         {
@@ -31,9 +30,9 @@ namespace engenious.Content.Serialization
 
         public void Write(Stream stream, int length = -1)
         {
-            System.IO.BufferedStream buffered = new BufferedStream(stream);
+            BufferedStream buffered = new BufferedStream(stream);
             byte[] buffer = new byte[1024];
-            int readLen = length == -1 ? (int)buffer.Length : (int)stream.Length;
+            int readLen = length == -1 ? (int) buffer.Length : (int) stream.Length;
             int toRead = Math.Min(readLen, buffer.Length);
             int read;
             while ((read = buffered.Read(buffer, 0, toRead)) >= toRead)
@@ -46,27 +45,27 @@ namespace engenious.Content.Serialization
             buffered.Dispose();
         }
 
-        public void Write(engenious.Graphics.VertexPositionNormalTexture v)
+        public void Write(Graphics.VertexPositionNormalTexture v)
         {
             Write(v.Position);
             Write(v.Normal);
             Write(v.TextureCoordinate);
         }
 
-        public void Write(engenious.Graphics.VertexPositionColor v)
+        public void Write(Graphics.VertexPositionColor v)
         {
             Write(v.Position);
             Write(v.Color);
         }
 
-        public void Write(engenious.Graphics.VertexPositionColorTexture v)
+        public void Write(Graphics.VertexPositionColorTexture v)
         {
             Write(v.Position);
             Write(v.Color);
             Write(v.TextureCoordinate);
         }
 
-        public void Write(engenious.Graphics.VertexPositionTexture v)
+        public void Write(Graphics.VertexPositionTexture v)
         {
             Write(v.Position);
             Write(v.TextureCoordinate);
@@ -74,7 +73,7 @@ namespace engenious.Content.Serialization
 
         public void Write(Matrix matrix)
         {
-            Write(matrix.Row0);//TODO: perhaps better saving per Column?
+            Write(matrix.Row0); //TODO: perhaps better saving per Column?
             Write(matrix.Row1);
             Write(matrix.Row2);
             Write(matrix.Row3);
@@ -118,4 +117,3 @@ namespace engenious.Content.Serialization
         }
     }
 }
-

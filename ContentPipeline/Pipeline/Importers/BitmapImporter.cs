@@ -3,7 +3,8 @@ using System.Drawing;
 
 namespace engenious.Content.Pipeline
 {
-    [ContentImporterAttribute(".bmp", ".jpg", ".png", DisplayName = "Bitmap Importer", DefaultProcessor = "BitmapProcessor")]
+    [ContentImporterAttribute(".bmp", ".jpg", ".png", DisplayName = "Bitmap Importer",
+         DefaultProcessor = "BitmapProcessor")]
     public class BitmapImporter : ContentImporter<Bitmap>
     {
         public BitmapImporter()
@@ -20,10 +21,9 @@ namespace engenious.Content.Pipeline
             }
             catch (Exception ex)
             {
-                context.RaiseBuildMessage(filename ,  ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
+                context.RaiseBuildMessage(filename, ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
             }
             return null;
         }
     }
 }
-

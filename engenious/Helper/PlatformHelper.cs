@@ -9,9 +9,9 @@ namespace engenious
         Linux,
         Mac
     }
+
     internal class PlatformHelper
     {
-
         public static Platform RunningPlatform()
         {
             switch (Environment.OSVersion.Platform)
@@ -36,4 +36,3 @@ namespace engenious
         }
     }
 }
-

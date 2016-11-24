@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 namespace engenious
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     [System.ComponentModel.TypeConverter(typeof(Vector2Converter))]
     public struct Vector2 : IEquatable<Vector2>
     {
-        public float X{get;set;}
-        public float Y{get;set;}
+        public float X { get; set; }
+        public float Y { get; set; }
 
         public Vector2(float w)
         {
@@ -17,8 +19,8 @@ namespace engenious
 
         public Vector2(float x, float y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         public float Dot(Vector2 value2)
@@ -30,22 +32,12 @@ namespace engenious
         {
             return new Vector2(X, -Y);
         }
+
         [System.ComponentModel.Browsable(false)]
-        public float Length
-        {
-            get
-            {
-                return (float)Math.Sqrt(X * X + Y * Y);
-            }
-        }
+        public float Length => (float) Math.Sqrt(X * X + Y * Y);
+
         [System.ComponentModel.Browsable(false)]
-        public float LengthSquared
-        {
-            get
-            {
-                return X * X + Y * Y;
-            }
-        }
+        public float LengthSquared => X * X + Y * Y;
 
         public void Normalize()
         {
@@ -61,7 +53,8 @@ namespace engenious
 
         public Vector2 Transform(Matrix matrix)
         {
-            return new Vector2((X * matrix.M11) + (Y * matrix.M21) + matrix.M41, (X * matrix.M12) + (Y * matrix.M22) + matrix.M42);
+            return new Vector2((X * matrix.M11) + (Y * matrix.M21) + matrix.M41,
+                (X * matrix.M12) + (Y * matrix.M22) + matrix.M42);
         }
 
         public override int GetHashCode()
@@ -74,7 +67,7 @@ namespace engenious
         public override bool Equals(object obj)
         {
             if (obj is Vector2)
-                return Equals((Vector2)obj);
+                return Equals((Vector2) obj);
             return false;
         }
 
@@ -128,7 +121,7 @@ namespace engenious
             return value * scalar;
         }
 
-        public static Vector2 operator *(Vector2 value1, Vector2 value2)//TODO: ugly as hell
+        public static Vector2 operator *(Vector2 value1, Vector2 value2) //TODO: ugly as hell
         {
             value1.X *= value2.X;
             value1.Y *= value2.Y;
@@ -142,14 +135,13 @@ namespace engenious
             return value;
         }
 
-        public static Vector2 operator /(Vector2 value1, Vector2 value2)//TODO: ugly as hell?
+        public static Vector2 operator /(Vector2 value1, Vector2 value2) //TODO: ugly as hell?
         {
             value1.X /= value2.X;
             value1.Y /= value2.Y;
             return value1;
         }
 
-            
 
         public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
         {
@@ -160,8 +152,8 @@ namespace engenious
 
         public static void Clamp(Vector2 value, Vector2 min, Vector2 max, out Vector2 output)
         {
-            output =new Vector2( Math.Min(Math.Max(min.X, value.X), max.X),
-                                Math.Min(Math.Max(min.Y, value.Y), max.Y));
+            output = new Vector2(Math.Min(Math.Max(min.X, value.X), max.X),
+                Math.Min(Math.Max(min.Y, value.Y), max.Y));
         }
 
         public static float Dot(Vector2 value1, Vector2 value2)
@@ -204,7 +196,8 @@ namespace engenious
         {
             //{v1*x1+v2*y1+w1,v1*x2+v2*y2+w2,v1*x3+v2*y3+w3,v1*x4+v2*y4+w4}
             //{v1*x1+v2*x2+x4,v1*y1+v2*y2+y4,v1*z1+v2*z2+z4,v1*w1+v2*w2+w4}
-            return new Vector2(position.X * matrix.M11 + position.Y * matrix.M12 + matrix.M14, position.X * matrix.M21 + position.Y * matrix.M22 + matrix.M24);
+            return new Vector2(position.X * matrix.M11 + position.Y * matrix.M12 + matrix.M14,
+                position.X * matrix.M21 + position.Y * matrix.M22 + matrix.M24);
         }
 
         public static Vector2 TransformNormal(Vector2 normal, Matrix matrix)
@@ -212,13 +205,14 @@ namespace engenious
             throw new NotImplementedException();
         }
 
-        
+
         public static void Transform(Vector2[] positions, ref Matrix matrix, Vector2[] output)
         {
             int index = 0;
             foreach (var position in positions)
             {
-                output[index++] = new Vector2(position.X * matrix.M11 + position.Y * matrix.M12 + matrix.M14, position.X * matrix.M21 + position.Y * matrix.M22 + matrix.M24);
+                output[index++] = new Vector2(position.X * matrix.M11 + position.Y * matrix.M12 + matrix.M14,
+                    position.X * matrix.M21 + position.Y * matrix.M22 + matrix.M24);
             }
         }
 
@@ -228,4 +222,3 @@ namespace engenious
         public static readonly Vector2 Zero = new Vector2();
     }
 }
-

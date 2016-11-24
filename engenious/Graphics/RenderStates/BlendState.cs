@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public class BlendState
     {
@@ -13,23 +11,30 @@ namespace engenious.Graphics
         {
             AlphaBlend = new BlendState();
 
-            Additive = new BlendState();
-            Additive.ColorSourceBlend = BlendingFactorSrc.One;
-            Additive.AlphaSourceBlend = BlendingFactorSrc.One;
-            Additive.ColorDestinationBlend = BlendingFactorDest.OneMinusSrcColor;//TODO: verify?	
-            Additive.AlphaDestinationBlend = BlendingFactorDest.OneMinusSrcColor;
+            Additive = new BlendState
+            {
+                ColorSourceBlend = BlendingFactorSrc.One,
+                AlphaSourceBlend = BlendingFactorSrc.One,
+                ColorDestinationBlend = BlendingFactorDest.OneMinusSrcColor,
+                AlphaDestinationBlend = BlendingFactorDest.OneMinusSrcColor
+            };
+            //TODO: verify?
 
-            NonPremultiplied = new BlendState();
-            NonPremultiplied.ColorSourceBlend = BlendingFactorSrc.SrcAlpha;
-            NonPremultiplied.AlphaSourceBlend = BlendingFactorSrc.SrcAlpha;
-            NonPremultiplied.ColorDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha;
-            NonPremultiplied.AlphaDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha;
+            NonPremultiplied = new BlendState
+            {
+                ColorSourceBlend = BlendingFactorSrc.SrcAlpha,
+                AlphaSourceBlend = BlendingFactorSrc.SrcAlpha,
+                ColorDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha,
+                AlphaDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha
+            };
 
-            Opaque = new BlendState();
-            Opaque.ColorSourceBlend = BlendingFactorSrc.One;
-            Opaque.AlphaSourceBlend = BlendingFactorSrc.One;
-            Opaque.ColorDestinationBlend = BlendingFactorDest.Zero;
-            Opaque.AlphaDestinationBlend = BlendingFactorDest.Zero;
+            Opaque = new BlendState
+            {
+                ColorSourceBlend = BlendingFactorSrc.One,
+                AlphaSourceBlend = BlendingFactorSrc.One,
+                ColorDestinationBlend = BlendingFactorDest.Zero,
+                AlphaDestinationBlend = BlendingFactorDest.Zero
+            };
 
             //GL.BlendEquationSeparate(
         }
@@ -37,28 +42,27 @@ namespace engenious.Graphics
         public BlendState()
         {
             //GL.BlendFunc(BlendingFactorSrc.One,#
-            this.ColorSourceBlend = BlendingFactorSrc.SrcAlpha;
-            this.AlphaSourceBlend = BlendingFactorSrc.SrcAlpha;
-            this.ColorDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha;
-            this.AlphaDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha;
+            ColorSourceBlend = BlendingFactorSrc.SrcAlpha;
+            AlphaSourceBlend = BlendingFactorSrc.SrcAlpha;
+            ColorDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha;
+            AlphaDestinationBlend = BlendingFactorDest.OneMinusSrcAlpha;
 
-            this.ColorBlendFunction = BlendEquationMode.FuncAdd;
-            this.AlphaBlendFunction = BlendEquationMode.FuncAdd;
+            ColorBlendFunction = BlendEquationMode.FuncAdd;
+            AlphaBlendFunction = BlendEquationMode.FuncAdd;
         }
 
-        public BlendingFactorSrc ColorSourceBlend{ get; set; }
+        public BlendingFactorSrc ColorSourceBlend { get; set; }
 
-        public BlendingFactorSrc AlphaSourceBlend{ get; set; }
+        public BlendingFactorSrc AlphaSourceBlend { get; set; }
 
-        public BlendingFactorDest ColorDestinationBlend{ get; set; }
+        public BlendingFactorDest ColorDestinationBlend { get; set; }
 
-        public BlendingFactorDest AlphaDestinationBlend{ get; set; }
+        public BlendingFactorDest AlphaDestinationBlend { get; set; }
 
-        public BlendEquationMode AlphaBlendFunction{ get; set; }
+        public BlendEquationMode AlphaBlendFunction { get; set; }
 
-        public BlendEquationMode ColorBlendFunction{ get; set; }
+        public BlendEquationMode ColorBlendFunction { get; set; }
 
-        public Color BlendFactor{ get; set; }
+        public Color BlendFactor { get; set; }
     }
 }
-

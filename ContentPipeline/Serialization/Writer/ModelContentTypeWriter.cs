@@ -1,7 +1,4 @@
-﻿using System;
-using engenious.Pipeline;
-using System.Linq;
-using engenious.Graphics;
+﻿using engenious.Graphics;
 
 namespace engenious.Content.Serialization
 {
@@ -12,13 +9,7 @@ namespace engenious.Content.Serialization
         {
         }
 
-        public override string RuntimeReaderName
-        {
-            get
-            {
-                return typeof(ModelTypeReader).FullName;
-            }
-        }
+        public override string RuntimeReaderName => typeof(ModelTypeReader).FullName;
 
         private void WriteTree(ContentWriter writer, ModelContent value, NodeContent node)
         {
@@ -51,7 +42,8 @@ namespace engenious.Content.Serialization
             WriteTree(writer, value, value.RootNode);
 
             writer.Write(value.Animations.Count);
-            foreach(var anim in value.Animations){
+            foreach (var anim in value.Animations)
+            {
                 writer.Write(anim.MaxTime);
                 writer.Write(anim.Channels.Count);
                 foreach (var c in anim.Channels)
@@ -71,4 +63,3 @@ namespace engenious.Content.Serialization
         }
     }
 }
-

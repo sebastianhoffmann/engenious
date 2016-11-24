@@ -8,14 +8,14 @@ namespace ContentTool.Builder
     [Serializable()]
     public class BuildCache
     {
-        public string OutputPath{ get; private set; }
+        public string OutputPath { get; private set; }
 
         public BuildCache()
         {
-            Files = new Dictionary<string,BuildInfo>();
+            Files = new Dictionary<string, BuildInfo>();
         }
 
-        public Dictionary<string,BuildInfo> Files{ get; private set; }
+        public Dictionary<string, BuildInfo> Files { get; private set; }
 
         public void AddBuildInfo(BuildInfo info)
         {
@@ -30,7 +30,6 @@ namespace ContentTool.Builder
                     Files[dependency].Refresh(importDir);
                 else
                     Files.Add(dependency, new BuildInfo(importDir, dependency));
-                
             }
         }
 
@@ -73,9 +72,9 @@ namespace ContentTool.Builder
             ContentBuilder.CreateFolderIfNeeded(file);
             try
             {
-                using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+                using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write))
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
+                    var formatter = new BinaryFormatter();
                     formatter.Serialize(fs, this);
                 }
             }
@@ -90,10 +89,10 @@ namespace ContentTool.Builder
                 return new BuildCache();
             try
             {
-                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    return (BuildCache)formatter.Deserialize(fs);
+                    var formatter = new BinaryFormatter();
+                    return (BuildCache) formatter.Deserialize(fs);
                 }
             }
             catch
@@ -103,4 +102,3 @@ namespace ContentTool.Builder
         }
     }
 }
-

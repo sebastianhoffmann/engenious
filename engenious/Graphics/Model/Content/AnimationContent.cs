@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace engenious.Graphics
 {
     internal class AnimationContent
     {
-        public float Time{ get; set; }
+        public float Time { get; set; }
 
-        public float MaxTime{ get; set; }
+        public float MaxTime { get; set; }
 
-        public List<AnimationNodeContent> Channels{ get; set; }
+        public List<AnimationNodeContent> Channels { get; set; }
     }
 }
-

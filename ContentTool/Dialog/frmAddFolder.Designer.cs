@@ -2,7 +2,7 @@
 
 namespace ContentTool
 {
-    public partial class frmAddFolder
+    public partial class FrmAddFolder
     {
         public void InitializeComponent()
         {

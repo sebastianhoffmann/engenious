@@ -1,19 +1,15 @@
 ﻿using System;
 using engenious.Graphics;
-using System.Collections.Generic;
-using OpenTK;
 
 namespace engenious.Content.Pipeline
 {
     [ContentProcessor(DisplayName = "Effect Processor")]
     public class EffectProcessor : ContentProcessor<EffectContent, EffectContent>
     {
-        public EffectProcessor()
+        private static string PreprocessMessage(IContentContext context, string file, string msg,
+            BuildMessageEventArgs.BuildMessageType messageType)
         {
-        }
-        private string PreprocessMessage(ContentProcessorContext context,string file, string msg, BuildMessageEventArgs.BuildMessageType messageType)
-        {
-            string[] lines = msg.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = msg.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i].StartsWith("error:", StringComparison.InvariantCultureIgnoreCase))
@@ -30,13 +26,13 @@ namespace engenious.Content.Pipeline
                 }
                 else
                 {
-
                 }
-                context.RaiseBuildMessage(file,lines[i],messageType);
+                context.RaiseBuildMessage(file, lines[i], messageType);
             }
 
             return string.Join("\n", lines);
         }
+
         public override EffectContent Process(EffectContent input, string filename, ContentProcessorContext context)
         {
             try
@@ -46,7 +42,7 @@ namespace engenious.Content.Pipeline
                 {
                     foreach (var pass in technique.Passes)
                     {
-                        engenious.Graphics.EffectPass compiledPass = new engenious.Graphics.EffectPass(pass.Name);
+                        Graphics.EffectPass compiledPass = new Graphics.EffectPass(pass.Name);
 
                         foreach (var shader in pass.Shaders)
                         {
@@ -58,8 +54,8 @@ namespace engenious.Content.Pipeline
                             }
                             catch (Exception ex)
                             {
-                                PreprocessMessage(context,shader.Value, ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
-                                
+                                PreprocessMessage(context, shader.Value, ex.Message,
+                                    BuildMessageEventArgs.BuildMessageType.Error);
                             }
                         }
 
@@ -75,10 +71,10 @@ namespace engenious.Content.Pipeline
             }
             catch (Exception ex)
             {
-                PreprocessMessage(context,System.IO.Path.GetFileName(filename), ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
+                PreprocessMessage(context, System.IO.Path.GetFileName(filename), ex.Message,
+                    BuildMessageEventArgs.BuildMessageType.Error);
             }
             return null;
         }
     }
 }
-

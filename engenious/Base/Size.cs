@@ -1,43 +1,38 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
-    public class Size
+    public struct Size
     {
         public Size(Point point)
         {
-            this.Width = point.X;
-            this.Height = point.Y;
+            Width = point.X;
+            Height = point.Y;
         }
 
         public Size(int width, int height)
         {
-            this.Width = width;
-            this.Height = height;
+            Width = width;
+            Height = height;
         }
 
-        public int Width{ get; set; }
+        public int Width { get; set; }
 
-        public int Height{ get; set; }
+        public int Height { get; set; }
 
         public override string ToString()
         {
-            return string.Format("[Size: Width={0}, Height={1}]", Width, Height);
+            return $"[Size: Width={Width}, Height={Height}]";
         }
 
         public override int GetHashCode()
         {
-            return (int)(Width ^ Height);//TODO
+            return (int) (Width ^ Height); //TODO
         }
 
         public override bool Equals(object obj)
         {
-            if (obj is Size)
-            {
-                Size sec = (Size)obj;
-                return Width == sec.Width && Height == sec.Height;
-            }
-            return false;
+            if (!(obj is Size)) return false;
+            var size = (Size) obj;
+            return Width == size.Width && Height == size.Height;
         }
 
         public static bool operator ==(Size a, Size b)
@@ -77,4 +72,3 @@ namespace engenious
         }
     }
 }
-

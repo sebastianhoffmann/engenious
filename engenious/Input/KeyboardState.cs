@@ -1,4 +1,5 @@
 ﻿#region License
+
 //
 // The Open Toolkit Library License
 //
@@ -23,6 +24,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #endregion
 
 using System;
@@ -30,19 +32,19 @@ using System.Runtime.InteropServices;
 
 namespace engenious.Input
 {
-    [StructLayout(LayoutKind.Sequential,Pack=1)]
-    public struct KeyboardState: IEquatable<KeyboardState>
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct KeyboardState : IEquatable<KeyboardState>
     {
         #region Fields
 
         // Allocate enough ints to store all keyboard keys
-        const int IntSize = sizeof(int) * 8;
-        const int NumInts = ((int)Keys.LastKey + IntSize - 1) / IntSize;
+        private const int IntSize = sizeof(int) * 8;
+        private const int NumInts = ((int) Keys.LastKey + IntSize - 1) / IntSize;
         // The following line triggers bogus CS0214 in gmcs 2.0.1, sigh...
         //TODO: fix
-        unsafe fixed int Key[NumInts];
+        private unsafe fixed int Key [NumInts];
 
-        bool is_connected;
+        private bool is_connected;
 
         #endregion
 
@@ -54,7 +56,7 @@ namespace engenious.Input
         /// </summary>
         /// <param name="key">The <see cref="OpenTK.Input.Key"/> to check.</param>
         /// <returns>True if key is pressed; false otherwise.</returns>
-        public bool this [Keys key]
+        public bool this[Keys key]
         {
             get { return IsKeyDown(key); }
             internal set { SetKeyState(key, value); }
@@ -66,10 +68,7 @@ namespace engenious.Input
         /// </summary>
         /// <param name="code">The scancode to check.</param>
         /// <returns>True if code is pressed; false otherwise.</returns>
-        public bool this [short code]
-        {
-            get { return IsKeyDown((Keys)code); }
-        }
+        public bool this[short code] => IsKeyDown((Keys) code);
 
         /// <summary>
         /// Gets a <see cref="System.Boolean"/> indicating whether this key is down.
@@ -77,7 +76,7 @@ namespace engenious.Input
         /// <param name="key">The <see cref="OpenTK.Input.Key"/> to check.</param>
         public bool IsKeyDown(Keys key)
         {
-            return ReadBit((int)key);
+            return ReadBit((int) key);
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace engenious.Input
         /// <param name="code">The scan code to check.</param>
         public bool IsKeyDown(short code)
         {
-            return code >= 0 && code < (short)Keys.LastKey && ReadBit(code);
+            return code >= 0 && code < (short) Keys.LastKey && ReadBit(code);
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace engenious.Input
         /// <param name="key">The <see cref="OpenTK.Input.Key"/> to check.</param>
         public bool IsKeyUp(Keys key)
         {
-            return !ReadBit((int)key);
+            return !ReadBit((int) key);
         }
 
         /// <summary>
@@ -144,8 +143,8 @@ namespace engenious.Input
             internal set { is_connected = value; }
         }
 
-        #if false
-        // Disabled until the correct cross-platform API can be determined.
+#if false
+// Disabled until the correct cross-platform API can be determined.
         public bool IsLedOn(KeyboardLeds led)
         {
         return false;
@@ -204,7 +203,7 @@ namespace engenious.Input
         {
             if (obj is KeyboardState)
             {
-                return this == (KeyboardState)obj;
+                return this == (KeyboardState) obj;
             }
             else
             {
@@ -240,11 +239,11 @@ namespace engenious.Input
         {
             if (down)
             {
-                EnableBit((int)key);
+                EnableBit((int) key);
             }
             else
             {
-                DisableBit((int)key);
+                DisableBit((int) key);
             }
         }
 
@@ -252,13 +251,13 @@ namespace engenious.Input
         {
             ValidateOffset(offset);
 
-            int int_offset = offset / IntSize;
-            int bit_offset = offset % IntSize;
+            int intOffset = offset / IntSize;
+            int bitOffset = offset % IntSize;
             unsafe
             {
                 fixed (int* k = Key)
                 {
-                    return (*(k + int_offset) & (1 << bit_offset)) != 0u;
+                    return (*(k + intOffset) & (1 << bitOffset)) != 0u;
                 }
             }
         }
@@ -267,13 +266,13 @@ namespace engenious.Input
         {
             ValidateOffset(offset);
 
-            int int_offset = offset / IntSize;
-            int bit_offset = offset % IntSize;
+            int intOffset = offset / IntSize;
+            int bitOffset = offset % IntSize;
             unsafe
             {
                 fixed (int* k = Key)
                 {
-                    *(k + int_offset) |= 1 << bit_offset;
+                    *(k + intOffset) |= 1 << bitOffset;
                 }
             }
         }
@@ -282,13 +281,13 @@ namespace engenious.Input
         {
             ValidateOffset(offset);
 
-            int int_offset = offset / IntSize;
-            int bit_offset = offset % IntSize;
+            int intOffset = offset / IntSize;
+            int bitOffset = offset % IntSize;
             unsafe
             {
                 fixed (int* k = Key)
                 {
-                    *(k + int_offset) &= ~(1 << bit_offset);
+                    *(k + intOffset) &= ~(1 << bitOffset);
                 }
             }
         }
@@ -316,7 +315,7 @@ namespace engenious.Input
 
         #region Private Members
 
-        static void ValidateOffset(int offset)
+        private static void ValidateOffset(int offset)
         {
             if (offset < 0 || offset >= NumInts * IntSize)
                 throw new ArgumentOutOfRangeException();
@@ -349,4 +348,3 @@ namespace engenious.Input
         #endregion
     }
 }
-

@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     public interface IGameComponent
     {
         void Initialize();
     }
 }
-

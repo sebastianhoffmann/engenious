@@ -1,7 +1,4 @@
-﻿using System;
-using OpenTK;
-
-namespace engenious.Audio
+﻿namespace engenious.Audio
 {
     public class AudioListener
     {
@@ -11,7 +8,7 @@ namespace engenious.Audio
             Up = Vector3.UnitY;
             Forward = Vector3.UnitZ;
         }
-            
+
         public Vector3 Forward { get; set; }
 
         public Vector3 Position { get; set; }
@@ -21,4 +18,3 @@ namespace engenious.Audio
         public Vector3 Velocity { get; set; }
     }
 }
-

@@ -2,13 +2,13 @@
 
 namespace Sample
 {
-	class MainClass
-	{
+    internal class MainClass
+    {
         [STAThread()]
-		public static void Main (string[] args)
-		{
-			using(TestGame test = new TestGame ())
-				test.Run ();
-		}
-	}
+        public static void Main(string[] args)
+        {
+            using (var test = new TestGame())
+                test.Run();
+        }
+    }
 }

@@ -1,63 +1,44 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
+
 namespace engenious
 {
     [StructLayout(LayoutKind.Explicit, Pack = 1)]
     [System.ComponentModel.TypeConverter(typeof(MatrixConverter))]
-    public struct Matrix :IEquatable<Matrix>
+    public struct Matrix : IEquatable<Matrix>
     {
-        [FieldOffset(0)]
-        private unsafe fixed float items[16];
-        [FieldOffset(0)]
-        public float M11;
-        [FieldOffset(4)]
-        public float M12;
-        [FieldOffset(8)]
-        public float M13;
-        [FieldOffset(12)]
-        public float M14;
+        [FieldOffset(0)] private unsafe fixed float items [16];
+        [FieldOffset(0)] public float M11;
+        [FieldOffset(4)] public float M12;
+        [FieldOffset(8)] public float M13;
+        [FieldOffset(12)] public float M14;
 
-        [FieldOffset(16)]
-        public float M21;
-        [FieldOffset(20)]
-        public float M22;
-        [FieldOffset(24)]
-        public float M23;
-        [FieldOffset(28)]
-        public float M24;
+        [FieldOffset(16)] public float M21;
+        [FieldOffset(20)] public float M22;
+        [FieldOffset(24)] public float M23;
+        [FieldOffset(28)] public float M24;
 
-        [FieldOffset(32)]
-        public float M31;
-        [FieldOffset(36)]
-        public float M32;
-        [FieldOffset(40)]
-        public float M33;
-        [FieldOffset(44)]
-        public float M34;
+        [FieldOffset(32)] public float M31;
+        [FieldOffset(36)] public float M32;
+        [FieldOffset(40)] public float M33;
+        [FieldOffset(44)] public float M34;
 
-        [FieldOffset(48)]
-        public float M41;
-        [FieldOffset(52)]
-        public float M42;
-        [FieldOffset(56)]
-        public float M43;
-        [FieldOffset(60)]
-        public float M44;
+        [FieldOffset(48)] public float M41;
+        [FieldOffset(52)] public float M42;
+        [FieldOffset(56)] public float M43;
+        [FieldOffset(60)] public float M44;
 
-        [FieldOffset(0)]
-        public Vector4 Row0;
-        [FieldOffset(16)]
-        public Vector4 Row1;
-        [FieldOffset(32)]
-        public Vector4 Row2;
-        [FieldOffset(48)]
-        public Vector4 Row3;
+        [FieldOffset(0)] public Vector4 Row0;
+        [FieldOffset(16)] public Vector4 Row1;
+        [FieldOffset(32)] public Vector4 Row2;
+        [FieldOffset(48)] public Vector4 Row3;
 
         public Matrix(float m11, float m21, float m31, float m41,
-                      float m12, float m22, float m32, float m42,
-                      float m13, float m23, float m33, float m43,
-                      float m14, float m24, float m34, float m44)
+            float m12, float m22, float m32, float m42,
+            float m13, float m23, float m33, float m43,
+            float m14, float m24, float m34, float m44)
             : this()
         {
             M11 = m11;
@@ -92,7 +73,7 @@ namespace engenious
 
         public Vector3 Translation
         {
-            get{ return new Vector3(M41, M42, M43); }
+            get { return new Vector3(M41, M42, M43); }
             set
             {
                 M41 = value.X;
@@ -149,45 +130,46 @@ namespace engenious
             }
         }
 
-        public float Determinant =>   M11 * M22 * M33 * M44 - M11 * M22 * M34 * M43 + M11 * M23 * M34 * M42 - M11 * M23 * M32 * M44
-                                    + M11 * M24 * M32 * M43 - M11 * M24 * M33 * M42 - M12 * M23 * M34 * M41 + M12 * M23 * M31 * M44
-                                    - M12 * M24 * M31 * M43 + M12 * M24 * M33 * M41 - M12 * M21 * M33 * M44 + M12 * M21 * M34 * M43
-                                    + M13 * M24 * M31 * M42 - M13 * M24 * M32 * M41 + M13 * M21 * M32 * M44 - M13 * M21 * M34 * M42
-                                    + M13 * M22 * M34 * M41 - M13 * M22 * M31 * M44 - M14 * M21 * M32 * M43 + M14 * M21 * M33 * M42
-                                    - M14 * M22 * M33 * M41 + M14 * M22 * M31 * M43 - M14 * M23 * M31 * M42 + M14 * M23 * M32 * M41;
+        public float Determinant
+            => M11 * M22 * M33 * M44 - M11 * M22 * M34 * M43 + M11 * M23 * M34 * M42 - M11 * M23 * M32 * M44
+               + M11 * M24 * M32 * M43 - M11 * M24 * M33 * M42 - M12 * M23 * M34 * M41 + M12 * M23 * M31 * M44
+               - M12 * M24 * M31 * M43 + M12 * M24 * M33 * M41 - M12 * M21 * M33 * M44 + M12 * M21 * M34 * M43
+               + M13 * M24 * M31 * M42 - M13 * M24 * M32 * M41 + M13 * M21 * M32 * M44 - M13 * M21 * M34 * M42
+               + M13 * M22 * M34 * M41 - M13 * M22 * M31 * M44 - M14 * M21 * M32 * M43 + M14 * M21 * M33 * M42
+               - M14 * M22 * M33 * M41 + M14 * M22 * M31 * M43 - M14 * M23 * M31 * M42 + M14 * M23 * M32 * M41;
 
-        public unsafe float this [int columnIndex, int rowIndex]
+        public unsafe float this[int columnIndex, int rowIndex]
         {
             get
             {
                 if (rowIndex < 0 || columnIndex < 0 || rowIndex >= 4 || columnIndex >= 4)
                     throw new IndexOutOfRangeException();
-                fixed(float* ptr = items)
+                fixed (float* ptr = items)
                     return ptr[rowIndex + columnIndex * 4];
             }
             set
             {
                 if (rowIndex < 0 || columnIndex < 0 || rowIndex >= 4 || columnIndex >= 4)
                     throw new IndexOutOfRangeException();
-                fixed(float* ptr = items)
+                fixed (float* ptr = items)
                     ptr[rowIndex + columnIndex * 4] = value;
             }
         }
 
-        public unsafe float this [int index]
+        public unsafe float this[int index]
         {
             get
             {
                 if (index < 0 || index >= 16)
                     throw new IndexOutOfRangeException();
-                fixed(float* ptr = items)
+                fixed (float* ptr = items)
                     return ptr[index];
             }
             set
             {
                 if (index < 0 || index >= 16)
                     throw new IndexOutOfRangeException();
-                fixed(float* ptr = items)
+                fixed (float* ptr = items)
                     ptr[index] = value;
             }
         }
@@ -218,7 +200,7 @@ namespace engenious
         public override bool Equals(object other)
         {
             if (other is Matrix)
-                return Equals((Matrix)other);
+                return Equals((Matrix) other);
             return false;
         }
 
@@ -229,7 +211,7 @@ namespace engenious
 
         #endregion
 
-        public unsafe static bool operator==(Matrix value1, Matrix value2)
+        public static unsafe bool operator ==(Matrix value1, Matrix value2)
         {
             for (int i = 0; i < 16; i++)
             {
@@ -239,7 +221,7 @@ namespace engenious
             return true;
         }
 
-        public unsafe static bool operator!=(Matrix value1, Matrix value2)
+        public static unsafe bool operator !=(Matrix value1, Matrix value2)
         {
             for (int i = 0; i < 16; i++)
             {
@@ -249,7 +231,7 @@ namespace engenious
             return false;
         }
 
-        public unsafe static Matrix operator+(Matrix value1, Matrix value2)
+        public static unsafe Matrix operator +(Matrix value1, Matrix value2)
         {
             for (int i = 0; i < 16; i++)
             {
@@ -258,7 +240,7 @@ namespace engenious
             return value1;
         }
 
-        public unsafe static Matrix operator-(Matrix value1, Matrix value2)
+        public static unsafe Matrix operator -(Matrix value1, Matrix value2)
         {
             for (int i = 0; i < 16; i++)
             {
@@ -267,7 +249,7 @@ namespace engenious
             return value1;
         }
 
-        public unsafe static Matrix operator*(float scalar, Matrix value)
+        public static unsafe Matrix operator *(float scalar, Matrix value)
         {
             for (int i = 0; i < 16; i++)
             {
@@ -276,14 +258,14 @@ namespace engenious
             return value;
         }
 
-        public static Matrix operator*(Matrix value, float scalar)
+        public static Matrix operator *(Matrix value, float scalar)
         {
             return scalar * value;
         }
 
-        public unsafe static Matrix operator*(Matrix value1, Matrix value2)
+        public static unsafe Matrix operator *(Matrix value1, Matrix value2)
         {
-            Matrix multiply = new Matrix();
+            var multiply = new Matrix();
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
@@ -318,27 +300,25 @@ namespace engenious
                 value1.M12 * value2.M41 + value1.M22 * value2.M42 + value1.M32 * value2.M43 + value1.M42 * value2.M44,
                 value1.M13 * value2.M41 + value1.M23 * value2.M42 + value1.M33 * value2.M43 + value1.M43 * value2.M44,
                 value1.M14 * value2.M41 + value1.M24 * value2.M42 + value1.M34 * value2.M43 + value1.M44 * value2.M44);*/
-
         }
 
 
-        public static void CreatePerspectiveFieldOfView(float fovY, float aspect, float near, float far, out Matrix result)
+        public static void CreatePerspectiveFieldOfView(float fovY, float aspect, float near, float far,
+            out Matrix result)
         {
-
-            float tangent = (float)Math.Tan(fovY / 2/* * DEG2RAD*/); // tangent of half fovY
-            float height = near * tangent;         // half height of near plane
-            float width = height * aspect;          // half width of near plane
+            float tangent = (float) Math.Tan(fovY / 2 /* * DEG2RAD*/); // tangent of half fovY
+            float height = near * tangent; // half height of near plane
+            float width = height * aspect; // half width of near plane
 
             // params: left, right, bottom, top, near, far
             CreatePerspectiveOffCenter(-width, width, height, -height, near, far, out result);
-
         }
 
         public static Matrix CreatePerspectiveFieldOfView(float fovY, float aspect, float near, float far)
         {
-            float tangent = (float)Math.Tan(fovY / 2/* * DEG2RAD*/); // tangent of half fovY
-            float height = near * tangent;         // half height of near plane
-            float width = height * aspect;          // half width of near plane
+            float tangent = (float) Math.Tan(fovY / 2 /* * DEG2RAD*/); // tangent of half fovY
+            float height = near * tangent; // half height of near plane
+            float width = height * aspect; // half width of near plane
 
             // params: left, right, bottom, top, near, far
             Matrix result;
@@ -346,15 +326,16 @@ namespace engenious
             return result;
         }
 
-        public unsafe static void CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float near, float far, out Matrix result)
+        public static unsafe void CreatePerspectiveOffCenter(float left, float right, float bottom, float top,
+            float near, float far, out Matrix result)
         {
-            if (left  == right)
+            if (left == right)
                 throw new ArgumentOutOfRangeException($"{nameof(left)} or {nameof(right)}");
             if (bottom == top)
                 throw new ArgumentOutOfRangeException($"{nameof(bottom)} or {nameof(top)}");
             if (near == far)
                 throw new ArgumentOutOfRangeException($"{nameof(near)} or {nameof(far)}");
-            Matrix m = Matrix.Identity;
+            Matrix m = Identity;
             m.items[0] = 2.0f * near / (right - left);
             m.items[5] = 2.0f * near / (top - bottom);
             m.items[8] = (right + left) / (right - left);
@@ -368,9 +349,9 @@ namespace engenious
             result = m;
         }
 
-        public unsafe static Matrix CreateOrthographic(float width, float height, float near, float far)
+        public static unsafe Matrix CreateOrthographic(float width, float height, float near, float far)
         {
-            Matrix res = Matrix.Identity;
+            var res = Identity;
             res.items[0] = 2f / width;
             res.items[5] = -2f / height;
             res.items[10] = 1f / (near - far);
@@ -380,11 +361,10 @@ namespace engenious
             return res;
         }
 
-        public unsafe static Matrix CreateOrthographicOffCenter(float left, float right, float bottom, float top, float near, float far)
+        public static unsafe Matrix CreateOrthographicOffCenter(float left, float right, float bottom, float top,
+            float near, float far)
         {
-
-
-            Matrix res = Matrix.Identity;
+            var res = Identity;
             res.items[0] = 2.0f / (right - left);
             res.items[5] = 2.0f / (top - bottom);
             res.items[10] = -2.0f / (far - near);
@@ -394,23 +374,22 @@ namespace engenious
             return res;
         }
 
-        public static void CreateOrthographicOffCenter(float left, float right, float bottom, float top, float near, float far, out Matrix result)
+        public static void CreateOrthographicOffCenter(float left, float right, float bottom, float top, float near,
+            float far, out Matrix result)
         {
             result = CreateOrthographicOffCenter(left, right, bottom, top, near, far);
         }
 
-        public unsafe static Matrix CreateLookAt(Vector3 eyePos, Vector3 lookAt, Vector3 up)
+        public static unsafe Matrix CreateLookAt(Vector3 eyePos, Vector3 lookAt, Vector3 up)
         {
-
-
-            Vector3 forward = (lookAt - eyePos).Normalized();
+            var forward = (lookAt - eyePos).Normalized();
             up = up.Normalized();
-            Vector3 side = forward.Cross(up).Normalized();
+            var side = forward.Cross(up).Normalized();
 
 
-            Vector3 newUp = side.Cross(forward).Normalized();
+            var newUp = side.Cross(forward).Normalized();
 
-            Matrix m = new Matrix();
+            var m = new Matrix();
             m.items[0] = side.X;
             m.items[4] = side.Y;
             m.items[8] = side.Z;
@@ -482,47 +461,46 @@ namespace engenious
             return CreateTranslation(translation.X, translation.Y, translation.Z);
         }
 
-        public unsafe static Matrix CreateTranslation(float x, float y, float z)
+        public static unsafe Matrix CreateTranslation(float x, float y, float z)
         {
-            Matrix res = Matrix.Identity;
+            var res = Identity;
             res.M41 = x;
             res.M42 = y;
             res.M43 = z;
             //res = res.Transposed();
             return res;
-
         }
 
         public static Matrix CreateRotationX(float rot)
         {
-            Matrix ret = Matrix.Identity;
-            ret.M22 = ret.M33 = (float)Math.Cos(rot);
-            ret.M32 = (float)Math.Sin(rot);
-            ret.M23 = -ret.M32;//TODO: transpose?
+            var ret = Identity;
+            ret.M22 = ret.M33 = (float) Math.Cos(rot);
+            ret.M32 = (float) Math.Sin(rot);
+            ret.M23 = -ret.M32; //TODO: transpose?
             return ret;
         }
 
         public static Matrix CreateRotationY(float rot)
         {
-            Matrix ret = Matrix.Identity;
-            ret.M11 = ret.M33 = (float)Math.Cos(rot);
-            ret.M13 = (float)Math.Sin(rot);
-            ret.M31 = -ret.M13;//TODO: transpose?
+            var ret = Identity;
+            ret.M11 = ret.M33 = (float) Math.Cos(rot);
+            ret.M13 = (float) Math.Sin(rot);
+            ret.M31 = -ret.M13; //TODO: transpose?
             return ret;
         }
 
         public static Matrix CreateRotationZ(float rot)
         {
-            Matrix ret = Matrix.Identity;
-            ret.M11 = ret.M22 = (float)Math.Cos(rot);
-            ret.M12 = (float)Math.Sin(rot);
-            ret.M21 = -ret.M12;//TODO: transpose?
+            var ret = Identity;
+            ret.M11 = ret.M22 = (float) Math.Cos(rot);
+            ret.M12 = (float) Math.Sin(rot);
+            ret.M21 = -ret.M12; //TODO: transpose?
             return ret;
         }
 
         public static unsafe Matrix Lerp(Matrix val1, Matrix val2, float amount)
         {
-            Matrix res = new Matrix();
+            var res = new Matrix();
             for (int i = 0; i < 16; i++)
             {
                 res.items[i] = val1.items[i] + (val2.items[i] - val1.items[i]) * amount;
@@ -533,106 +511,106 @@ namespace engenious
         public static Matrix Invert(Matrix m)
         {
             float det;
-            Matrix inv = new Matrix();
+            var inv = new Matrix();
             inv[0] = m[5] * m[10] * m[15] -
-            m[5] * m[11] * m[14] -
-            m[9] * m[6] * m[15] +
-            m[9] * m[7] * m[14] +
-            m[13] * m[6] * m[11] -
-            m[13] * m[7] * m[10];
+                     m[5] * m[11] * m[14] -
+                     m[9] * m[6] * m[15] +
+                     m[9] * m[7] * m[14] +
+                     m[13] * m[6] * m[11] -
+                     m[13] * m[7] * m[10];
             inv[4] = -m[4] * m[10] * m[15] +
-            m[4] * m[11] * m[14] +
-            m[8] * m[6] * m[15] -
-            m[8] * m[7] * m[14] -
-            m[12] * m[6] * m[11] +
-            m[12] * m[7] * m[10];
+                     m[4] * m[11] * m[14] +
+                     m[8] * m[6] * m[15] -
+                     m[8] * m[7] * m[14] -
+                     m[12] * m[6] * m[11] +
+                     m[12] * m[7] * m[10];
             inv[8] = m[4] * m[9] * m[15] -
-            m[4] * m[11] * m[13] -
-            m[8] * m[5] * m[15] +
-            m[8] * m[7] * m[13] +
-            m[12] * m[5] * m[11] -
-            m[12] * m[7] * m[9];
+                     m[4] * m[11] * m[13] -
+                     m[8] * m[5] * m[15] +
+                     m[8] * m[7] * m[13] +
+                     m[12] * m[5] * m[11] -
+                     m[12] * m[7] * m[9];
             inv[12] = -m[4] * m[9] * m[14] +
-            m[4] * m[10] * m[13] +
-            m[8] * m[5] * m[14] -
-            m[8] * m[6] * m[13] -
-            m[12] * m[5] * m[10] +
-            m[12] * m[6] * m[9];
+                      m[4] * m[10] * m[13] +
+                      m[8] * m[5] * m[14] -
+                      m[8] * m[6] * m[13] -
+                      m[12] * m[5] * m[10] +
+                      m[12] * m[6] * m[9];
             inv[1] = -m[1] * m[10] * m[15] +
-            m[1] * m[11] * m[14] +
-            m[9] * m[2] * m[15] -
-            m[9] * m[3] * m[14] -
-            m[13] * m[2] * m[11] +
-            m[13] * m[3] * m[10];
+                     m[1] * m[11] * m[14] +
+                     m[9] * m[2] * m[15] -
+                     m[9] * m[3] * m[14] -
+                     m[13] * m[2] * m[11] +
+                     m[13] * m[3] * m[10];
             inv[5] = m[0] * m[10] * m[15] -
-            m[0] * m[11] * m[14] -
-            m[8] * m[2] * m[15] +
-            m[8] * m[3] * m[14] +
-            m[12] * m[2] * m[11] -
-            m[12] * m[3] * m[10];
+                     m[0] * m[11] * m[14] -
+                     m[8] * m[2] * m[15] +
+                     m[8] * m[3] * m[14] +
+                     m[12] * m[2] * m[11] -
+                     m[12] * m[3] * m[10];
             inv[9] = -m[0] * m[9] * m[15] +
-            m[0] * m[11] * m[13] +
-            m[8] * m[1] * m[15] -
-            m[8] * m[3] * m[13] -
-            m[12] * m[1] * m[11] +
-            m[12] * m[3] * m[9];
+                     m[0] * m[11] * m[13] +
+                     m[8] * m[1] * m[15] -
+                     m[8] * m[3] * m[13] -
+                     m[12] * m[1] * m[11] +
+                     m[12] * m[3] * m[9];
             inv[13] = m[0] * m[9] * m[14] -
-            m[0] * m[10] * m[13] -
-            m[8] * m[1] * m[14] +
-            m[8] * m[2] * m[13] +
-            m[12] * m[1] * m[10] -
-            m[12] * m[2] * m[9];
+                      m[0] * m[10] * m[13] -
+                      m[8] * m[1] * m[14] +
+                      m[8] * m[2] * m[13] +
+                      m[12] * m[1] * m[10] -
+                      m[12] * m[2] * m[9];
             inv[2] = m[1] * m[6] * m[15] -
-            m[1] * m[7] * m[14] -
-            m[5] * m[2] * m[15] +
-            m[5] * m[3] * m[14] +
-            m[13] * m[2] * m[7] -
-            m[13] * m[3] * m[6];
+                     m[1] * m[7] * m[14] -
+                     m[5] * m[2] * m[15] +
+                     m[5] * m[3] * m[14] +
+                     m[13] * m[2] * m[7] -
+                     m[13] * m[3] * m[6];
             inv[6] = -m[0] * m[6] * m[15] +
-            m[0] * m[7] * m[14] +
-            m[4] * m[2] * m[15] -
-            m[4] * m[3] * m[14] -
-            m[12] * m[2] * m[7] +
-            m[12] * m[3] * m[6];
+                     m[0] * m[7] * m[14] +
+                     m[4] * m[2] * m[15] -
+                     m[4] * m[3] * m[14] -
+                     m[12] * m[2] * m[7] +
+                     m[12] * m[3] * m[6];
             inv[10] = m[0] * m[5] * m[15] -
-            m[0] * m[7] * m[13] -
-            m[4] * m[1] * m[15] +
-            m[4] * m[3] * m[13] +
-            m[12] * m[1] * m[7] -
-            m[12] * m[3] * m[5];
+                      m[0] * m[7] * m[13] -
+                      m[4] * m[1] * m[15] +
+                      m[4] * m[3] * m[13] +
+                      m[12] * m[1] * m[7] -
+                      m[12] * m[3] * m[5];
             inv[14] = -m[0] * m[5] * m[14] +
-            m[0] * m[6] * m[13] +
-            m[4] * m[1] * m[14] -
-            m[4] * m[2] * m[13] -
-            m[12] * m[1] * m[6] +
-            m[12] * m[2] * m[5];
+                      m[0] * m[6] * m[13] +
+                      m[4] * m[1] * m[14] -
+                      m[4] * m[2] * m[13] -
+                      m[12] * m[1] * m[6] +
+                      m[12] * m[2] * m[5];
             inv[3] = -m[1] * m[6] * m[11] +
-            m[1] * m[7] * m[10] +
-            m[5] * m[2] * m[11] -
-            m[5] * m[3] * m[10] -
-            m[9] * m[2] * m[7] +
-            m[9] * m[3] * m[6];
+                     m[1] * m[7] * m[10] +
+                     m[5] * m[2] * m[11] -
+                     m[5] * m[3] * m[10] -
+                     m[9] * m[2] * m[7] +
+                     m[9] * m[3] * m[6];
             inv[7] = m[0] * m[6] * m[11] -
-            m[0] * m[7] * m[10] -
-            m[4] * m[2] * m[11] +
-            m[4] * m[3] * m[10] +
-            m[8] * m[2] * m[7] -
-            m[8] * m[3] * m[6];
+                     m[0] * m[7] * m[10] -
+                     m[4] * m[2] * m[11] +
+                     m[4] * m[3] * m[10] +
+                     m[8] * m[2] * m[7] -
+                     m[8] * m[3] * m[6];
             inv[11] = -m[0] * m[5] * m[11] +
-            m[0] * m[7] * m[9] +
-            m[4] * m[1] * m[11] -
-            m[4] * m[3] * m[9] -
-            m[8] * m[1] * m[7] +
-            m[8] * m[3] * m[5];
+                      m[0] * m[7] * m[9] +
+                      m[4] * m[1] * m[11] -
+                      m[4] * m[3] * m[9] -
+                      m[8] * m[1] * m[7] +
+                      m[8] * m[3] * m[5];
             inv[15] = m[0] * m[5] * m[10] -
-            m[0] * m[6] * m[9] -
-            m[4] * m[1] * m[10] +
-            m[4] * m[2] * m[9] +
-            m[8] * m[1] * m[6] -
-            m[8] * m[2] * m[5];
+                      m[0] * m[6] * m[9] -
+                      m[4] * m[1] * m[10] +
+                      m[4] * m[2] * m[9] +
+                      m[8] * m[1] * m[6] -
+                      m[8] * m[2] * m[5];
             det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
             if (det == 0)
-                throw new ArgumentException("Not invertible",nameof(m));
+                throw new ArgumentException("Not invertible", nameof(m));
 
             det = 1.0f / det;
 

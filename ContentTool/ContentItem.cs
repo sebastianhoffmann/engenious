@@ -1,26 +1,24 @@
 ﻿using System;
 using System.ComponentModel;
-using engenious.Pipeline;
-using System.Collections.Generic;
 using System.Xml;
 
 namespace ContentTool
 {
     [System.Xml.Serialization.XmlInclude(typeof(ContentFolder))]
     [System.Xml.Serialization.XmlInclude(typeof(ContentFile))]
-    public abstract class ContentItem : System.ComponentModel.INotifyPropertyChanged,System.Collections.Specialized.INotifyCollectionChanged,ICustomTypeDescriptor
+    public abstract class ContentItem : INotifyPropertyChanged, System.Collections.Specialized.INotifyCollectionChanged,
+        ICustomTypeDescriptor
     {
-
         #region ICustomTypeDescriptor implementation
 
         public AttributeCollection GetAttributes()
         {
-            return TypeDescriptor.GetAttributes(this,true);
+            return TypeDescriptor.GetAttributes(this, true);
         }
 
         public string GetClassName()
         {
-            return TypeDescriptor.GetClassName(this,true);
+            return TypeDescriptor.GetClassName(this, true);
         }
 
         public string GetComponentName()
@@ -60,13 +58,14 @@ namespace ContentTool
 
         public PropertyDescriptorCollection GetProperties()
         {
-            return GetProperties(null);//return TypeDescriptor.GetProperties(this, true);
+            return GetProperties(null); //return TypeDescriptor.GetProperties(this, true);
         }
 
         public virtual PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
-            return TypeDescriptor.GetProperties(this,attributes,true);
+            return TypeDescriptor.GetProperties(this, attributes, true);
         }
+
         public object GetPropertyOwner(PropertyDescriptor pd)
         {
             return this;
@@ -74,44 +73,43 @@ namespace ContentTool
 
         #endregion
 
-
-
-        public ContentItem(ContentFolder parent = null)
+        protected ContentItem(ContentFolder parent = null)
         {
-            this.Parent = parent;
+            Parent = parent;
         }
 
-        private string name;
+        private string _name;
+
         [DisplayName("(Name)")]
         public virtual string Name
         {
-            get { return name; }
+            get { return _name; }
             set
             {
-                if (name != value)
+                if (_name != value)
                 {
-                    name = value;
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs("Name"));
+                    _name = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
                 }
             }
         }
 
         [System.Xml.Serialization.XmlIgnore]
-        [System.ComponentModel.Browsable(false)]
-        public virtual ContentFolder Parent{ get; internal set; }
+        [Browsable(false)]
+        public virtual ContentFolder Parent { get; internal set; }
 
-        public string getPath()
+        public string GetPath()
         {
-            if (this is ContentProject || this.Parent == null)
+            if (this is ContentProject || Parent == null)
                 return "";
-            if (this.Parent is ContentProject)
-                return this.Name;
-            return System.IO.Path.Combine(this.Parent.getPath(), this.Name);
+            if (Parent is ContentProject)
+                return Name;
+            return System.IO.Path.Combine(Parent.GetPath(), Name);
         }
 
         #region INotifyPropertyChanged implementation
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #endregion
 
@@ -121,12 +119,13 @@ namespace ContentTool
 
         #endregion
 
-        protected void InvokePropertyChange(object sender, System.ComponentModel.PropertyChangedEventArgs args)
+        protected void InvokePropertyChange(object sender, PropertyChangedEventArgs args)
         {
             PropertyChanged?.Invoke(sender, args);
         }
 
-        protected void InvokeCollectionChange(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
+        protected void InvokeCollectionChange(object sender,
+            System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
         {
             CollectionChanged?.Invoke(sender, args);
         }
@@ -135,4 +134,3 @@ namespace ContentTool
         public abstract void WriteItems(XmlWriter writer);
     }
 }
-

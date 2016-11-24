@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public enum BlendingFactorSrc
     {
@@ -65,4 +63,3 @@ namespace engenious.Graphics
         FuncReverseSubtract
     }
 }
-

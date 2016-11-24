@@ -5,10 +5,6 @@ namespace engenious.Content.Pipeline
     [ContentImporterAttribute(".fnt", DisplayName = "FontImporter", DefaultProcessor = "FontProcessor")]
     public class FontImporter : ContentImporter<FontContent>
     {
-        public FontImporter()
-        {
-        }
-
         public override FontContent Import(string filename, ContentImporterContext context)
         {
             try
@@ -22,17 +18,18 @@ namespace engenious.Content.Pipeline
                 if (end == -1)
                     throw new Exception("Not a valid font file");
                 string texture = content.Substring(start + toFind.Length, end - (start + toFind.Length));
-                start = content.IndexOf("common ");
+                start = content.IndexOf("common ", StringComparison.Ordinal);
                 if (start == -1)
                     throw new Exception("Not a valid font file");
 
                 content = content.Substring(start);
 
-                return new FontContent(filename, System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filename), texture), content);
+                return new FontContent(filename,
+                    System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filename) ?? "", texture), content);
             }
             catch (Exception ex)
             {
-                context.RaiseBuildMessage(filename,ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
+                context.RaiseBuildMessage(filename, ex.Message, BuildMessageEventArgs.BuildMessageType.Error);
             }
             return null;
         }

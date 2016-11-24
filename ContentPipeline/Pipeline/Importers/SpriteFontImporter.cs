@@ -6,13 +6,10 @@ using System.Xml;
 
 namespace engenious.Pipeline
 {
-    [ContentImporterAttribute(".spritefont", DisplayName = "SpriteFontImporter", DefaultProcessor = "SpriteFontProcessor")]
+    [ContentImporterAttribute(".spritefont", DisplayName = "SpriteFontImporter",
+         DefaultProcessor = "SpriteFontProcessor")]
     public class SpriteFontImporter : ContentImporter<SpriteFontContent>
     {
-        public SpriteFontImporter()
-        {
-        }
-
         #region implemented abstract members of ContentImporter
 
         public override SpriteFontContent Import(string filename, ContentImporterContext context)
@@ -28,7 +25,7 @@ namespace engenious.Pipeline
         public SpriteFontContent(string fileName)
         {
             CharacterRegions = new List<CharacterRegion>();
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.Load(fileName);
             XmlElement rootNode = null;
             foreach (var node in doc.ChildNodes.OfType<XmlElement>())
@@ -41,7 +38,7 @@ namespace engenious.Pipeline
             }
             if (rootNode == null)
                 throw new FormatException("Not a valid Spritefont file");
-            foreach (XmlElement element in rootNode.ChildNodes.OfType<XmlElement>())
+            foreach (var element in rootNode.ChildNodes.OfType<XmlElement>())
             {
                 switch (element.Name)
                 {
@@ -66,15 +63,15 @@ namespace engenious.Pipeline
                         DefaultCharacter = element.InnerText.ToCharArray().FirstOrDefault();
                         break;
                     case "CharacterRegions":
-                        parseCharacterRegion(element);
+                        ParseCharacterRegion(element);
                         break;
                 }
             }
         }
 
-        private void parseCharacterRegion(XmlElement rootNode)
+        private void ParseCharacterRegion(XmlElement rootNode)
         {
-            foreach (XmlElement region in rootNode.ChildNodes.OfType<XmlElement>())
+            foreach (var region in rootNode.ChildNodes.OfType<XmlElement>())
             {
                 if (region.Name == "CharacterRegion")
                 {
@@ -93,18 +90,19 @@ namespace engenious.Pipeline
                     }
                     if (start != null && end != null)
                     {
-                        CharacterRegions.Add(new CharacterRegion(start, end,DefaultCharacter.HasValue? DefaultCharacter.Value:'*'));//TODO: default default character
+                        CharacterRegions.Add(new CharacterRegion(start, end,
+                                DefaultCharacter.HasValue ? DefaultCharacter.Value : '*'));
+                            //TODO: default default character
                     }
                 }
             }
         }
 
 
-
         private System.Drawing.FontStyle parseStyle(string styles)
         {
-            System.Drawing.FontStyle fontStyle = System.Drawing.FontStyle.Regular;
-            foreach(var style in styles.Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries))
+            var fontStyle = System.Drawing.FontStyle.Regular;
+            foreach (var style in styles.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries))
             {
                 switch (style)
                 {
@@ -126,71 +124,65 @@ namespace engenious.Pipeline
                 }
             }
             return fontStyle;
-                
         }
 
 
+        public string FontName { get; private set; }
 
-        public string FontName{ get; private set; }
+        public int Size { get; private set; }
 
-        public int Size{ get; private set; }
+        public int Spacing { get; private set; }
 
-        public int Spacing{ get; private set; }
+        public bool UseKerning { get; private set; }
 
-        public bool UseKerning{ get; private set; }
+        public System.Drawing.FontStyle Style { get; private set; }
 
-        public System.Drawing.FontStyle Style{ get; private set; }
+        public char? DefaultCharacter { get; private set; }
 
-        public char? DefaultCharacter{ get; private set; }
-
-        public List<CharacterRegion> CharacterRegions{ get; private set; }
-
-        
+        public List<CharacterRegion> CharacterRegions { get; private set; }
     }
 
     public class CharacterRegion
     {
-        private static int parseAddress(string characterAddress)
+        private static int ParseAddress(string characterAddress)
         {
-            if (characterAddress.StartsWith("0x"))
-                return Convert.ToInt32(characterAddress.Substring(2),16);
-            return int.Parse(characterAddress);
+            return characterAddress.StartsWith("0x")
+                ? Convert.ToInt32(characterAddress.Substring(2), 16)
+                : int.Parse(characterAddress);
         }
 
-        private char toChar(int characterAddress)
+        private static char ToChar(int characterAddress)
         {
-            char[] value = System.Text.Encoding.Unicode.GetChars(BitConverter.GetBytes(characterAddress));
+            var value = System.Text.Encoding.Unicode.GetChars(BitConverter.GetBytes(characterAddress));
 
             return value[0];
         }
 
-        private char defaultChar;
+        private char _defaultChar;
 
         public CharacterRegion(string start, string end, char defaultChar)
-            : this(parseAddress(start), parseAddress(end), defaultChar)
+            : this(ParseAddress(start), ParseAddress(end), defaultChar)
         {
-            
         }
 
         public CharacterRegion(int start, int end, char defaultChar)
         {
             Start = start;
             End = end;
-            this.defaultChar = defaultChar;
+            _defaultChar = defaultChar;
         }
 
         public IEnumerable<char> GetChararcters()
         {
             for (int i = Start; i <= End; i++)
             {
-                yield return toChar(i);
+                yield return ToChar(i);
             }
             yield break;
         }
 
-        public int Start{ get; private set; }
+        public int Start { get; private set; }
 
-        public int End{ get; private set; }
+        public int End { get; private set; }
     }
 }
-

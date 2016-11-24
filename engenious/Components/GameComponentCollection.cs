@@ -1,112 +1,84 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace engenious
 {
     public sealed class GameComponentCollection : ICollection<GameComponent>
     {
-        private List<IDrawable> drawables;
-        private List<IUpdateable> updateables;
-        private List<GameComponent> components;
+        private readonly List<GameComponent> _components;
 
         public GameComponentCollection()
         {
-            drawables = new List<IDrawable>();
-            updateables = new List<IUpdateable>();
-            components = new List<GameComponent>();
+            Drawables = new List<IDrawable>();
+            Updatables = new List<IUpdateable>();
+            _components = new List<GameComponent>();
         }
 
-        internal List<IUpdateable> Updatables
-        {
-            get
-            {
-                return updateables;
-            }
-        }
+        internal List<IUpdateable> Updatables { get; }
 
-        internal List<IDrawable> Drawables
-        {
-            get
-            {
-                return drawables;
-            }
-        }
+        internal List<IDrawable> Drawables { get; }
 
 
         internal void Sort()
         {
-            updateables.Sort((x, y) =>
-                {
-                    if (x.Enabled && y.Enabled)
-                        return x.UpdateOrder.CompareTo(y.UpdateOrder);
-                    return -x.Enabled.CompareTo(y.Enabled);
-                });
-            drawables.Sort((x, y) =>
-                {
-                    if (x.Visible && y.Visible)
-                        return x.DrawOrder.CompareTo(y.DrawOrder);
-                    return -x.Visible.CompareTo(y.Visible);
-                });
+            Updatables.Sort((x, y) =>
+            {
+                if (x.Enabled && y.Enabled)
+                    return x.UpdateOrder.CompareTo(y.UpdateOrder);
+                return -x.Enabled.CompareTo(y.Enabled);
+            });
+            Drawables.Sort((x, y) =>
+            {
+                if (x.Visible && y.Visible)
+                    return x.DrawOrder.CompareTo(y.DrawOrder);
+                return -x.Visible.CompareTo(y.Visible);
+            });
         }
 
         #region ICollection implementation
 
         public void Add(GameComponent item)
         {
-            IDrawable drawable = item as IDrawable;
+            var drawable = item as IDrawable;
             if (drawable != null)
-                drawables.Add(drawable);
-            IUpdateable updateable = item as IUpdateable;
+                Drawables.Add(drawable);
+            var updateable = item as IUpdateable;
             if (updateable != null)
-                updateables.Add(updateable);
-            components.Add(item);
+                Updatables.Add(updateable);
+            _components.Add(item);
         }
 
         public void Clear()
         {
-            drawables.Clear();
-            updateables.Clear();
-            components.Clear();
+            Drawables.Clear();
+            Updatables.Clear();
+            _components.Clear();
         }
 
         public bool Contains(GameComponent item)
         {
-            return components.Contains(item);
+            return _components.Contains(item);
         }
 
         public void CopyTo(GameComponent[] array, int arrayIndex)
         {
-            components.CopyTo(array, arrayIndex);
+            _components.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(GameComponent item)
         {
-
-            IDrawable drawable = item as IDrawable;
+            var drawable = item as IDrawable;
             if (drawable != null)
-                drawables.Remove(drawable);
-            IUpdateable updateable = item as IUpdateable;
+                Drawables.Remove(drawable);
+            var updateable = item as IUpdateable;
             if (updateable != null)
-                updateables.Remove(updateable);
-            
-            return components.Remove(item);
+                Updatables.Remove(updateable);
+
+            return _components.Remove(item);
         }
 
-        public int Count
-        {
-            get
-            {
-                return components.Count;
-            }
-        }
+        public int Count => _components.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         #endregion
 
@@ -114,7 +86,7 @@ namespace engenious
 
         public IEnumerator<GameComponent> GetEnumerator()
         {
-            return components.GetEnumerator();
+            return _components.GetEnumerator();
         }
 
         #endregion
@@ -123,10 +95,9 @@ namespace engenious
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return components.GetEnumerator();
+            return _components.GetEnumerator();
         }
 
         #endregion
     }
 }
-

@@ -1,45 +1,31 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
-	public class Effect:GraphicsResource,IEffect
-	{
-		public Effect (GraphicsDevice graphicsDevice)
-			: base (graphicsDevice)
-		{
-			Techniques = new EffectTechniqueCollection ();
+    public class Effect : GraphicsResource, IEffect
+    {
+        public Effect(GraphicsDevice graphicsDevice)
+            : base(graphicsDevice)
+        {
+            Techniques = new EffectTechniqueCollection();
+        }
 
-		}
+        internal void Initialize()
+        {
+            Parameters = new EffectParameterCollection(Techniques);
+        }
 
-		internal void Initialize ()
-		{
-			Parameters = new EffectParameterCollection (Techniques);
-		}
+        public EffectParameterCollection Parameters { get; private set; }
 
-		public EffectParameterCollection Parameters {
-			get;
-			private set;
-		}
+        public EffectTechniqueCollection Techniques { get; private set; }
 
-		public EffectTechniqueCollection Techniques {
-			get;
-			private set;
-		}
-
-		public EffectTechnique CurrentTechnique {
-			get;
-			set;
-		}
+        public EffectTechnique CurrentTechnique { get; set; }
 
 
-			
-
-		protected internal virtual void OnApply ()
-		{
-			foreach (EffectPass pass in CurrentTechnique.Passes) {
-				pass.Apply ();
-			}
-		}
-	}
+        protected internal virtual void OnApply()
+        {
+            foreach (var pass in CurrentTechnique.Passes)
+            {
+                pass.Apply();
+            }
+        }
+    }
 }
-

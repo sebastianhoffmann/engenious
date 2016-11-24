@@ -1,18 +1,17 @@
-﻿using System;
-using engenious.Graphics;
+﻿using engenious.Graphics;
 
 namespace engenious
 {
     public abstract class DrawableGameComponent : GameComponent, IDrawable
     {
-        public DrawableGameComponent(Game game)
+        protected DrawableGameComponent(Game game)
             : base(game)
         {
-            this.GraphicsDevice = game.GraphicsDevice;
+            GraphicsDevice = game.GraphicsDevice;
             Visible = true;
         }
 
-        public GraphicsDevice GraphicsDevice{ get; private set; }
+        public GraphicsDevice GraphicsDevice { get; private set; }
 
         #region IDrawable implementation
 
@@ -20,30 +19,18 @@ namespace engenious
         {
         }
 
-        public bool Visible
-        {
-            get;
-            set;
-        }
+        public bool Visible { get; set; }
 
-        public int DrawOrder
-        {
-            get;
-            set;
-        }
-
+        public int DrawOrder { get; set; }
 
         #endregion
 
         protected override void LoadContent()
         {
-           
         }
 
         protected override void UnloadContent()
         {
-
         }
     }
 }
-

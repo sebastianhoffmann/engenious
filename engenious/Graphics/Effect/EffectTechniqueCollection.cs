@@ -1,47 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 
 namespace engenious.Graphics
 {
-	public sealed class EffectTechniqueCollection :IEnumerable<EffectTechnique>
-	{
-		private Dictionary<string,EffectTechnique> techniques;
-		private List<EffectTechnique> techniqueList;
+    public sealed class EffectTechniqueCollection : IEnumerable<EffectTechnique>
+    {
+        private readonly Dictionary<string, EffectTechnique> _techniques;
+        private readonly List<EffectTechnique> _techniqueList;
 
-		public EffectTechniqueCollection ()
-		{
-			techniques = new Dictionary<string, EffectTechnique> ();
-			techniqueList = new List<EffectTechnique> ();
-		}
+        public EffectTechniqueCollection()
+        {
+            _techniques = new Dictionary<string, EffectTechnique>();
+            _techniqueList = new List<EffectTechnique>();
+        }
 
-		internal void Add (EffectTechnique technique)
-		{
-			techniques.Add (technique.Name, technique);
-			techniqueList.Add (technique);
-		}
+        internal void Add(EffectTechnique technique)
+        {
+            _techniques.Add(technique.Name, technique);
+            _techniqueList.Add(technique);
+        }
 
-		public EffectTechnique this [int index] { 
-			get {
-				return techniqueList [index];
-			} 
-		}
+        public EffectTechnique this[int index] => _techniqueList[index];
 
-		public EffectTechnique this [string name] { 
-			get {
-				return techniques [name];
-			} 
-		}
+        public EffectTechnique this[string name] => _techniques[name];
 
-		IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-		{
-			return techniqueList.GetEnumerator ();	
-		}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _techniqueList.GetEnumerator();
+        }
 
-		public IEnumerator<EffectTechnique> GetEnumerator ()
-		{
-			return techniqueList.GetEnumerator ();	
-		}
-	}
+        public IEnumerator<EffectTechnique> GetEnumerator()
+        {
+            return _techniqueList.GetEnumerator();
+        }
+    }
 }
-

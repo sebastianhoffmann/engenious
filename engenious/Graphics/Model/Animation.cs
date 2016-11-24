@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace engenious.Graphics
 {
     public class Animation
     {
-        public float Time{ get;internal set; }
+        public float Time { get; internal set; }
 
-        public float MaxTime{ get; set; }
+        public float MaxTime { get; set; }
 
-        public List<AnimationNode> Channels{ get; set; }
+        public List<AnimationNode> Channels { get; set; }
 
         public void Update(float elapsed)
         {
@@ -20,4 +19,3 @@ namespace engenious.Graphics
         }
     }
 }
-

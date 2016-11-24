@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public interface ITextureEffect
     {
-        Texture Texture{set;}
+        Texture Texture { set; }
     }
 }
-

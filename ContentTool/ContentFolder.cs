@@ -10,45 +10,47 @@ namespace ContentTool
     {
         public ContentFolder()
         {
-            this.Contents = new ObservableList<ContentItem>();
-            this.Contents.CollectionChanged += Contents_CollectionChanged;
-            this.Contents.PropertyChanged += Contents_PropertyChanged;
+            Contents = new ObservableList<ContentItem>();
+            Contents.CollectionChanged += Contents_CollectionChanged;
+            Contents.PropertyChanged += Contents_PropertyChanged;
         }
 
         public ContentFolder(string name, ContentFolder parent = null)
             : base(parent)
         {
-            this.Name = name;
-            this.Contents = new ObservableList<ContentItem>();
-            this.Contents.CollectionChanged += Contents_CollectionChanged;
-            this.Contents.PropertyChanged += Contents_PropertyChanged;
+            Name = name;
+            Contents = new ObservableList<ContentItem>();
+            Contents.CollectionChanged += Contents_CollectionChanged;
+            Contents.PropertyChanged += Contents_PropertyChanged;
         }
 
-        void Contents_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Contents_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             InvokePropertyChange(sender, e);
         }
 
-        void Contents_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Contents_CollectionChanged(object sender,
+            System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             InvokeCollectionChange(sender, e);
         }
 
-        public ContentItem getElement(string path)
+        public ContentItem GetElement(string path)
         {
-            string trailingPath=null;
-            int ind = path.IndexOf("/");
+            string trailingPath = null;
+            int ind = path.IndexOf("/", StringComparison.Ordinal);
             if (ind != -1)
             {
-                trailingPath = path.Substring(ind+1);
-                path = path.Substring(0,ind);
+                trailingPath = path.Substring(ind + 1);
+                path = path.Substring(0, ind);
             }
-            foreach(var c in Contents)
+            foreach (var c in Contents)
             {
                 if (c.Name == path)
                 {
-                    if (c is ContentFolder && trailingPath != null)
-                        return ((ContentFolder)c).getElement(trailingPath);
+                    var folder = c as ContentFolder;
+                    if (folder != null && trailingPath != null)
+                        return folder.GetElement(trailingPath);
                     else
                         return c;
                 }
@@ -57,13 +59,12 @@ namespace ContentTool
         }
 
         [System.ComponentModel.Browsable(false)]
-        public ObservableList<ContentItem> Contents{ get; set; }
+        public ObservableList<ContentItem> Contents { get; set; }
 
         public override string ToString()
         {
             return Name;
         }
-
 
         #region implemented abstract members of ContentItem
 
@@ -75,21 +76,21 @@ namespace ContentTool
                     Name = node.ChildNodes.OfType<XmlText>().FirstOrDefault()?.InnerText;
                     break;
                 case "Contents":
-                    foreach(var child in node.ChildNodes.OfType<XmlElement>())
+                    foreach (var child in node.ChildNodes.OfType<XmlElement>())
                     {
                         ContentItem item;
-                        switch(child.Name)
+                        switch (child.Name)
                         {
                             case "ContentFolder":
-                                item = new ContentFolder("",this);
+                                item = new ContentFolder("", this);
                                 break;
                             case "ContentFile":
-                                item = new ContentFile("",this);
+                                item = new ContentFile("", this);
                                 break;
                             default:
                                 continue;
                         }
-                        foreach(var inner in child.ChildNodes.OfType<XmlElement>())
+                        foreach (var inner in child.ChildNodes.OfType<XmlElement>())
                             item.ReadItem(inner);
                         Contents.Add(item);
                     }
@@ -97,7 +98,7 @@ namespace ContentTool
             }
         }
 
-        public override void WriteItems(System.Xml.XmlWriter writer)
+        public override void WriteItems(XmlWriter writer)
         {
             writer.WriteElementString("Name", Name);
 
@@ -116,4 +117,3 @@ namespace ContentTool
         #endregion
     }
 }
-

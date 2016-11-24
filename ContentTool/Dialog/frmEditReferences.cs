@@ -1,47 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ContentTool.Dialog
 {
-    public partial class frmEditReferences : Form
+    public partial class FrmEditReferences : Form
     {
-        public frmEditReferences()
+        public FrmEditReferences()
         {
             InitializeComponent();
         }
 
         private void frmEditReferences_Load(object sender, EventArgs e)
         {
-
         }
 
         public string RootDir { get; internal set; }
-        private ObservableCollection<string> references = new ObservableCollection<string>();
-        private List<string> original;
+        private ObservableCollection<string> _references = new ObservableCollection<string>();
+        private List<string> _original;
+
         public List<string> References
         {
-            get
-            {
-                return references.ToList();
-            }
+            get { return _references.ToList(); }
             internal set
             {
-                original = value;
-                references = new ObservableCollection<string>(value);
+                _original = value;
+                _references = new ObservableCollection<string>(value);
                 btnOk.Enabled = Changed;
-                references.CollectionChanged += References_CollectionChanged;
-                lstReferences.DataSource = references;
+                _references.CollectionChanged += References_CollectionChanged;
+                lstReferences.DataSource = _references;
             }
         }
 
-        private void References_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void References_CollectionChanged(object sender,
+            System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             btnOk.Enabled = Changed;
         }
@@ -50,45 +44,49 @@ namespace ContentTool.Dialog
         {
             get
             {
-                if (original.Count != references.Count)
+                if (_original.Count != _references.Count)
                     return true;
-                for (int i = 0; i < original.Count; i++)
-                    if (original[i] != references[i])
+                for (int i = 0; i < _original.Count; i++)
+                    if (_original[i] != _references[i])
                         return true;
                 return false;
             }
         }
-        private string[] currentFiles;
-        private string[] relativePaths;
+
+        private string[] _currentFiles;
+        private string[] _relativePaths;
+
         private string[] CurrentFiles
         {
-            get
-            {
-                return cbRelative.Checked ? relativePaths : currentFiles;
-            }
+            get { return cbRelative.Checked ? _relativePaths : _currentFiles; }
             set
             {
-                Uri root = new Uri(RootDir + System.IO.Path.DirectorySeparatorChar, UriKind.Absolute);
-                currentFiles = value;
+                var root = new Uri(RootDir + System.IO.Path.DirectorySeparatorChar, UriKind.Absolute);
+                _currentFiles = value;
                 int i = 0;
-                relativePaths = new string[value.Length];
+                _relativePaths = new string[value.Length];
                 foreach (var file in value)
                 {
                     Uri uri = new Uri(file, UriKind.Absolute);
-                    relativePaths[i] = root.MakeRelativeUri(uri).ToString();
+                    _relativePaths[i] = root.MakeRelativeUri(uri).ToString();
                     i++;
                 }
             }
         }
+
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = ".Net Assembly(.dll)|*.dll";
-            ofd.Multiselect = true;
-            if (ofd.ShowDialog() == DialogResult.OK)
+            using (var ofd = new OpenFileDialog
             {
-                CurrentFiles = ofd.FileNames;
-                txtPath.Text = string.Join(";", CurrentFiles);
+                Filter = ".Net Assembly(.dll)|*.dll",
+                Multiselect = true
+            })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    CurrentFiles = ofd.FileNames;
+                    txtPath.Text = string.Join(";", CurrentFiles);
+                }
             }
         }
 
@@ -110,23 +108,23 @@ namespace ContentTool.Dialog
         {
             foreach (var path in CurrentFiles)
             {
-                references.Add(path);
+                _references.Add(path);
             }
             txtPath.Text = "";
             lstReferences.DataSource = null;
-            lstReferences.DataSource = references;
-            CurrentFiles = new string[] { };
+            lstReferences.DataSource = _references;
+            CurrentFiles = new string[] {};
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
             foreach (var obj in lstReferences.SelectedItems)
                 if (obj != null)
-                    references.Remove(obj.ToString());
+                    _references.Remove(obj.ToString());
             lstReferences.SelectedItem = null;
 
             lstReferences.DataSource = null;
-            lstReferences.DataSource = references;
+            lstReferences.DataSource = _references;
             btnRemove.Enabled = lstReferences.SelectedItems.Count > 0;
         }
 

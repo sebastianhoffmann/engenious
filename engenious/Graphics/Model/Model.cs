@@ -1,6 +1,4 @@
-﻿using System;
-using engenious.Graphics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace engenious.Graphics
 {
@@ -13,17 +11,17 @@ namespace engenious.Graphics
             Transform = Matrix.Identity;
         }
 
-        public Mesh[] Meshes{ get; set; }
+        public Mesh[] Meshes { get; set; }
 
-        internal Node RootNode{ get; set; }
+        internal Node RootNode { get; set; }
 
-        internal List<Node> Nodes{ get; set; }
+        internal List<Node> Nodes { get; set; }
 
-        public List<Animation> Animations{ get; set; }
+        public List<Animation> Animations { get; set; }
 
-        public Animation CurrentAnimation{get;set;}
+        public Animation CurrentAnimation { get; set; }
 
-        public Matrix Transform{get;set;}
+        public Matrix Transform { get; set; }
 
         public void UpdateAnimation(float elapsed)
         {
@@ -34,11 +32,10 @@ namespace engenious.Graphics
 
         internal void UpdateAnimation(Node parent, Node node)
         {
-
             if (parent == null)
                 node.GlobalTransform = node.LocalTransform;
             else
-                node.GlobalTransform = parent.GlobalTransform*node.LocalTransform;
+                node.GlobalTransform = parent.GlobalTransform * node.LocalTransform;
 
             foreach (var child in node.Children)
             {
@@ -68,8 +65,8 @@ namespace engenious.Graphics
             foreach (var pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                
-                effect.World = Transform*node.GlobalTransform*node.Transformation;
+
+                effect.World = Transform * node.GlobalTransform * node.Transformation;
 
                 foreach (var mesh in node.Meshes)
                 {
@@ -82,4 +79,3 @@ namespace engenious.Graphics
         }
     }
 }
-

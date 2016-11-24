@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace engenious.Graphics
 {
@@ -7,17 +6,15 @@ namespace engenious.Graphics
     {
         public ModelContent()
         {
-            Animations =new List<AnimationContent>();
+            Animations = new List<AnimationContent>();
         }
 
-        public MeshContent[] Meshes{ get; set; }
+        public MeshContent[] Meshes { get; set; }
 
-        internal NodeContent RootNode{ get; set; }
+        internal NodeContent RootNode { get; set; }
 
-        internal List<NodeContent> Nodes{ get; set; }
+        internal List<NodeContent> Nodes { get; set; }
 
-        internal List<AnimationContent> Animations{ get; set; }
-
+        internal List<AnimationContent> Animations { get; set; }
     }
 }
-

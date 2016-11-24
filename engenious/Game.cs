@@ -3,12 +3,11 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using engenious.Graphics;
 using engenious.Content;
-using System.Linq;
-using engenious.Input;
 
 namespace engenious
 {
-    public delegate void KeyPressDelegate(object sender,char Key);
+    public delegate void KeyPressDelegate(object sender, char Key);
+
     public abstract class Game : GraphicsResource
     {
         public event KeyPressDelegate KeyPress;
@@ -17,8 +16,8 @@ namespace engenious
         public event EventHandler Exiting;
         public event EventHandler Resized;
 
-        private GameTime gameTime;
-        internal int major, minor;
+        private readonly GameTime _gameTime;
+        internal int Major, Minor;
         internal OpenTK.Graphics.GraphicsContextFlags contextFlags;
         private OpenTK.Graphics.IGraphicsContext Context;
 
@@ -27,27 +26,27 @@ namespace engenious
             OpenTK.Graphics.GraphicsContextFlags flags = OpenTK.Graphics.GraphicsContextFlags.Default;
             int major = 1;
             int minor = 0;
-            OpenTK.Platform.IWindowInfo windowInfo = Window.window.WindowInfo;
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT ||
-                        System.Environment.OSVersion.Platform == PlatformID.Win32S ||
-                        System.Environment.OSVersion.Platform == PlatformID.Win32Windows ||
-                        System.Environment.OSVersion.Platform == PlatformID.WinCE)
+            OpenTK.Platform.IWindowInfo windowInfo = Window.BaseWindow.WindowInfo;
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT ||
+                Environment.OSVersion.Platform == PlatformID.Win32S ||
+                Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                Environment.OSVersion.Platform == PlatformID.WinCE)
             {
-                major=4;
+                major = 4;
                 minor = 4;
             }
-            if (this.Context == null || this.Context.IsDisposed)
+            if (Context == null || Context.IsDisposed)
             {
-
                 OpenTK.Graphics.ColorFormat colorFormat = new OpenTK.Graphics.ColorFormat(8, 8, 8, 8);
-                int depth = 24;//TODO: wth?
+                int depth = 24; //TODO: wth?
                 int stencil = 8;
                 int samples = 4;
 
-                OpenTK.Graphics.GraphicsMode mode = new OpenTK.Graphics.GraphicsMode(colorFormat, depth, stencil, samples);
+                OpenTK.Graphics.GraphicsMode mode = new OpenTK.Graphics.GraphicsMode(colorFormat, depth, stencil,
+                    samples);
                 try
                 {
-                    this.Context = new OpenTK.Graphics.GraphicsContext(mode, windowInfo, major, minor, flags);
+                    Context = new OpenTK.Graphics.GraphicsContext(mode, windowInfo, major, minor, flags);
                     //this.Context = Window.Context;
                 }
                 catch (Exception ex)
@@ -56,20 +55,18 @@ namespace engenious
                     major = 1;
                     minor = 0;
                     flags = OpenTK.Graphics.GraphicsContextFlags.Default;
-                    this.Context = new OpenTK.Graphics.GraphicsContext(mode, windowInfo, major, minor, flags);
+                    Context = new OpenTK.Graphics.GraphicsContext(mode, windowInfo, major, minor, flags);
                 }
             }
 
-            this.Context.MakeCurrent(windowInfo);
-            (this.Context as OpenTK.Graphics.IGraphicsContextInternal).LoadAll();
+            Context.MakeCurrent(windowInfo);
+            (Context as OpenTK.Graphics.IGraphicsContextInternal)?.LoadAll();
             ThreadingHelper.Initialize(windowInfo, major, minor, contextFlags);
-            this.Context.MakeCurrent(windowInfo);
-
+            Context.MakeCurrent(windowInfo);
         }
 
-        public Game()
+        protected Game()
         {
-
             OpenTK.Graphics.GraphicsContext.ShareContexts = true;
             var window = new GameWindow(1280, 720);
 
@@ -83,28 +80,29 @@ namespace engenious
             GL.Viewport(window.ClientRectangle);
             //Window.Location = new System.Drawing.Point();
             Mouse = new MouseDevice(window.Mouse);
-            engenious.Input.Mouse.UpdateWindow(window);
+            Input.Mouse.UpdateWindow(window);
             window.FocusedChanged += Window_FocusedChanged;
-            window.Closing += delegate(object sender, System.ComponentModel.CancelEventArgs e)
-            {
-                Exiting?.Invoke(this, new EventArgs());
-            };
-            
-            gameTime = new GameTime(new TimeSpan(), new TimeSpan());
+            window.Closing +=
+                delegate(object sender, System.ComponentModel.CancelEventArgs e)
+                {
+                    Exiting?.Invoke(this, new EventArgs());
+                };
+
+            _gameTime = new GameTime(new TimeSpan(), new TimeSpan());
 
             window.UpdateFrame += delegate(object sender, FrameEventArgs e)
             {
                 Components.Sort();
 
-                gameTime.Update(e.Time);
+                _gameTime.Update(e.Time);
 
-                Update(gameTime);
+                Update(_gameTime);
             };
             window.RenderFrame += delegate(object sender, FrameEventArgs e)
             {
                 ThreadingHelper.RunUIThread();
                 GraphicsDevice.Clear(Color.CornflowerBlue);
-                Draw(gameTime);
+                Draw(_gameTime);
 
                 GraphicsDevice.Present();
             };
@@ -113,7 +111,7 @@ namespace engenious
                 GraphicsDevice.Viewport = new Viewport(window.ClientRectangle);
                 GL.Viewport(window.ClientRectangle);
 
-                Resized?.Invoke(sender,e);
+                Resized?.Invoke(sender, e);
                 OnResize(this, e);
             };
             window.Load += delegate(object sender, EventArgs e)
@@ -121,21 +119,14 @@ namespace engenious
                 Initialize();
                 LoadContent();
             };
-            window.Closing += delegate(object sender, System.ComponentModel.CancelEventArgs e)
-            {
-                OnExiting(this, new EventArgs());
-            };
-            window.KeyPress += delegate(object sender, KeyPressEventArgs e)
-            {
-                KeyPress?.Invoke(this, e.KeyChar);
-            };
+            window.Closing +=
+                delegate(object sender, System.ComponentModel.CancelEventArgs e) { OnExiting(this, new EventArgs()); };
+            window.KeyPress += delegate(object sender, KeyPressEventArgs e) { KeyPress?.Invoke(this, e.KeyChar); };
 
             //Window.Context.MakeCurrent(Window.WindowInfo);
 
-            Content = new engenious.Content.ContentManager(GraphicsDevice);
+            Content = new ContentManager(GraphicsDevice);
             Components = new GameComponentCollection();
-           
-
         }
 
         void Window_FocusedChanged(object sender, EventArgs e)
@@ -174,47 +165,43 @@ namespace engenious
         {
         }
 
-        public ContentManager Content{ get; private set; }
+        public ContentManager Content { get; private set; }
 
-        public System.Drawing.Icon Icon { get { return Window.Icon; } set { Window.Icon = value; } }
-        
-        public Window Window{ get; private set; }
+        public System.Drawing.Icon Icon
+        {
+            get { return Window.Icon; }
+            set { Window.Icon = value; }
+        }
 
-        public MouseDevice Mouse{ get; private set; }
+        public Window Window { get; private set; }
 
-        public string Title{ get { return Window.Title; } set { Window.Title = value; } }
+        public MouseDevice Mouse { get; private set; }
+
+        public string Title
+        {
+            get { return Window.Title; }
+            set { Window.Title = value; }
+        }
 
         public bool IsMouseVisible
         {
-            get
-            {
-                return Window.CursorVisible;
-            }
-            set
-            {
-                Window.CursorVisible = value;
-            }
+            get { return Window.CursorVisible; }
+            set { Window.CursorVisible = value; }
         }
 
-        public bool IsActive
-        {
-            get
-            {
-                return Window.Focused;
-            }
-        }
+        public bool IsActive => Window.Focused;
 
         public void Run()
         {
-            Window.window.Run();
+            Window.BaseWindow.Run();
         }
 
         public void Run(double updatesPerSec, double framesPerSec)
         {
-            Window.window.Run(updatesPerSec, framesPerSec);
+            Window.BaseWindow.Run(updatesPerSec, framesPerSec);
         }
 
-        public GameComponentCollection Components{ get; private set; }
+        public GameComponentCollection Components { get; private set; }
 
         public virtual void LoadContent()
         {
@@ -234,7 +221,6 @@ namespace engenious
 
         public virtual void Update(GameTime gameTime)
         {
-
             foreach (var component in Components.Updatables)
             {
                 if (!component.Enabled)
@@ -265,4 +251,3 @@ namespace engenious
         #endregion
     }
 }
-

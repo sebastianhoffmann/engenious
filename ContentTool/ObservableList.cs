@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace System.Collections.Generic
 {
-    
-    public class ObservableList<T> :  INotifyCollectionChanged, IList<T>, INotifyPropertyChanged
+    public class ObservableList<T> : INotifyCollectionChanged, IList<T>, INotifyPropertyChanged
     {
         private List<T> list;
 
@@ -23,7 +21,6 @@ namespace System.Collections.Generic
         {
             list = new List<T>(collection);
         }
-
 
 
         private void RemoveChangedEvents(T item)
@@ -88,12 +85,12 @@ namespace System.Collections.Generic
         }
 
 
-
         public void Insert(int index, T item)
         {
             list.Insert(index, item);
             AddChangedEvents(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+            CollectionChanged?.Invoke(this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
         }
 
         public void RemoveAt(int index)
@@ -101,22 +98,21 @@ namespace System.Collections.Generic
             T old = list[index];
             list.RemoveAt(index);
             AddChangedEvents(old);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, old));
+            CollectionChanged?.Invoke(this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, old));
         }
 
-        public T this [int index]
+        public T this[int index]
         {
-            get
-            {
-                return list[index];
-            }
+            get { return list[index]; }
             set
             {
                 T old = list[index];
                 list[index] = value;
                 RemoveChangedEvents(old);
                 AddChangedEvents(value);
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, old));
+                CollectionChanged?.Invoke(this,
+                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, old));
             }
         }
 
@@ -128,14 +124,14 @@ namespace System.Collections.Generic
         {
             list.Add(item);
             AddChangedEvents(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+            CollectionChanged?.Invoke(this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
         }
 
         public void Clear()
         {
             list.Clear();
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-
         }
 
         public bool Contains(T item)
@@ -152,25 +148,14 @@ namespace System.Collections.Generic
         {
             bool removed = list.Remove(item);
             AddChangedEvents(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            CollectionChanged?.Invoke(this,
+                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
             return removed;
         }
 
-        public int Count
-        {
-            get
-            {
-                return list.Count;
-            }
-        }
+        public int Count => list.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         #endregion
 
@@ -192,8 +177,6 @@ namespace System.Collections.Generic
 
         #endregion
 
-
-
         #region INotifyCollectionChanged implementation
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -207,4 +190,3 @@ namespace System.Collections.Generic
         #endregion
     }
 }
-

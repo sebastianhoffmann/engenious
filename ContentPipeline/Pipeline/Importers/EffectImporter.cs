@@ -6,41 +6,39 @@ using engenious.Graphics;
 
 namespace engenious.Content.Pipeline
 {
-
     [ContentImporterAttribute(".glsl", DisplayName = "Effect Importer", DefaultProcessor = "EffectProcessor")]
     public class EffectImporter : ContentImporter<EffectContent>
     {
-        public EffectImporter()
-        {
-        }
-
         #region implemented abstract members of ContentImporter
 
-        private static ShaderType parseShaderType(string type)
+        private static ShaderType ParseShaderType(string type)
         {
-            if (type == "PixelShader" || type == "FragmentShader")
-                return ShaderType.FragmentShader;
-            if (type == "VertexShader")
-                return ShaderType.VertexShader;
+            switch (type)
+            {
+                case "PixelShader":
+                case "FragmentShader":
+                    return ShaderType.FragmentShader;
+                case "VertexShader":
+                    return ShaderType.VertexShader;
+                case "GeometryShader":
+                    return ShaderType.GeometryShader;
+                case "TessControlShader":
+                    return ShaderType.TessControlShader;
+                case "TessEvaluationShader":
+                    return ShaderType.TessEvaluationShader;
+                case "ComputeShader":
+                    return ShaderType.ComputeShader;
+            }
 
-            if (type == "GeometryShader")
-                return ShaderType.GeometryShader;
-            if (type == "TessControlShader")
-                return ShaderType.TessControlShader;
-            if (type == "TessEvaluationShader")
-                return ShaderType.TessEvaluationShader;
-            if (type == "ComputeShader")
-                return ShaderType.ComputeShader;
-
-            return (ShaderType)(-1);
+            return (ShaderType) (-1);
         }
 
-        private static float parseColorPart(string value)
+        private static float ParseColorPart(string value)
         {
             value = value.Trim();
             int tmp;
             if (int.TryParse(value, out tmp))
-                return  tmp / 255.0f;
+                return tmp / 255.0f;
             return float.Parse(value);
         }
 
@@ -49,27 +47,24 @@ namespace engenious.Content.Pipeline
             if (el.HasChildNodes)
             {
                 float a = 1.0f, r = 0, g = 0, b = 0;
-                foreach (XmlElement e in el.ChildNodes.OfType<XmlElement>())
+                foreach (var e in el.ChildNodes.OfType<XmlElement>())
                 {
-                    if (e.Name == "A")
+                    switch (e.Name)
                     {
-                        a = parseColorPart(e.InnerText);                           
-                    }
-                    else if (e.Name == "R")
-                    {
-                        r = parseColorPart(e.InnerText);                           
-                    }
-                    else if (e.Name == "G")
-                    {
-                        g = parseColorPart(e.InnerText);                           
-                    }
-                    else if (e.Name == "B")
-                    {
-                        b = parseColorPart(e.InnerText);                           
-                    }
-                    else
-                    {
-                        throw new Exception("'" + e.Name + "' is not an option for the Color element");
+                        case "A":
+                            a = ParseColorPart(e.InnerText);
+                            break;
+                        case "R":
+                            r = ParseColorPart(e.InnerText);
+                            break;
+                        case "G":
+                            g = ParseColorPart(e.InnerText);
+                            break;
+                        case "B":
+                            b = ParseColorPart(e.InnerText);
+                            break;
+                        default:
+                            throw new Exception("'" + e.Name + "' is not an option for the Color element");
                     }
                 }
 
@@ -79,8 +74,8 @@ namespace engenious.Content.Pipeline
                 throw new Exception("Empty value not allowed for Colors");
             try
             {
-                System.Reflection.FieldInfo fI = typeof(Color).GetType().GetField(el.InnerText.Trim(), System.Reflection.BindingFlags.Static);
-                return (Color)fI.GetValue(null);
+                var fI = typeof(Color).GetType().GetField(el.InnerText.Trim(), System.Reflection.BindingFlags.Static);
+                return (Color) fI.GetValue(null);
             }
             catch
             {
@@ -117,7 +112,8 @@ namespace engenious.Content.Pipeline
                 }
                 else
                 {
-                    throw new Exception("Color must either use A/R/G/B Xml Elements or be a Hexadecimal value of Length 3/4/6/8");
+                    throw new Exception(
+                        "Color must either use A/R/G/B Xml Elements or be a Hexadecimal value of Length 3/4/6/8");
                 }
 
 
@@ -130,39 +126,41 @@ namespace engenious.Content.Pipeline
         {
             if (!element.HasChildNodes || element.Name != "BlendState")
                 return null;
-            BlendState blendState = new BlendState();
-            foreach (XmlElement el in element.ChildNodes.OfType<XmlElement>())
+            var blendState = new BlendState();
+            foreach (var el in element.ChildNodes.OfType<XmlElement>())
             {
-                
-                if (el.Name == "AlphaBlendFunction")
-                    blendState.AlphaBlendFunction = (BlendEquationMode)Enum.Parse(typeof(BlendEquationMode), el.InnerText);
-                else if (el.Name == "AlphaDestinationBlend")
-                    blendState.AlphaDestinationBlend = (BlendingFactorDest)Enum.Parse(typeof(BlendingFactorDest), el.InnerText);
-                else if (el.Name == "AlphaSourceBlend")
-                    blendState.AlphaSourceBlend = (BlendingFactorSrc)Enum.Parse(typeof(BlendingFactorSrc), el.InnerText);
-                else if (el.Name == "BlendFactor")
-                    blendState.BlendFactor = ParseColor(el);
-                else if (el.Name == "ColorBlendFunction")
-                    blendState.ColorBlendFunction = (BlendEquationMode)Enum.Parse(typeof(BlendEquationMode), el.InnerText);
-                else if (el.Name == "ColorDestinationBlend")
-                    blendState.ColorDestinationBlend = (BlendingFactorDest)Enum.Parse(typeof(BlendingFactorDest), el.InnerText);
-                else if (el.Name == "ColorSourceBlend")
-                    blendState.ColorSourceBlend = (BlendingFactorSrc)Enum.Parse(typeof(BlendingFactorSrc), el.InnerText);
-                /*else if (el.Name == "ColorWriteChannels")
-                    blendState.ColorWriteChannels = (ColorWriteChannels)Enum.Parse(typeof(ColorWriteChannels), el.InnerText);
-                else if (el.Name == "ColorWriteChannels1")
-                    blendState.ColorWriteChannels1 = (ColorWriteChannels)Enum.Parse(typeof(ColorWriteChannels), el.InnerText);
-                else if (el.Name == "ColorWriteChannels2")
-                    blendState.ColorWriteChannels2 = (ColorWriteChannels)Enum.Parse(typeof(ColorWriteChannels), el.InnerText);
-                else if (el.Name == "ColorWriteChannels3")
-                    blendState.ColorWriteChannels3 = (ColorWriteChannels)Enum.Parse(typeof(ColorWriteChannels), el.InnerText);
-                else if (el.Name == "IndependentBlendEnable")
-                    blendState.IndependentBlendEnable = bool.Parse(el.InnerText);
-                else if (el.Name == "MultiSampleMask")
-                    blendState.MultiSampleMask = int.Parse(el.InnerText);*/
-                else
-                    throw new Exception("'" + el.Name + "' is not an option of the BlendState");
-
+                switch (el.Name)
+                {
+                    case "AlphaBlendFunction":
+                        blendState.AlphaBlendFunction =
+                            (BlendEquationMode) Enum.Parse(typeof(BlendEquationMode), el.InnerText);
+                        break;
+                    case "AlphaDestinationBlend":
+                        blendState.AlphaDestinationBlend =
+                            (BlendingFactorDest) Enum.Parse(typeof(BlendingFactorDest), el.InnerText);
+                        break;
+                    case "AlphaSourceBlend":
+                        blendState.AlphaSourceBlend =
+                            (BlendingFactorSrc) Enum.Parse(typeof(BlendingFactorSrc), el.InnerText);
+                        break;
+                    case "BlendFactor":
+                        blendState.BlendFactor = ParseColor(el);
+                        break;
+                    case "ColorBlendFunction":
+                        blendState.ColorBlendFunction =
+                            (BlendEquationMode) Enum.Parse(typeof(BlendEquationMode), el.InnerText);
+                        break;
+                    case "ColorDestinationBlend":
+                        blendState.ColorDestinationBlend =
+                            (BlendingFactorDest) Enum.Parse(typeof(BlendingFactorDest), el.InnerText);
+                        break;
+                    case "ColorSourceBlend":
+                        blendState.ColorSourceBlend =
+                            (BlendingFactorSrc) Enum.Parse(typeof(BlendingFactorSrc), el.InnerText);
+                        break;
+                    default:
+                        throw new Exception("'" + el.Name + "' is not an option of the BlendState");
+                }
             }
             return blendState;
         }
@@ -171,8 +169,8 @@ namespace engenious.Content.Pipeline
         {
             if (!element.HasChildNodes || element.Name != "DepthStencilState")
                 return null;
-            DepthStencilState depthStencilState = new DepthStencilState();
-            foreach (XmlElement el in element.ChildNodes.OfType<XmlElement>())
+            var depthStencilState = new DepthStencilState();
+            foreach (var el in element.ChildNodes.OfType<XmlElement>())
             {
                 /*if (el.Name == "CounterClockwiseStencilDepthBufferFail")
                     depthStencilState.CounterClockwiseStencilDepthBufferFail = (StencilOp)Enum.Parse(typeof(StencilOp), el.InnerText);
@@ -185,23 +183,25 @@ namespace engenious.Content.Pipeline
                 if (el.Name == "DepthBufferEnable")
                     depthStencilState.DepthBufferEnable = bool.Parse(el.InnerText);
                 else if (el.Name == "DepthBufferFunction")
-                    depthStencilState.DepthBufferFunction = (DepthFunction)Enum.Parse(typeof(DepthFunction), el.InnerText);
+                    depthStencilState.DepthBufferFunction =
+                        (DepthFunction) Enum.Parse(typeof(DepthFunction), el.InnerText);
                 else if (el.Name == "DepthBufferWriteEnable")
                     depthStencilState.DepthBufferWriteEnable = bool.Parse(el.InnerText);
                 else if (el.Name == "ReferenceStencil")
                     depthStencilState.ReferenceStencil = int.Parse(el.InnerText);
                 else if (el.Name == "DepthBufferFunction")
-                    depthStencilState.StencilDepthBufferFail = (StencilOp)Enum.Parse(typeof(StencilOp), el.InnerText);
+                    depthStencilState.StencilDepthBufferFail = (StencilOp) Enum.Parse(typeof(StencilOp), el.InnerText);
                 else if (el.Name == "ReferenceStencil")
                     depthStencilState.StencilEnable = bool.Parse(el.InnerText);
                 else if (el.Name == "StencilFail")
-                    depthStencilState.StencilFail = (StencilOp)Enum.Parse(typeof(StencilOp), el.InnerText);
+                    depthStencilState.StencilFail = (StencilOp) Enum.Parse(typeof(StencilOp), el.InnerText);
                 else if (el.Name == "StencilFunction")
-                    depthStencilState.StencilFunction = (StencilFunction)Enum.Parse(typeof(StencilFunction), el.InnerText);
+                    depthStencilState.StencilFunction =
+                        (StencilFunction) Enum.Parse(typeof(StencilFunction), el.InnerText);
                 else if (el.Name == "DepthBufferFunction")
                     depthStencilState.StencilMask = int.Parse(el.InnerText);
                 else if (el.Name == "StencilPass")
-                    depthStencilState.StencilPass = (StencilOp)Enum.Parse(typeof(StencilOp), el.InnerText);
+                    depthStencilState.StencilPass = (StencilOp) Enum.Parse(typeof(StencilOp), el.InnerText);
                 /*else if (el.Name == "DepthBufferFunction")
                     depthStencilState.StencilWriteMask = int.Parse(el.InnerText);
                 else if (el.Name == "TwoSidedStencilMode")
@@ -216,26 +216,26 @@ namespace engenious.Content.Pipeline
         {
             if (!element.HasChildNodes || element.Name != "RasterizerState")
                 return null;
-            RasterizerState rasterizerState = new RasterizerState();
-            foreach (XmlElement el in element.ChildNodes.OfType<XmlElement>())
+            var rasterizerState = new RasterizerState();
+            foreach (var el in element.ChildNodes.OfType<XmlElement>())
             {
-                if (el.Name == "CullMode")
-                    rasterizerState.CullMode = (CullMode)Enum.Parse(typeof(CullMode), el.InnerText);
-                else if (el.Name == "FillMode")
-                    rasterizerState.FillMode = (PolygonMode)Enum.Parse(typeof(PolygonMode), el.InnerText);
-                else if (el.Name == "MultiSampleAntiAlias")
-                    rasterizerState.MultiSampleAntiAlias = bool.Parse(el.InnerText);
-                else if (el.Name == "ScissorTestEnable")
-                    rasterizerState.ScissorTestEnable = bool.Parse(el.InnerText);
-                /*else if (el.Name == "SlopeScaleDepthBias")
-                    rasterizerState.SlopeScaleDepthBias = float.Parse(el.InnerText);
-                else if (el.Name == "DepthBias")
-                    rasterizerState.DepthBias = float.Parse(el.InnerText);
-                else if (el.Name == "DepthClipEnable")
-                    rasterizerState.DepthClipEnable = bool.Parse(el.InnerText);*/
-                else
-                    throw new Exception("'" + el.Name + "' is not an option of the RasterizerState");
-                
+                switch (el.Name)
+                {
+                    case "CullMode":
+                        rasterizerState.CullMode = (CullMode) Enum.Parse(typeof(CullMode), el.InnerText);
+                        break;
+                    case "FillMode":
+                        rasterizerState.FillMode = (PolygonMode) Enum.Parse(typeof(PolygonMode), el.InnerText);
+                        break;
+                    case "MultiSampleAntiAlias":
+                        rasterizerState.MultiSampleAntiAlias = bool.Parse(el.InnerText);
+                        break;
+                    case "ScissorTestEnable":
+                        rasterizerState.ScissorTestEnable = bool.Parse(el.InnerText);
+                        break;
+                    default:
+                        throw new Exception("'" + el.Name + "' is not an option of the RasterizerState");
+                }
             }
             return rasterizerState;
         }
@@ -244,67 +244,61 @@ namespace engenious.Content.Pipeline
         {
             try
             {
-                EffectContent content = new EffectContent();
+                var content = new EffectContent();
 
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.Load(filename);
                 XmlElement effectElement;
-                XmlNode current = doc.FirstChild;
+                var current = doc.FirstChild;
                 while (current != null && current.NodeType != XmlNodeType.Element)
                 {
                     current = current.NextSibling;
                 }
-                effectElement = (XmlElement)current;
-                foreach (XmlElement technique in effectElement.ChildNodes.OfType<XmlElement>())
+                effectElement = (XmlElement) current;
+                foreach (var technique in effectElement.ChildNodes.OfType<XmlElement>())
                 {
-                    EffectTechnique info = new EffectTechnique();
+                    var info = new EffectTechnique();
                     info.Name = technique.GetAttribute("name");
-                    foreach (XmlElement pass in technique.ChildNodes.OfType<XmlElement>())
+                    foreach (var pass in technique.ChildNodes.OfType<XmlElement>())
                     {
-                        EffectPass pi = new EffectPass();
+                        var pi = new EffectPass();
                         pi.Name = pass.GetAttribute("name");
-                        foreach (XmlElement sh in pass.ChildNodes.OfType<XmlElement>())
+                        foreach (var sh in pass.ChildNodes.OfType<XmlElement>())
                         {
-                            if (sh.Name == "Shader")
+                            switch (sh.Name)
                             {
-                                ShaderType type = parseShaderType(sh.GetAttribute("type"));
-                                if ((int)type == -1)
-                                    throw new Exception("Unsupported Shader type detected");
-                                string shaderFile = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filename), sh.GetAttribute("filename"));
-                                pi.Shaders.Add(type, shaderFile);
-                                context.Dependencies.Add(shaderFile);
-
-                            }
-                            else if (sh.Name == "BlendState")
-                            {
-                                pi.BlendState = ParseBlendState(sh);
-
-                            }
-                            else if (sh.Name == "DepthStencilState")
-                            {
-                                pi.DepthStencilState = ParseDepthStencilState(sh);
-                            }
-                            else if (sh.Name == "RasterizerState")
-                            {
-                                pi.RasterizerState = ParseRasterizerState(sh);
-                            }
-                            else if (sh.Name == "Attributes")
-                            {
-                                foreach (XmlElement attr in sh.ChildNodes.OfType<XmlElement>())
-                                {
-                                    if (attr.Name == "attribute")
+                                case "Shader":
+                                    ShaderType type = ParseShaderType(sh.GetAttribute("type"));
+                                    if ((int) type == -1)
+                                        throw new Exception("Unsupported Shader type detected");
+                                    string shaderFile = System.IO.Path.Combine(
+                                        System.IO.Path.GetDirectoryName(filename), sh.GetAttribute("filename"));
+                                    pi.Shaders.Add(type, shaderFile);
+                                    context.Dependencies.Add(shaderFile);
+                                    break;
+                                case "BlendState":
+                                    pi.BlendState = ParseBlendState(sh);
+                                    break;
+                                case "DepthStencilState":
+                                    pi.DepthStencilState = ParseDepthStencilState(sh);
+                                    break;
+                                case "RasterizerState":
+                                    pi.RasterizerState = ParseRasterizerState(sh);
+                                    break;
+                                case "Attributes":
+                                    foreach (var attr in sh.ChildNodes.OfType<XmlElement>())
                                     {
-                                        VertexElementUsage usage = (VertexElementUsage)Enum.Parse(typeof(VertexElementUsage), attr.InnerText);
+                                        if (attr.Name != "attribute") continue;
+                                        var usage =
+                                            (VertexElementUsage) Enum.Parse(typeof(VertexElementUsage), attr.InnerText);
                                         string nm = attr.GetAttribute("name");
                                         if (nm.Length < 1)
                                             throw new Exception("Not a valid attribute name'" + nm + "'");
                                         pi.Attributes.Add(usage, nm);
                                     }
-                                }
-                            }
-                            else
-                            {
-                                throw new Exception("'" + sh.Name + "' element not recognized");
+                                    break;
+                                default:
+                                    throw new Exception("'" + sh.Name + "' element not recognized");
                             }
                         }
                         info.Passes.Add(pi);
@@ -331,7 +325,7 @@ namespace engenious.Content.Pipeline
             Techniques = new List<EffectTechnique>();
         }
 
-        public List<EffectTechnique> Techniques{ get; private set; }
+        public List<EffectTechnique> Techniques { get; private set; }
     }
 
     public class EffectTechnique
@@ -341,29 +335,29 @@ namespace engenious.Content.Pipeline
             Passes = new List<EffectPass>();
         }
 
-        public string Name{ get; internal set; }
+        public string Name { get; internal set; }
 
-        public List<EffectPass> Passes{ get; private set; }
+        public List<EffectPass> Passes { get; private set; }
     }
+
     public class EffectPass
     {
         public EffectPass()
         {
             Shaders = new Dictionary<ShaderType, string>();
-            Attributes = new Dictionary<VertexElementUsage,string>(); 
+            Attributes = new Dictionary<VertexElementUsage, string>();
         }
 
-        public string Name{ get; internal set; }
+        public string Name { get; internal set; }
 
-        public BlendState BlendState{ get; internal set; }
+        public BlendState BlendState { get; internal set; }
 
-        public DepthStencilState DepthStencilState{ get; internal set; }
+        public DepthStencilState DepthStencilState { get; internal set; }
 
-        public RasterizerState RasterizerState{ get; internal set; }
+        public RasterizerState RasterizerState { get; internal set; }
 
-        public Dictionary<ShaderType,string> Shaders{ get; private set; }
+        public Dictionary<ShaderType, string> Shaders { get; private set; }
 
-        public Dictionary<VertexElementUsage,string> Attributes{ get; private set; }
+        public Dictionary<VertexElementUsage, string> Attributes { get; private set; }
     }
 }
-

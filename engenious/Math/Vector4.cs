@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace engenious
 {
@@ -7,10 +6,10 @@ namespace engenious
     [System.ComponentModel.TypeConverter(typeof(Vector4Converter))]
     public struct Vector4
     {
-        public float X{get;set;}
-        public float Y{get;set;}
-        public float Z{get;set;}
-        public float W{get;set;}
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+        public float W { get; set; }
 
         public Vector4(float val)
         {
@@ -46,15 +45,20 @@ namespace engenious
 
         public static Vector4 Transform(Vector4 position, Matrix matrix)
         {
-
-            return new Vector4(position.X * matrix.M11 + position.Y * matrix.M12 + position.Z * matrix.M13 + position.W * matrix.M14,
-                position.X * matrix.M21 + position.Y * matrix.M22 + position.Z * matrix.M23 + position.W * matrix.M24,
-                position.X * matrix.M31 + position.Y * matrix.M32 + position.Z * matrix.M33 + position.W * matrix.M34,
-                position.X * matrix.M41 + position.Y * matrix.M42 + position.Z * matrix.M43 + position.W * matrix.M44);
+            return
+                new Vector4(
+                    position.X * matrix.M11 + position.Y * matrix.M12 + position.Z * matrix.M13 +
+                    position.W * matrix.M14,
+                    position.X * matrix.M21 + position.Y * matrix.M22 + position.Z * matrix.M23 +
+                    position.W * matrix.M24,
+                    position.X * matrix.M31 + position.Y * matrix.M32 + position.Z * matrix.M33 +
+                    position.W * matrix.M34,
+                    position.X * matrix.M41 + position.Y * matrix.M42 + position.Z * matrix.M43 +
+                    position.W * matrix.M44);
         }
 
         public static readonly Vector4 One = new Vector4(1, 1, 1, 1);
-        public static readonly Vector4 Zero = new Vector4();
+        public static readonly Vector4 Zero;
 
         public static readonly Vector4 UnitX = new Vector4(1, 0, 0, 0);
         public static readonly Vector4 UnitY = new Vector4(0, 1, 0, 0);
@@ -63,7 +67,7 @@ namespace engenious
 
         public override string ToString()
         {
-            return string.Format("{{{0}, {1}, {2}, {3}}}", X, Y, Z, W);
+            return $"{{{X}, {Y}, {Z}, {W}}}";
         }
     }
 }

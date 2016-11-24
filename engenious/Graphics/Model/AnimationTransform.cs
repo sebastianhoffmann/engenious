@@ -1,25 +1,23 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     public class AnimationTransform
     {
-        static string dubi;
-        public AnimationTransform(string name,Vector3 location, Vector3 scale, Quaternion quaternion)
+        public AnimationTransform(string name, Vector3 location, Vector3 scale, Quaternion quaternion)
         {
-            this.name = name;
             //dubi += name + ": " + quaternion.ToString() + "\n";
             Location = location;
-            if (name.Contains("$")){
-                Location = new Vector3(location.X,location.Z,location.Y);
+            if (name.Contains("$"))
+            {
+                Location = new Vector3(location.X, location.Z, location.Y);
             }
             Scale = scale;
             Rotation = quaternion;
         }
-        public Quaternion Rotation{get;private set;}
-        public Vector3 Location{get;private set;}
-        public Vector3 Scale{get;private set;}
-        string name;
+
+        public Quaternion Rotation { get; private set; }
+        public Vector3 Location { get; private set; }
+        public Vector3 Scale { get; private set; }
+
         public Matrix ToMatrix()
         {
             Matrix res = Matrix.CreateFromQuaternion(Rotation.X, Rotation.Y, Rotation.Z, Rotation.W);
@@ -38,22 +36,23 @@ namespace engenious
             return res;
         }
 
-        public static AnimationTransform Lerp(AnimationTransform transform1,AnimationTransform transform2,float amount)
+        public static AnimationTransform Lerp(AnimationTransform transform1, AnimationTransform transform2, float amount)
         {
-            return new AnimationTransform("",Vector3.Lerp(transform1.Location,transform2.Location,amount),
-                                            Vector3.Lerp(transform1.Scale,transform2.Scale,amount),
-                                            Quaternion.Lerp(transform1.Rotation,transform2.Rotation,amount));
+            return new AnimationTransform("", Vector3.Lerp(transform1.Location, transform2.Location, amount),
+                Vector3.Lerp(transform1.Scale, transform2.Scale, amount),
+                Quaternion.Lerp(transform1.Rotation, transform2.Rotation, amount));
         }
-        public static AnimationTransform operator +(AnimationTransform t1,AnimationTransform t2)
+
+        public static AnimationTransform operator +(AnimationTransform t1, AnimationTransform t2)
         {
-            return new AnimationTransform("",t1.Location+t2.Location,t1.Scale*t2.Scale,t1.Rotation*t2.Rotation);
+            return new AnimationTransform("", t1.Location + t2.Location, t1.Scale * t2.Scale, t1.Rotation * t2.Rotation);
         }
-        public static AnimationTransform Transform(AnimationTransform t,Matrix transformation)
+
+        public static AnimationTransform Transform(AnimationTransform t, Matrix transformation)
         {
-            return new AnimationTransform("",Vector3.Transform(t.Location,transformation),
+            return new AnimationTransform("", Vector3.Transform(t.Location, transformation),
                 t.Scale,
                 t.Rotation);
         }
     }
 }
-

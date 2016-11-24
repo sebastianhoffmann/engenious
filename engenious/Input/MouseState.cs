@@ -1,4 +1,5 @@
 ﻿#region License
+
 //
 // The Open Toolkit Library License
 //
@@ -23,11 +24,10 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace engenious.Input
 {
@@ -37,13 +37,14 @@ namespace engenious.Input
     public struct MouseState : IEquatable<MouseState>
     {
         #region Fields
-        internal const int WheelDelta = 1;//Windows wheel
+
+        internal const int WheelDelta = 1; //Windows wheel
         internal const int MaxButtons = 16;
         // we are storing in an ushort
-        Vector2 position;
-        MouseScroll scroll;
-        ushort buttons;
-        bool is_connected;
+        private Vector2 _position;
+        private MouseScroll _scroll;
+        private ushort _buttons;
+        private bool _isConnected;
 
         #endregion
 
@@ -55,15 +56,15 @@ namespace engenious.Input
         /// </summary>
         /// <param name="button">The <see cref="OpenTK.Input.MouseButton"/> to check.</param>
         /// <returns>True if key is pressed; false otherwise.</returns>
-        public bool this [MouseButton button]
+        public bool this[MouseButton button]
         {
             get { return IsButtonDown(button); }
             internal set
             {
                 if (value)
-                    EnableBit((int)button);
+                    EnableBit((int) button);
                 else
-                    DisableBit((int)button);
+                    DisableBit((int) button);
             }
         }
 
@@ -73,7 +74,7 @@ namespace engenious.Input
         /// <param name="button">The <see cref="OpenTK.Input.MouseButton"/> to check.</param>
         public bool IsButtonDown(MouseButton button)
         {
-            return ReadBit((int)button);
+            return ReadBit((int) button);
         }
 
         /// <summary>
@@ -82,25 +83,19 @@ namespace engenious.Input
         /// <param name="button">The <see cref="OpenTK.Input.MouseButton"/> to check.</param>
         public bool IsButtonUp(MouseButton button)
         {
-            return !ReadBit((int)button);
+            return !ReadBit((int) button);
         }
 
         /// <summary>
         /// Gets the absolute wheel position in integer units.
         /// To support high-precision mice, it is recommended to use <see cref="WheelPrecise"/> instead.
         /// </summary>
-        public int Wheel
-        {
-            get { return (int)(scroll.Y*WheelDelta); }
-        }
+        public int Wheel => (int) (_scroll.Y * WheelDelta);
 
         /// <summary>
         /// Gets the absolute wheel position in floating-point units.
         /// </summary>
-        public float WheelPrecise
-        {
-            get { return scroll.Y; }
-        }
+        public float WheelPrecise => _scroll.Y;
 
         /// <summary>
         /// Gets a <see cref="OpenTK.Input.MouseScroll"/> instance,
@@ -108,8 +103,8 @@ namespace engenious.Input
         /// </summary>
         public MouseScroll Scroll
         {
-            get { return scroll; }
-            internal set{scroll = value;}
+            get { return _scroll; }
+            internal set { _scroll = value; }
         }
 
         /// <summary>
@@ -117,8 +112,8 @@ namespace engenious.Input
         /// </summary>
         public int X
         {
-            get { return (int)Math.Round(position.X); }
-            internal set { position.X = value; }
+            get { return (int) Math.Round(_position.X); }
+            internal set { _position.X = value; }
         }
 
         /// <summary>
@@ -126,76 +121,52 @@ namespace engenious.Input
         /// </summary>
         public int Y
         {
-            get { return (int)Math.Round(position.Y); }
-            internal set { position.Y = value; }
+            get { return (int) Math.Round(_position.Y); }
+            internal set { _position.Y = value; }
         }
 
         /// <summary>
         /// Gets a <see cref="System.Boolean"/> indicating whether the left mouse button is pressed.
         /// This property is intended for XNA compatibility.
         /// </summary>
-        public ButtonState LeftButton
-        {
-            get { return IsButtonDown(MouseButton.Left) ? ButtonState.Pressed : ButtonState.Released; }
-        }
+        public ButtonState LeftButton => IsButtonDown(MouseButton.Left) ? ButtonState.Pressed : ButtonState.Released;
 
         /// <summary>
         /// Gets a <see cref="System.Boolean"/> indicating whether the middle mouse button is pressed.
         /// This property is intended for XNA compatibility.
         /// </summary>
-        public ButtonState MiddleButton
-        {
-            get { return IsButtonDown(MouseButton.Middle) ? ButtonState.Pressed : ButtonState.Released; }
-        }
+        public ButtonState MiddleButton => IsButtonDown(MouseButton.Middle) ? ButtonState.Pressed : ButtonState.Released
+            ;
 
         /// <summary>
         /// Gets a <see cref="System.Boolean"/> indicating whether the right mouse button is pressed.
         /// This property is intended for XNA compatibility.
         /// </summary>
-        public ButtonState RightButton
-        {
-            get { return IsButtonDown(MouseButton.Right) ? ButtonState.Pressed : ButtonState.Released; }
-        }
+        public ButtonState RightButton => IsButtonDown(MouseButton.Right) ? ButtonState.Pressed : ButtonState.Released;
 
         /// <summary>
         /// Gets a <see cref="System.Boolean"/> indicating whether the first extra mouse button is pressed.
         /// This property is intended for XNA compatibility.
         /// </summary>
-        public ButtonState XButton1
-        {
-            get { return IsButtonDown(MouseButton.Button1) ? ButtonState.Pressed : ButtonState.Released; }
-        }
+        public ButtonState XButton1 => IsButtonDown(MouseButton.Button1) ? ButtonState.Pressed : ButtonState.Released;
 
         /// <summary>
         /// Gets a <see cref="System.Boolean"/> indicating whether the second extra mouse button is pressed.
         /// This property is intended for XNA compatibility.
         /// </summary>
-        public ButtonState XButton2
-        {
-            get { return IsButtonDown(MouseButton.Button2) ? ButtonState.Pressed : ButtonState.Released; }
-        }
+        public ButtonState XButton2 => IsButtonDown(MouseButton.Button2) ? ButtonState.Pressed : ButtonState.Released;
 
         /// <summary>
         /// Gets a value indicating whether any button is down.
         /// </summary>
         /// <value><c>true</c> if any button is down; otherwise, <c>false</c>.</value>
-        public bool IsAnyButtonDown
-        {
-            get
-            {
-                // If any bit is set then a button is down.
-                return buttons != 0;
-            }
-        }
+        public bool IsAnyButtonDown => _buttons != 0;
 
         /// <summary>
         /// Gets the absolute wheel position in integer units. This property is intended for XNA compatibility.
         /// To support high-precision mice, it is recommended to use <see cref="WheelPrecise"/> instead.
         /// </summary>
-        public int ScrollWheelValue
-        {
-            get { return Wheel; }
-        }
+        public int ScrollWheelValue => Wheel;
 
         /// <summary>
         /// Gets a value indicating whether this instance is connected.
@@ -203,8 +174,8 @@ namespace engenious.Input
         /// <value><c>true</c> if this instance is connected; otherwise, <c>false</c>.</value>
         public bool IsConnected
         {
-            get { return is_connected; }
-            internal set { is_connected = value; }
+            get { return _isConnected; }
+            internal set { _isConnected = value; }
         }
 
         /// <summary>
@@ -254,7 +225,7 @@ namespace engenious.Input
         {
             if (obj is MouseState)
             {
-                return this == (MouseState)obj;
+                return this == (MouseState) obj;
             }
             else
             {
@@ -270,7 +241,7 @@ namespace engenious.Input
         /// </returns>
         public override int GetHashCode()
         {
-            return buttons.GetHashCode() ^ X.GetHashCode() ^ Y.GetHashCode() ^ scroll.GetHashCode();
+            return _buttons.GetHashCode() ^ X.GetHashCode() ^ Y.GetHashCode() ^ _scroll.GetHashCode();
         }
 
         /// <summary>
@@ -279,9 +250,8 @@ namespace engenious.Input
         /// <returns>A <see cref="System.String"/> that represents the current <see cref="OpenTK.Input.MouseState"/>.</returns>
         public override string ToString()
         {
-            string b = Convert.ToString(buttons, 2).PadLeft(10, '0');
-            return String.Format("[X={0}, Y={1}, Scroll={2}, Buttons={3}, IsConnected={4}]",
-                X, Y, Scroll, b, IsConnected);
+            string b = Convert.ToString(_buttons, 2).PadLeft(10, '0');
+            return $"[X={X}, Y={Y}, Scroll={Scroll}, Buttons={b}, IsConnected={IsConnected}]";
         }
 
         #endregion
@@ -290,32 +260,32 @@ namespace engenious.Input
 
         internal Vector2 Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return _position; }
+            set { _position = value; }
         }
 
         internal bool ReadBit(int offset)
         {
             ValidateOffset(offset);
-            return (buttons & (1 << offset)) != 0;
+            return (_buttons & (1 << offset)) != 0;
         }
 
         internal void EnableBit(int offset)
         {
             ValidateOffset(offset);
-            buttons |= unchecked((ushort)(1 << offset));
+            _buttons |= unchecked((ushort) (1 << offset));
         }
 
         internal void DisableBit(int offset)
         {
             ValidateOffset(offset);
-            buttons &= unchecked((ushort)(~(1 << offset)));
+            _buttons &= unchecked((ushort) (~(1 << offset)));
         }
 
         internal void MergeBits(MouseState other)
         {
-            buttons |= other.buttons;
-            SetScrollRelative(other.scroll.X, other.scroll.Y);
+            _buttons |= other._buttons;
+            SetScrollRelative(other._scroll.X, other._scroll.Y);
             X += other.X;
             Y += other.Y;
             IsConnected |= other.IsConnected;
@@ -330,14 +300,14 @@ namespace engenious.Input
 
         internal void SetScrollAbsolute(float x, float y)
         {
-            scroll.X = x;
-            scroll.Y = y;
+            _scroll.X = x;
+            _scroll.Y = y;
         }
 
         internal void SetScrollRelative(float x, float y)
         {
-            scroll.X += x;
-            scroll.Y += y;
+            _scroll.X += x;
+            _scroll.Y += y;
         }
 
         #endregion
@@ -346,10 +316,10 @@ namespace engenious.Input
 
         #region Private Members
 
-        static void ValidateOffset(int offset)
+        private static void ValidateOffset(int offset)
         {
             if (offset < 0 || offset >= 16)
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
         }
 
         #endregion
@@ -364,10 +334,10 @@ namespace engenious.Input
         public bool Equals(MouseState other)
         {
             return
-                buttons == other.buttons &&
-            X == other.X &&
-            Y == other.Y &&
-            Scroll == other.Scroll;
+                _buttons == other._buttons &&
+                X == other.X &&
+                Y == other.Y &&
+                Scroll == other.Scroll;
         }
 
         #endregion

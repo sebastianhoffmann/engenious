@@ -23,12 +23,14 @@ namespace engenious.Audio
         {
             return null;
         }
+
         #region IDisposable implementation
+
         public void Dispose()
         {
             throw new NotImplementedException();
         }
+
         #endregion
     }
 }
-

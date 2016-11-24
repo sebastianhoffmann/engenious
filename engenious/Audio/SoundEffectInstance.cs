@@ -7,23 +7,23 @@ namespace engenious.Audio
     {
         internal int sid;
         private bool isLooped;
-        private float volume,pitch,pan;
+        private float volume, pitch, pan;
         private SoundEffect effect;
+
         public SoundEffectInstance()
         {
-
+            Duration = new TimeSpan();
         }
-
 
 
         public TimeSpan Duration { get; }
 
 
         public bool IsLooped
-        { 
-            get { return isLooped; } 
+        {
+            get { return isLooped; }
             set
-            { 
+            {
                 if (value != isLooped && sid != 0)
                 {
                     AL.Source(sid, ALSourceb.Looping, value);
@@ -32,40 +32,41 @@ namespace engenious.Audio
             }
         }
 
-        public float Volume{
-            get{return volume;}
+        public float Volume
+        {
+            get { return volume; }
             set
             {
                 if (volume != value)
                 {
                     volume = value;
-                    AL.Source (sid, ALSourcef.Gain, value);
-                    
+                    AL.Source(sid, ALSourcef.Gain, value);
                 }
             }
-            
         }
 
-        public float Pitch{
-            get{return pitch;}
+        public float Pitch
+        {
+            get { return pitch; }
             set
             {
                 if (pitch != value)
                 {
                     pitch = value;
-                    AL.Source (sid, ALSourcef.Pitch,value);
+                    AL.Source(sid, ALSourcef.Pitch, value);
                 }
             }
         }
 
-        public float Pan{
-            get{return pan;}
+        public float Pan
+        {
+            get { return pan; }
             set
             {
                 if (pan != value)
                 {
                     pan = value;
-                    AL.Source (sid, ALSource3f.Position,value, 0, 0.1f);
+                    AL.Source(sid, ALSource3f.Position, value, 0, 0.1f);
                 }
             }
         }
@@ -79,9 +80,9 @@ namespace engenious.Audio
             //    Apply3D(l,emitter);
         }
 
-        private void Apply3D(AudioListener listener,AudioEmitter emitter)
+        private void Apply3D(AudioListener listener, AudioEmitter emitter)
         {
-            if (sid==0)
+            if (sid == 0)
                 return;
 
 
@@ -93,7 +94,7 @@ namespace engenious.Audio
             Matrix orientation = Matrix.Identity;
             Vector3 forward = listener.Forward.Normalized();
             Vector3 right = Vector3.Cross(forward, listener.Up);
-            Vector3 up = Vector3.Cross(right,forward);
+            Vector3 up = Vector3.Cross(right, forward);
             orientation.M11 = right.X;
             orientation.M12 = right.Y;
             orientation.M13 = right.Z;
@@ -118,21 +119,21 @@ namespace engenious.Audio
 
         public virtual void Play()
         {
-            if (sid==0)
+            if (sid == 0)
             {
                 sid = SoundSourceManager.Instance.Dequeue();
                 //TODO:int bufferId = effect.SoundBuffer.OpenALDataBuffer;
                 //AL.Source(sid, ALSourcei.Buffer, bufferId);
             }
 
-            if (sid==0)
+            if (sid == 0)
                 return;
 
-            AL.DistanceModel (ALDistanceModel.InverseDistanceClamped);
-            AL.Source (sid, ALSource3f.Position,Pan, 0, 0.1f);
-            AL.Source (sid, ALSourcef.Gain, Volume);
-            AL.Source (sid, ALSourceb.Looping, IsLooped);
-            AL.Source (sid, ALSourcef.Pitch,Pitch);
+            AL.DistanceModel(ALDistanceModel.InverseDistanceClamped);
+            AL.Source(sid, ALSource3f.Position, Pan, 0, 0.1f);
+            AL.Source(sid, ALSourcef.Gain, Volume);
+            AL.Source(sid, ALSourceb.Looping, IsLooped);
+            AL.Source(sid, ALSourcef.Pitch, Pitch);
 
             SoundSourceManager.Instance.PlaySound(this);
         }
@@ -174,8 +175,5 @@ namespace engenious.Audio
         }
 
         #endregion
-
-
     }
 }
-

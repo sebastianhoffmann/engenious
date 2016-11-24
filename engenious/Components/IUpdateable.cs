@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     public interface IUpdateable
     {
@@ -11,4 +9,3 @@ namespace engenious
         void Update(GameTime gameTime);
     }
 }
-

@@ -4,7 +4,7 @@ namespace engenious.Pipeline
 {
     public class AudioContent
     {
-        public enum Format:ushort
+        public enum Format : ushort
         {
             PCM = 0x0001,
             MS_ADPCM = 0x0002,
@@ -65,7 +65,7 @@ namespace engenious.Pipeline
                 throw new FormatException("Missing format part");
             uint formatLength = r.ReadUInt32();
             size -= formatLength;
-            Format formatTag = (Format)r.ReadUInt16();
+            Format formatTag = (Format) r.ReadUInt16();
             ushort channels = r.ReadUInt16();
             uint samplesPerSec = r.ReadUInt32();
             uint avgBytesPerSec = r.ReadUInt32();
@@ -87,10 +87,8 @@ namespace engenious.Pipeline
                     throw new FormatException("Missing format part");
 
                 uint dataLength = r.ReadUInt32();
-                size -= 8+dataLength;
-                
+                size -= 8 + dataLength;
             }
         }
     }
 }
-

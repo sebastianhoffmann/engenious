@@ -2,11 +2,11 @@
 
 namespace engenious
 {
-    public abstract class GameComponent : IGameComponent,IUpdateable,IDisposable
+    public abstract class GameComponent : IGameComponent, IUpdateable, IDisposable
     {
-        public GameComponent(Game game)
+        protected GameComponent(Game game)
         {
-            this.Game = game;
+            Game = game;
             Enabled = true;
         }
 
@@ -16,22 +16,13 @@ namespace engenious
         {
         }
 
-        public int UpdateOrder
-        {
-            get;
-            set;
-        }
+        public int UpdateOrder { get; set; }
 
-        public bool Enabled
-        {
-            get;
-            set;
-        }
+        public bool Enabled { get; set; }
 
         public Game Game { get; private set; }
 
         #endregion
-
 
         #region IGameComponent implementation
 
@@ -68,4 +59,3 @@ namespace engenious
         #endregion
     }
 }
-

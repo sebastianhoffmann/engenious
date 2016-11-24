@@ -2,27 +2,17 @@
 
 namespace engenious.Content.Serialization
 {
-	public abstract class ContentTypeWriter<T> : IContentTypeWriter
-	{
-		public ContentTypeWriter ()
-		{
-		}
+    public abstract class ContentTypeWriter<T> : IContentTypeWriter
+    {
+        public abstract void Write(ContentWriter writer, T value);
 
-		public abstract void Write (ContentWriter writer, T value);
+        void IContentTypeWriter.Write(ContentWriter writer, object value)
+        {
+            Write(writer, (T) value);
+        }
 
-		void IContentTypeWriter.Write (ContentWriter writer, object value)
-		{
-			Write (writer, (T)value);
-		}
+        public abstract string RuntimeReaderName { get; }
 
-		public abstract string RuntimeReaderName{ get; }
-
-		public Type RuntimeType { 
-			get {
-				return typeof(T);
-			}
-		
-		}
-	}
+        public Type RuntimeType => typeof(T);
+    }
 }
-

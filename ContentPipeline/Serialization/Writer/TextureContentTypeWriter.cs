@@ -1,5 +1,4 @@
-﻿using System;
-using engenious.Content.Pipeline;
+﻿using engenious.Content.Pipeline;
 
 namespace engenious.Content.Serialization
 {
@@ -16,15 +15,14 @@ namespace engenious.Content.Serialization
         {
             writer.Write(value.GenerateMipMaps);
             writer.Write(value.MipMapCount);
-            foreach(var map in value.MipMaps)
+            foreach (var map in value.MipMaps)
             {
                 map.Save(writer);
             }
         }
 
-        public override string RuntimeReaderName{ get { return typeof(Texture2DTypeReader).FullName; } }
+        public override string RuntimeReaderName => typeof(Texture2DTypeReader).FullName;
 
         #endregion
     }
 }
-

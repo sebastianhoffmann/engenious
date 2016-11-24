@@ -1,6 +1,4 @@
-﻿using System;
-using engenious.Graphics;
-using engenious.Content.Pipeline;
+﻿using engenious.Content.Pipeline;
 
 namespace engenious.Content.Serialization
 {
@@ -9,7 +7,6 @@ namespace engenious.Content.Serialization
     {
         public SpriteFontTypeWriter()
         {
-
         }
 
 
@@ -43,7 +40,6 @@ namespace engenious.Content.Serialization
             }
         }
 
-        public override string RuntimeReaderName{ get { return typeof(SpriteFontTypeReader).FullName; } }
+        public override string RuntimeReaderName => typeof(SpriteFontTypeReader).FullName;
     }
 }
-

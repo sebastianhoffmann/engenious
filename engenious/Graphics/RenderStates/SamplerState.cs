@@ -1,9 +1,6 @@
-﻿using System;
-using OpenTK.Graphics.OpenGL4;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
-    public class SamplerState:GraphicsResource
+    public class SamplerState : GraphicsResource
     {
         public static readonly SamplerState LinearClamp;
         public static readonly SamplerState LinearWrap;
@@ -18,17 +15,15 @@ namespace engenious.Graphics
         public SamplerState()
         {
             //TODO: implement completly	
-            this.AddressU = this.AddressV = this.AddressW = TextureWrapMode.ClampToEdge;
-
+            AddressU = AddressV = AddressW = TextureWrapMode.ClampToEdge;
         }
 
-        public TextureWrapMode AddressU{ get; set; }
+        public TextureWrapMode AddressU { get; set; }
 
-        public TextureWrapMode AddressV{ get; set; }
+        public TextureWrapMode AddressV { get; set; }
 
-        public TextureWrapMode AddressW{ get; set; }
+        public TextureWrapMode AddressW { get; set; }
 
-        public TextureFilter TextureFilter{get;set;}
+        public TextureFilter TextureFilter { get; set; }
     }
 }
-

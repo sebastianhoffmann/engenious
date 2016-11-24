@@ -4,26 +4,24 @@ using System.Collections.Generic;
 namespace engenious.Content.Pipeline
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class ContentImporterAttribute : System.Attribute
+    public class ContentImporterAttribute : Attribute
     {
-        private List<string> fileExtensions;
+        private readonly List<string> _fileExtensions;
 
 
         public ContentImporterAttribute(params string[] fileExtensions)
         {
-            this.fileExtensions = new List<string>();
+            _fileExtensions = new List<string>();
             foreach (string ext in fileExtensions)
-                this.fileExtensions.Add(ext);
+                this._fileExtensions.Add(ext);
         }
 
-        public IEnumerable<string> FileExtensions { get { return fileExtensions; } }
+        public IEnumerable<string> FileExtensions => _fileExtensions;
 
-        public string DisplayName{ get; set; }
+        public string DisplayName { get; set; }
 
         public string DefaultProcessor { get; set; }
 
         public bool CacheImportedData { get; set; }
     }
-
 }
-

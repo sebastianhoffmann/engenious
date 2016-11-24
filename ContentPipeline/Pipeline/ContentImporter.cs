@@ -4,19 +4,8 @@ namespace engenious.Content.Pipeline
 {
     public abstract class ContentImporter<T> : IContentImporter
     {
-        public ContentImporter()
-        {
-        }
-        private static Type exportType = null;
-        public static Type ExportType
-        {
-            get
-            {
-                if (exportType == null)
-                    exportType = typeof(T);
-                return exportType;
-            }
-        }
+        private static Type _exportType;
+        public static Type ExportType => _exportType ?? (_exportType = typeof(T));
 
         public abstract T Import(string filename, ContentImporterContext context);
 
@@ -24,7 +13,5 @@ namespace engenious.Content.Pipeline
         {
             return Import(filename, context);
         }
-
     }
 }
-

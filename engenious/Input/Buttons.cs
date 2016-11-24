@@ -33,4 +33,3 @@ namespace engenious.Input
         LeftThumbstickRight = 1073741824
     }
 }
-

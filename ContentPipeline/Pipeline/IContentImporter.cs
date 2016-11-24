@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace engenious.Content.Pipeline
+﻿namespace engenious.Content.Pipeline
 {
-	public interface IContentImporter
-	{
-		object Import (string filename, ContentImporterContext context);
-	}
+    public interface IContentImporter
+    {
+        object Import(string filename, ContentImporterContext context);
+    }
 }
-

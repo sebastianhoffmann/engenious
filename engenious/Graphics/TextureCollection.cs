@@ -6,35 +6,29 @@ namespace engenious.Graphics
 {
     public sealed class TextureCollection : ICollection<Texture>
     {
-        private Texture[] textures;
+        private readonly Texture[] _textures;
 
         public TextureCollection()
         {
             int maxTextures = GL.GetInteger(GetPName.MaxTextureImageUnits);
-            textures = new Texture[maxTextures];
+            _textures = new Texture[maxTextures];
         }
 
-        public Texture this [int index]
-        { 
-            get
-            {
-                return textures[index];
-            }
+        public Texture this[int index]
+        {
+            get { return _textures[index]; }
             set
             {
-                if (textures[index] != value)
+                if (_textures[index] != value)
                 {
-                    textures[index] = value;
+                    _textures[index] = value;
                     GL.ActiveTexture(TextureUnit.Texture0 + index);
                     if (value == null)
                         GL.BindTexture(TextureTarget.Texture2D, 0);
                     else
                         value.Bind();
-
                 }
-
             }
-
         }
 
         #region ICollection implementation
@@ -61,7 +55,7 @@ namespace engenious.Graphics
 
         public void Clear()
         {
-            for (int i = 0; i < textures.Length; i++)
+            for (int i = 0; i < _textures.Length; i++)
                 this[i] = null;
         }
 
@@ -72,8 +66,8 @@ namespace engenious.Graphics
 
         public int IndexOf(Texture item)
         {
-            for (int i = 0; i < textures.Length; i++)
-                if (textures[i] == item)
+            for (int i = 0; i < _textures.Length; i++)
+                if (_textures[i] == item)
                     return i;
             return -1;
         }
@@ -92,22 +86,9 @@ namespace engenious.Graphics
             return true;
         }
 
-        public int Count
-        {
-            get
-            {
-                return textures.Length;
-            }
-        }
+        public int Count => _textures.Length;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
+        public bool IsReadOnly => false;
 
         #endregion
 
@@ -115,7 +96,7 @@ namespace engenious.Graphics
 
         public IEnumerator<Texture> GetEnumerator()
         {
-            return (IEnumerator<Texture>)textures.GetEnumerator();
+            return (IEnumerator<Texture>) _textures.GetEnumerator();
         }
 
         #endregion
@@ -124,10 +105,9 @@ namespace engenious.Graphics
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return textures.GetEnumerator();
+            return _textures.GetEnumerator();
         }
 
         #endregion
     }
 }
-

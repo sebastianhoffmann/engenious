@@ -58,21 +58,21 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("library_animation_clips", typeof (library_animation_clips))]
-        [XmlElement("library_animations", typeof (library_animations))]
-        [XmlElement("library_cameras", typeof (library_cameras))]
-        [XmlElement("library_controllers", typeof (library_controllers))]
-        [XmlElement("library_effects", typeof (library_effects))]
-        [XmlElement("library_force_fields", typeof (library_force_fields))]
-        [XmlElement("library_geometries", typeof (library_geometries))]
-        [XmlElement("library_images", typeof (library_images))]
-        [XmlElement("library_lights", typeof (library_lights))]
-        [XmlElement("library_materials", typeof (library_materials))]
-        [XmlElement("library_nodes", typeof (library_nodes))]
-        [XmlElement("library_physics_materials", typeof (library_physics_materials))]
-        [XmlElement("library_physics_models", typeof (library_physics_models))]
-        [XmlElement("library_physics_scenes", typeof (library_physics_scenes))]
-        [XmlElement("library_visual_scenes", typeof (library_visual_scenes))]
+        [XmlElement("library_animation_clips", typeof(library_animation_clips))]
+        [XmlElement("library_animations", typeof(library_animations))]
+        [XmlElement("library_cameras", typeof(library_cameras))]
+        [XmlElement("library_controllers", typeof(library_controllers))]
+        [XmlElement("library_effects", typeof(library_effects))]
+        [XmlElement("library_force_fields", typeof(library_force_fields))]
+        [XmlElement("library_geometries", typeof(library_geometries))]
+        [XmlElement("library_images", typeof(library_images))]
+        [XmlElement("library_lights", typeof(library_lights))]
+        [XmlElement("library_materials", typeof(library_materials))]
+        [XmlElement("library_nodes", typeof(library_nodes))]
+        [XmlElement("library_physics_materials", typeof(library_physics_materials))]
+        [XmlElement("library_physics_models", typeof(library_physics_models))]
+        [XmlElement("library_physics_scenes", typeof(library_physics_scenes))]
+        [XmlElement("library_visual_scenes", typeof(library_visual_scenes))]
         public object[] Items
         {
             get { return itemsField; }
@@ -280,7 +280,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (uint), "0")]
+        [DefaultValue(typeof(uint), "0")]
         public uint mip
         {
             get { return mipField; }
@@ -289,7 +289,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (uint), "0")]
+        [DefaultValue(typeof(uint), "0")]
         public uint slice
         {
             get { return sliceField; }
@@ -362,12 +362,12 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("float", typeof (double))]
-        [XmlElement("float2", typeof (double))]
-        [XmlElement("float3", typeof (double))]
-        [XmlElement("float4", typeof (double))]
-        [XmlElement("sampler2D", typeof (fx_sampler2D_common))]
-        [XmlElement("surface", typeof (fx_surface_common))]
+        [XmlElement("float", typeof(double))]
+        [XmlElement("float2", typeof(double))]
+        [XmlElement("float3", typeof(double))]
+        [XmlElement("float4", typeof(double))]
+        [XmlElement("sampler2D", typeof(fx_sampler2D_common))]
+        [XmlElement("surface", typeof(fx_surface_common))]
         [XmlChoiceIdentifier("ItemElementName")]
         public object Item
         {
@@ -482,7 +482,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (byte), "255")]
+        [DefaultValue(typeof(byte), "255")]
         public byte mipmap_maxlevel
         {
             get { return mipmap_maxlevelField; }
@@ -490,7 +490,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (float), "0")]
+        [DefaultValue(typeof(float), "0")]
         public float mipmap_bias
         {
             get { return mipmap_biasField; }
@@ -740,8 +740,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("size", typeof (long))]
-        [XmlElement("viewport_ratio", typeof (double))]
+        [XmlElement("size", typeof(long))]
+        [XmlElement("viewport_ratio", typeof(double))]
         public object Item
         {
             get { return itemField; }
@@ -749,7 +749,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (uint), "0")]
+        [DefaultValue(typeof(uint), "0")]
         public uint mip_levels
         {
             get { return mip_levelsField; }
@@ -799,9 +799,9 @@ namespace engenious.Pipeline.Collada
         private object[] itemsField;
 
         /// <remarks />
-        [XmlElement("all", typeof (fx_surface_init_cube_commonAll))]
-        [XmlElement("face", typeof (fx_surface_init_cube_commonFace))]
-        [XmlElement("primary", typeof (fx_surface_init_cube_commonPrimary))]
+        [XmlElement("all", typeof(fx_surface_init_cube_commonAll))]
+        [XmlElement("face", typeof(fx_surface_init_cube_commonFace))]
+        [XmlElement("primary", typeof(fx_surface_init_cube_commonPrimary))]
         public object[] Items
         {
             get { return itemsField; }
@@ -887,8 +887,8 @@ namespace engenious.Pipeline.Collada
         private object itemField;
 
         /// <remarks />
-        [XmlElement("all", typeof (fx_surface_init_volume_commonAll))]
-        [XmlElement("primary", typeof (fx_surface_init_volume_commonPrimary))]
+        [XmlElement("all", typeof(fx_surface_init_volume_commonAll))]
+        [XmlElement("primary", typeof(fx_surface_init_volume_commonPrimary))]
         public object Item
         {
             get { return itemField; }
@@ -1174,7 +1174,7 @@ namespace engenious.Pipeline.Collada
     }
 
     /// <remarks />
-    [XmlInclude(typeof (common_transparent_type))]
+    [XmlInclude(typeof(common_transparent_type))]
     [GeneratedCode("xsd", "4.0.30319.1")]
     [Serializable]
     [DebuggerStepThrough]
@@ -1185,9 +1185,9 @@ namespace engenious.Pipeline.Collada
         private object itemField;
 
         /// <remarks />
-        [XmlElement("color", typeof (common_color_or_texture_typeColor))]
-        [XmlElement("param", typeof (common_color_or_texture_typeParam))]
-        [XmlElement("texture", typeof (common_color_or_texture_typeTexture))]
+        [XmlElement("color", typeof(common_color_or_texture_typeColor))]
+        [XmlElement("param", typeof(common_color_or_texture_typeParam))]
+        [XmlElement("texture", typeof(common_color_or_texture_typeTexture))]
         public object Item
         {
             get { return itemField; }
@@ -1338,8 +1338,8 @@ namespace engenious.Pipeline.Collada
         private object itemField;
 
         /// <remarks />
-        [XmlElement("float", typeof (common_float_or_param_typeFloat))]
-        [XmlElement("param", typeof (common_float_or_param_typeParam))]
+        [XmlElement("float", typeof(common_float_or_param_typeFloat))]
+        [XmlElement("param", typeof(common_float_or_param_typeParam))]
         public object Item
         {
             get { return itemField; }
@@ -1588,7 +1588,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (byte), "255")]
+        [DefaultValue(typeof(byte), "255")]
         public byte mipmap_maxlevel
         {
             get { return mipmap_maxlevelField; }
@@ -1596,7 +1596,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (float), "0")]
+        [DefaultValue(typeof(float), "0")]
         public float mipmap_bias
         {
             get { return mipmap_biasField; }
@@ -1711,7 +1711,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (byte), "255")]
+        [DefaultValue(typeof(byte), "255")]
         public byte mipmap_maxlevel
         {
             get { return mipmap_maxlevelField; }
@@ -1719,7 +1719,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (float), "0")]
+        [DefaultValue(typeof(float), "0")]
         public float mipmap_bias
         {
             get { return mipmap_biasField; }
@@ -1834,7 +1834,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (byte), "255")]
+        [DefaultValue(typeof(byte), "255")]
         public byte mipmap_maxlevel
         {
             get { return mipmap_maxlevelField; }
@@ -1842,7 +1842,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (float), "0")]
+        [DefaultValue(typeof(float), "0")]
         public float mipmap_bias
         {
             get { return mipmap_biasField; }
@@ -1937,7 +1937,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (byte), "0")]
+        [DefaultValue(typeof(byte), "0")]
         public byte mipmap_maxlevel
         {
             get { return mipmap_maxlevelField; }
@@ -1945,7 +1945,7 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [DefaultValue(typeof (float), "0")]
+        [DefaultValue(typeof(float), "0")]
         public float mipmap_bias
         {
             get { return mipmap_biasField; }
@@ -3151,10 +3151,10 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("animation", typeof (animation))]
-        [XmlElement("channel", typeof (channel))]
-        [XmlElement("sampler", typeof (sampler))]
-        [XmlElement("source", typeof (source))]
+        [XmlElement("animation", typeof(animation))]
+        [XmlElement("channel", typeof(channel))]
+        [XmlElement("sampler", typeof(sampler))]
+        [XmlElement("source", typeof(source))]
         public object[] Items
         {
             get { return itemsField; }
@@ -3271,11 +3271,11 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("IDREF_array", typeof (IDREF_array))]
-        [XmlElement("Name_array", typeof (Name_array))]
-        [XmlElement("bool_array", typeof (bool_array))]
-        [XmlElement("float_array", typeof (float_array))]
-        [XmlElement("int_array", typeof (int_array))]
+        [XmlElement("IDREF_array", typeof(IDREF_array))]
+        [XmlElement("Name_array", typeof(Name_array))]
+        [XmlElement("bool_array", typeof(bool_array))]
+        [XmlElement("float_array", typeof(float_array))]
+        [XmlElement("int_array", typeof(int_array))]
         public object Item
         {
             get { return itemField; }
@@ -3528,7 +3528,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (short), "6")]
+        [DefaultValue(typeof(short), "6")]
         public short digits
         {
             get { return digitsField; }
@@ -3537,7 +3537,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (short), "38")]
+        [DefaultValue(typeof(short), "38")]
         public short magnitude
         {
             get { return magnitudeField; }
@@ -3704,7 +3704,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (ulong), "0")]
+        [DefaultValue(typeof(ulong), "0")]
         public ulong offset
         {
             get { return offsetField; }
@@ -3721,7 +3721,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (ulong), "1")]
+        [DefaultValue(typeof(ulong), "1")]
         public ulong stride
         {
             get { return strideField; }
@@ -3959,8 +3959,8 @@ namespace engenious.Pipeline.Collada
         private object itemField;
 
         /// <remarks />
-        [XmlElement("orthographic", typeof (cameraOpticsTechnique_commonOrthographic))]
-        [XmlElement("perspective", typeof (cameraOpticsTechnique_commonPerspective))]
+        [XmlElement("orthographic", typeof(cameraOpticsTechnique_commonOrthographic))]
+        [XmlElement("perspective", typeof(cameraOpticsTechnique_commonPerspective))]
         public object Item
         {
             get { return itemField; }
@@ -3983,9 +3983,9 @@ namespace engenious.Pipeline.Collada
         private TargetableFloat znearField;
 
         /// <remarks />
-        [XmlElement("aspect_ratio", typeof (TargetableFloat))]
-        [XmlElement("xmag", typeof (TargetableFloat))]
-        [XmlElement("ymag", typeof (TargetableFloat))]
+        [XmlElement("aspect_ratio", typeof(TargetableFloat))]
+        [XmlElement("xmag", typeof(TargetableFloat))]
+        [XmlElement("ymag", typeof(TargetableFloat))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public TargetableFloat[] Items
         {
@@ -4048,9 +4048,9 @@ namespace engenious.Pipeline.Collada
         private TargetableFloat znearField;
 
         /// <remarks />
-        [XmlElement("aspect_ratio", typeof (TargetableFloat))]
-        [XmlElement("xfov", typeof (TargetableFloat))]
-        [XmlElement("yfov", typeof (TargetableFloat))]
+        [XmlElement("aspect_ratio", typeof(TargetableFloat))]
+        [XmlElement("xfov", typeof(TargetableFloat))]
+        [XmlElement("yfov", typeof(TargetableFloat))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public TargetableFloat[] Items
         {
@@ -4211,8 +4211,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("morph", typeof (morph))]
-        [XmlElement("skin", typeof (skin))]
+        [XmlElement("morph", typeof(morph))]
+        [XmlElement("skin", typeof(skin))]
         public object Item
         {
             get { return itemField; }
@@ -4679,8 +4679,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("data", typeof (byte[]), DataType = "hexBinary")]
-        [XmlElement("init_from", typeof (string), DataType = "anyURI")]
+        [XmlElement("data", typeof(byte[]), DataType = "hexBinary")]
+        [XmlElement("init_from", typeof(string), DataType = "anyURI")]
         public object Item
         {
             get { return itemField; }
@@ -4753,7 +4753,7 @@ namespace engenious.Pipeline.Collada
 
         /// <remarks />
         [XmlAttribute]
-        [DefaultValue(typeof (ulong), "1")]
+        [DefaultValue(typeof(ulong), "1")]
         public ulong depth
         {
             get { return depthField; }
@@ -4787,8 +4787,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("image", typeof (image))]
-        [XmlElement("newparam", typeof (common_newparam_type))]
+        [XmlElement("image", typeof(image))]
+        [XmlElement("newparam", typeof(common_newparam_type))]
         public object[] Items
         {
             get { return itemsField; }
@@ -4845,8 +4845,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("image", typeof (image))]
-        [XmlElement("newparam", typeof (common_newparam_type))]
+        [XmlElement("image", typeof(image))]
+        [XmlElement("newparam", typeof(common_newparam_type))]
         public object[] Items
         {
             get { return itemsField; }
@@ -4854,10 +4854,10 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("blinn", typeof (effectFx_profile_abstractProfile_COMMONTechniqueBlinn))]
-        [XmlElement("constant", typeof (effectFx_profile_abstractProfile_COMMONTechniqueConstant))]
-        [XmlElement("lambert", typeof (effectFx_profile_abstractProfile_COMMONTechniqueLambert))]
-        [XmlElement("phong", typeof (effectFx_profile_abstractProfile_COMMONTechniquePhong))]
+        [XmlElement("blinn", typeof(effectFx_profile_abstractProfile_COMMONTechniqueBlinn))]
+        [XmlElement("constant", typeof(effectFx_profile_abstractProfile_COMMONTechniqueConstant))]
+        [XmlElement("lambert", typeof(effectFx_profile_abstractProfile_COMMONTechniqueLambert))]
+        [XmlElement("phong", typeof(effectFx_profile_abstractProfile_COMMONTechniquePhong))]
         public object Item
         {
             get { return itemField; }
@@ -5416,9 +5416,9 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("convex_mesh", typeof (convex_mesh))]
-        [XmlElement("mesh", typeof (mesh))]
-        [XmlElement("spline", typeof (spline))]
+        [XmlElement("convex_mesh", typeof(convex_mesh))]
+        [XmlElement("mesh", typeof(mesh))]
+        [XmlElement("spline", typeof(spline))]
         public object Item
         {
             get { return itemField; }
@@ -5482,13 +5482,13 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("lines", typeof (lines))]
-        [XmlElement("linestrips", typeof (linestrips))]
-        [XmlElement("polygons", typeof (polygons))]
-        [XmlElement("polylist", typeof (polylist))]
-        [XmlElement("triangles", typeof (triangles))]
-        [XmlElement("trifans", typeof (trifans))]
-        [XmlElement("tristrips", typeof (tristrips))]
+        [XmlElement("lines", typeof(lines))]
+        [XmlElement("linestrips", typeof(linestrips))]
+        [XmlElement("polygons", typeof(polygons))]
+        [XmlElement("polylist", typeof(polylist))]
+        [XmlElement("triangles", typeof(triangles))]
+        [XmlElement("trifans", typeof(trifans))]
+        [XmlElement("tristrips", typeof(tristrips))]
         public object[] Items
         {
             get { return itemsField; }
@@ -5719,8 +5719,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("p", typeof (string))]
-        [XmlElement("ph", typeof (polygonsPH))]
+        [XmlElement("p", typeof(string))]
+        [XmlElement("ph", typeof(polygonsPH))]
         public object[] Items
         {
             get { return itemsField; }
@@ -6088,13 +6088,13 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("lines", typeof (lines))]
-        [XmlElement("linestrips", typeof (linestrips))]
-        [XmlElement("polygons", typeof (polygons))]
-        [XmlElement("polylist", typeof (polylist))]
-        [XmlElement("triangles", typeof (triangles))]
-        [XmlElement("trifans", typeof (trifans))]
-        [XmlElement("tristrips", typeof (tristrips))]
+        [XmlElement("lines", typeof(lines))]
+        [XmlElement("linestrips", typeof(linestrips))]
+        [XmlElement("polygons", typeof(polygons))]
+        [XmlElement("polylist", typeof(polylist))]
+        [XmlElement("triangles", typeof(triangles))]
+        [XmlElement("trifans", typeof(trifans))]
+        [XmlElement("tristrips", typeof(tristrips))]
         public object[] Items
         {
             get { return itemsField; }
@@ -6384,10 +6384,10 @@ namespace engenious.Pipeline.Collada
         private object itemField;
 
         /// <remarks />
-        [XmlElement("ambient", typeof (lightTechnique_commonAmbient))]
-        [XmlElement("directional", typeof (lightTechnique_commonDirectional))]
-        [XmlElement("point", typeof (lightTechnique_commonPoint))]
-        [XmlElement("spot", typeof (lightTechnique_commonSpot))]
+        [XmlElement("ambient", typeof(lightTechnique_commonAmbient))]
+        [XmlElement("directional", typeof(lightTechnique_commonDirectional))]
+        [XmlElement("point", typeof(lightTechnique_commonPoint))]
+        [XmlElement("spot", typeof(lightTechnique_commonSpot))]
         public object Item
         {
             get { return itemField; }
@@ -7249,12 +7249,12 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("lookat", typeof (lookat))]
-        [XmlElement("matrix", typeof (matrix))]
-        [XmlElement("rotate", typeof (rotate))]
-        [XmlElement("scale", typeof (TargetableFloat3))]
-        [XmlElement("skew", typeof (skew))]
-        [XmlElement("translate", typeof (TargetableFloat3))]
+        [XmlElement("lookat", typeof(lookat))]
+        [XmlElement("matrix", typeof(matrix))]
+        [XmlElement("rotate", typeof(rotate))]
+        [XmlElement("scale", typeof(TargetableFloat3))]
+        [XmlElement("skew", typeof(skew))]
+        [XmlElement("translate", typeof(TargetableFloat3))]
         [XmlChoiceIdentifier("ItemsElementName")]
         public object[] Items
         {
@@ -8115,8 +8115,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlArrayItem("rotate", typeof (rotate), IsNullable = false)]
-        [XmlArrayItem("translate", typeof (TargetableFloat3), IsNullable = false)]
+        [XmlArrayItem("rotate", typeof(rotate), IsNullable = false)]
+        [XmlArrayItem("translate", typeof(TargetableFloat3), IsNullable = false)]
         public object[] mass_frame
         {
             get { return mass_frameField; }
@@ -8131,8 +8131,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("instance_physics_material", typeof (InstanceWithExtra))]
-        [XmlElement("physics_material", typeof (physics_material))]
+        [XmlElement("instance_physics_material", typeof(InstanceWithExtra))]
+        [XmlElement("physics_material", typeof(physics_material))]
         public object Item
         {
             get { return itemField; }
@@ -8217,8 +8217,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("instance_physics_material", typeof (InstanceWithExtra))]
-        [XmlElement("physics_material", typeof (physics_material))]
+        [XmlElement("instance_physics_material", typeof(InstanceWithExtra))]
+        [XmlElement("physics_material", typeof(physics_material))]
         public object Item
         {
             get { return itemField; }
@@ -8226,14 +8226,14 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("box", typeof (box))]
-        [XmlElement("capsule", typeof (capsule))]
-        [XmlElement("cylinder", typeof (cylinder))]
-        [XmlElement("instance_geometry", typeof (instance_geometry))]
-        [XmlElement("plane", typeof (plane))]
-        [XmlElement("sphere", typeof (sphere))]
-        [XmlElement("tapered_capsule", typeof (tapered_capsule))]
-        [XmlElement("tapered_cylinder", typeof (tapered_cylinder))]
+        [XmlElement("box", typeof(box))]
+        [XmlElement("capsule", typeof(capsule))]
+        [XmlElement("cylinder", typeof(cylinder))]
+        [XmlElement("instance_geometry", typeof(instance_geometry))]
+        [XmlElement("plane", typeof(plane))]
+        [XmlElement("sphere", typeof(sphere))]
+        [XmlElement("tapered_capsule", typeof(tapered_capsule))]
+        [XmlElement("tapered_cylinder", typeof(tapered_cylinder))]
         public object Item1
         {
             get { return item1Field; }
@@ -8241,8 +8241,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("rotate", typeof (rotate))]
-        [XmlElement("translate", typeof (TargetableFloat3))]
+        [XmlElement("rotate", typeof(rotate))]
+        [XmlElement("translate", typeof(TargetableFloat3))]
         public object[] Items
         {
             get { return itemsField; }
@@ -8624,9 +8624,9 @@ namespace engenious.Pipeline.Collada
         private string rigid_bodyField;
 
         /// <remarks />
-        [XmlElement("extra", typeof (extra))]
-        [XmlElement("rotate", typeof (rotate))]
-        [XmlElement("translate", typeof (TargetableFloat3))]
+        [XmlElement("extra", typeof(extra))]
+        [XmlElement("rotate", typeof(rotate))]
+        [XmlElement("translate", typeof(TargetableFloat3))]
         public object[] Items
         {
             get { return itemsField; }
@@ -8655,9 +8655,9 @@ namespace engenious.Pipeline.Collada
         private string rigid_bodyField;
 
         /// <remarks />
-        [XmlElement("extra", typeof (extra))]
-        [XmlElement("rotate", typeof (rotate))]
-        [XmlElement("translate", typeof (TargetableFloat3))]
+        [XmlElement("extra", typeof(extra))]
+        [XmlElement("rotate", typeof(rotate))]
+        [XmlElement("translate", typeof(TargetableFloat3))]
         public object[] Items
         {
             get { return itemsField; }
@@ -9196,8 +9196,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlArrayItem("rotate", typeof (rotate), IsNullable = false)]
-        [XmlArrayItem("translate", typeof (TargetableFloat3), IsNullable = false)]
+        [XmlArrayItem("rotate", typeof(rotate), IsNullable = false)]
+        [XmlArrayItem("translate", typeof(TargetableFloat3), IsNullable = false)]
         public object[] mass_frame
         {
             get { return mass_frameField; }
@@ -9212,8 +9212,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("instance_physics_material", typeof (InstanceWithExtra))]
-        [XmlElement("physics_material", typeof (physics_material))]
+        [XmlElement("instance_physics_material", typeof(InstanceWithExtra))]
+        [XmlElement("physics_material", typeof(physics_material))]
         public object Item
         {
             get { return itemField; }
@@ -9298,8 +9298,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("instance_physics_material", typeof (InstanceWithExtra))]
-        [XmlElement("physics_material", typeof (physics_material))]
+        [XmlElement("instance_physics_material", typeof(InstanceWithExtra))]
+        [XmlElement("physics_material", typeof(physics_material))]
         public object Item
         {
             get { return itemField; }
@@ -9307,14 +9307,14 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("box", typeof (box))]
-        [XmlElement("capsule", typeof (capsule))]
-        [XmlElement("cylinder", typeof (cylinder))]
-        [XmlElement("instance_geometry", typeof (instance_geometry))]
-        [XmlElement("plane", typeof (plane))]
-        [XmlElement("sphere", typeof (sphere))]
-        [XmlElement("tapered_capsule", typeof (tapered_capsule))]
-        [XmlElement("tapered_cylinder", typeof (tapered_cylinder))]
+        [XmlElement("box", typeof(box))]
+        [XmlElement("capsule", typeof(capsule))]
+        [XmlElement("cylinder", typeof(cylinder))]
+        [XmlElement("instance_geometry", typeof(instance_geometry))]
+        [XmlElement("plane", typeof(plane))]
+        [XmlElement("sphere", typeof(sphere))]
+        [XmlElement("tapered_capsule", typeof(tapered_capsule))]
+        [XmlElement("tapered_cylinder", typeof(tapered_cylinder))]
         public object Item1
         {
             get { return item1Field; }
@@ -9322,8 +9322,8 @@ namespace engenious.Pipeline.Collada
         }
 
         /// <remarks />
-        [XmlElement("rotate", typeof (rotate))]
-        [XmlElement("translate", typeof (TargetableFloat3))]
+        [XmlElement("rotate", typeof(rotate))]
+        [XmlElement("translate", typeof(TargetableFloat3))]
         public object[] Items
         {
             get { return itemsField; }
@@ -9859,7 +9859,7 @@ namespace engenious.Pipeline.Collada
                 return null;
 
             StringBuilder text = new StringBuilder();
-            if (typeof (T) == typeof (double))
+            if (typeof(T) == typeof(double))
             {
                 // If type is double, then use a plain ToString with no exponent
                 for (int i = 0; i < array.Count; i++)
@@ -9950,7 +9950,7 @@ namespace engenious.Pipeline.Collada
             StreamReader str = new StreamReader(stream);
             XmlSerializer xSerializer = new XmlSerializer(typeof(COLLADA));
 
-            return (COLLADA)xSerializer.Deserialize(str);            
+            return (COLLADA) xSerializer.Deserialize(str);
         }
 
         public void Save(string fileName)
@@ -9971,8 +9971,7 @@ namespace engenious.Pipeline.Collada
             XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8);
             XmlSerializer xSerializer = new XmlSerializer(typeof(COLLADA));
             writer.Formatting = Formatting.Indented;
-            xSerializer.Serialize(writer, this);          
+            xSerializer.Serialize(writer, this);
         }
     }
 }
-

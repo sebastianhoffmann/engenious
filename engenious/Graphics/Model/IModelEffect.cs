@@ -1,9 +1,6 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
-    public interface IModelEffect : IEffect,IEffectMatrices,ITextureEffect
+    public interface IModelEffect : IEffect, IEffectMatrices, ITextureEffect
     {
     }
 }
-

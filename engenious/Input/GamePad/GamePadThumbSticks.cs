@@ -4,41 +4,32 @@ namespace engenious.Input
 {
     public struct GamePadThumbSticks : IEquatable<GamePadThumbSticks>
     {
-        const float ConversionFactor = 1.0f / short.MaxValue;
-        short left_x, left_y;
-        short right_x, right_y;
+        private const float ConversionFactor = 1.0f / short.MaxValue;
+        private readonly short _leftX;
+        private readonly short _leftY;
+        private readonly short _rightX;
+        private readonly short _rightY;
 
-        const short leftThumbDeadZone = 7864;//0.24f * short.MaxValue;//MonoGame
-        const short rightThumbDeadZone = 8683;
+        private const short LeftThumbDeadZone = 7864; //0.24f * short.MaxValue;//MonoGame
+        private const short RightThumbDeadZone = 8683;
         //
         // Properties
         //
-        public Vector2 Left
-        {
-            get
-            {
-                return new Vector2((float)this.left_x * ConversionFactor, (float)this.left_y * ConversionFactor);
-            }
-        }
+        public Vector2 Left => new Vector2((float) _leftX * ConversionFactor, (float) _leftY * ConversionFactor);
 
-        public Vector2 Right
-        {
-            get
-            {
-                return new Vector2((float)this.right_x * ConversionFactor, (float)this.right_y * ConversionFactor);
-            }
-        }
+        public Vector2 Right => new Vector2((float) _rightX * ConversionFactor, (float) _rightY * ConversionFactor);
 
         //
         // Constructors
         //
-        internal GamePadThumbSticks(short left_x, short left_y, short right_x, short right_y)
+        internal GamePadThumbSticks(short leftX, short leftY, short rightX, short rightY)
         {
-            this.left_x = ExcludeAxisDeadZone(left_x, leftThumbDeadZone);//TODO: circular dead zone?
-            this.left_y = ExcludeAxisDeadZone(left_y, leftThumbDeadZone);
-            this.right_x = ExcludeAxisDeadZone(right_x, rightThumbDeadZone);
-            this.right_y = ExcludeAxisDeadZone(right_y, rightThumbDeadZone);
+            _leftX = ExcludeAxisDeadZone(leftX, LeftThumbDeadZone); //TODO: circular dead zone?
+            _leftY = ExcludeAxisDeadZone(leftY, LeftThumbDeadZone);
+            _rightX = ExcludeAxisDeadZone(rightX, RightThumbDeadZone);
+            _rightY = ExcludeAxisDeadZone(rightY, RightThumbDeadZone);
         }
+
         private static short ExcludeAxisDeadZone(short value, short deadZone)
         {
             if (value < -deadZone)
@@ -47,7 +38,7 @@ namespace engenious.Input
                 value -= deadZone;
             else
                 return 0;
-            return (short)(value / (short.MaxValue - deadZone));
+            return (short) (value / (short.MaxValue - deadZone));
         }
 
         //
@@ -55,28 +46,23 @@ namespace engenious.Input
         //
         public override bool Equals(object obj)
         {
-            return obj is GamePadThumbSticks && this.Equals((GamePadThumbSticks)obj);
+            return obj is GamePadThumbSticks && Equals((GamePadThumbSticks) obj);
         }
 
         public bool Equals(GamePadThumbSticks other)
         {
-            return this.left_x == other.left_x && this.left_y == other.left_y && this.right_x == other.right_x && this.right_y == other.right_y;
+            return _leftX == other._leftX && _leftY == other._leftY && _rightX == other._rightX &&
+                   _rightY == other._rightY;
         }
 
         public override int GetHashCode()
         {
-            return this.left_x.GetHashCode() ^ this.left_y.GetHashCode() ^ this.right_x.GetHashCode() ^ this.right_y.GetHashCode();
+            return _leftX.GetHashCode() ^ _leftY.GetHashCode() ^ _rightX.GetHashCode() ^ _rightY.GetHashCode();
         }
 
         public override string ToString()
         {
-            return string.Format("{{Left: ({0:f4}; {1:f4}); Right: ({2:f4}; {3:f4})}}", new object[]
-                {
-                    this.Left.X,
-                    this.Left.Y,
-                    this.Right.X,
-                    this.Right.Y
-                });
+            return $"{{Left: ({Left.X:f4}; {Left.Y:f4}); Right: ({Right.X:f4}; {Right.Y:f4})}}";
         }
 
         //
@@ -93,4 +79,3 @@ namespace engenious.Input
         }
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using System;
-using engenious.Content.Pipeline;
+﻿using engenious.Content.Pipeline;
 using engenious.Graphics;
 
 namespace engenious.Content.Serialization
@@ -27,32 +26,25 @@ namespace engenious.Content.Serialization
                     writer.WriteObject<BlendState>(pass.BlendState);
                     writer.WriteObject<DepthStencilState>(pass.DepthStencilState);
                     writer.WriteObject<RasterizerState>(pass.RasterizerState);
-                    writer.Write((byte)pass.Shaders.Count);
+                    writer.Write((byte) pass.Shaders.Count);
                     foreach (var shader in pass.Shaders)
                     {
-                        writer.Write((ushort)shader.Key);
+                        writer.Write((ushort) shader.Key);
                         writer.Write(System.IO.File.ReadAllText(shader.Value));
                     }
 
-                    writer.Write((byte)pass.Attributes.Count);
+                    writer.Write((byte) pass.Attributes.Count);
                     foreach (var attr in pass.Attributes)
                     {
-                        writer.Write((byte)attr.Key);
+                        writer.Write((byte) attr.Key);
                         writer.Write(attr.Value);
                     }
                 }
             }
         }
 
-        public override string RuntimeReaderName
-        {
-            get
-            {
-                return typeof(EffectTypeReader).FullName;
-            }
-        }
+        public override string RuntimeReaderName => typeof(EffectTypeReader).FullName;
 
         #endregion
     }
 }
-

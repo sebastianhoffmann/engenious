@@ -7,7 +7,6 @@ namespace engenious
         public GameTime()
             : this(TimeSpan.Zero, TimeSpan.Zero)
         {
-            
         }
 
 
@@ -19,7 +18,7 @@ namespace engenious
 
         internal void Update(double time)
         {
-            ElapsedGameTime = new TimeSpan((long)(time * TimeSpan.TicksPerSecond));
+            ElapsedGameTime = new TimeSpan((long) (time * TimeSpan.TicksPerSecond));
             TotalGameTime += ElapsedGameTime;
         }
 
@@ -28,4 +27,3 @@ namespace engenious
         public TimeSpan TotalGameTime { get; set; }
     }
 }
-

@@ -13,4 +13,3 @@ namespace engenious
         CoverageBufferBitNv = 32768
     }
 }
-

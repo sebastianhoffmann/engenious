@@ -1,11 +1,8 @@
-﻿using System;
-using OpenTK;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
-    public class BasicEffect : Effect,IModelEffect
+    public class BasicEffect : Effect, IModelEffect
     {
-        private const string vertexShader = 
+        private const string VertexShader =
             @"
 #version 440
 
@@ -25,7 +22,8 @@ void main(void)
    psTexCoord = textureCoordinate;
 }
 ";
-        private const string pixelShader = 
+
+        private const string pixelShader =
             @"
 #version 440
 in vec4 psColor;
@@ -47,26 +45,26 @@ void main(void)
             : base(graphicsDevice)
         {
             var technique = new EffectTechnique("Basic");
-            ThreadingHelper.BlockOnUIThread(()=>{
-            Shader[] shaders = new Shader[]
+            ThreadingHelper.BlockOnUIThread(() =>
             {
-                new Shader(ShaderType.VertexShader, vertexShader),
-                new Shader(ShaderType.FragmentShader, pixelShader)
-            };
+                Shader[] shaders = new Shader[]
+                {
+                    new Shader(ShaderType.VertexShader, VertexShader),
+                    new Shader(ShaderType.FragmentShader, pixelShader)
+                };
 
-            foreach (Shader shader in shaders)
-                shader.Compile();
-            EffectPass pass = new EffectPass("Basic");
-            pass.AttachShaders(shaders);
-            pass.BindAttribute(VertexElementUsage.Color, "color");
-            pass.BindAttribute(VertexElementUsage.TextureCoordinate, "textureCoordinate");
-            pass.BindAttribute(VertexElementUsage.Position, "position");
-            pass.Link();
+                foreach (var shader in shaders)
+                    shader.Compile();
+                var pass = new EffectPass("Basic");
+                pass.AttachShaders(shaders);
+                pass.BindAttribute(VertexElementUsage.Color, "color");
+                pass.BindAttribute(VertexElementUsage.TextureCoordinate, "textureCoordinate");
+                pass.BindAttribute(VertexElementUsage.Position, "position");
+                pass.Link();
 
 
-
-            technique.Passes.Add(pass);
-            Techniques.Add(technique);
+                technique.Passes.Add(pass);
+                Techniques.Add(technique);
             });
             CurrentTechnique = technique;
 
@@ -74,25 +72,20 @@ void main(void)
             Initialize();
 
             World = View = Projection = Matrix.Identity;
-
-
         }
 
         #region IEffectMatrices implementation
 
-        private Matrix world, view, projection;
+        private Matrix _world, _view, _projection;
 
         public Matrix Projection
         {
-            get
-            {
-                return projection;
-            }
+            get { return _projection; }
             set
             {
-                if (projection != value)
+                if (_projection != value)
                 {
-                    projection = value;
+                    _projection = value;
                     Parameters["Proj"].SetValue(value);
                 }
             }
@@ -100,15 +93,12 @@ void main(void)
 
         public Matrix View
         {
-            get
-            {
-                return view;
-            }
+            get { return _view; }
             set
             {
-                if (view != value)
+                if (_view != value)
                 {
-                    view = value;
+                    _view = value;
                     Parameters["View"].SetValue(value);
                 }
             }
@@ -116,15 +106,12 @@ void main(void)
 
         public Matrix World
         {
-            get
-            {
-                return world;
-            }
+            get { return _world; }
             set
             {
-                if (world != value)
+                if (_world != value)
                 {
-                    world = value;
+                    _world = value;
                     Parameters["World"].SetValue(value);
                 }
             }
@@ -132,7 +119,6 @@ void main(void)
 
         public Texture Texture
         {
-
             set
             {
                 GraphicsDevice.Textures[0] = value;
@@ -142,23 +128,14 @@ void main(void)
 
         public bool TextureEnabled
         {
-
-            set
-            {
-                Parameters["textEnabled"].SetValue(value ? 1 : 0);
-            }
+            set { Parameters["textEnabled"].SetValue(value ? 1 : 0); }
         }
 
         public bool VertexColorEnabled
         {
-
-            set
-            {
-                Parameters["colorEnabled"].SetValue(value ? 1 : 0);
-            }
+            set { Parameters["colorEnabled"].SetValue(value ? 1 : 0); }
         }
 
         #endregion
     }
 }
-

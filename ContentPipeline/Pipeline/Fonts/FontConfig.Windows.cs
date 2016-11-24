@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Text;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.IO;
@@ -12,10 +10,10 @@ using Microsoft.Win32;
 namespace engenious.Pipeline
 {
     public class FontConfigWindows : FontConfig
-	{
-        private Dictionary<string,string> fontFileMap = new Dictionary<string, string>();
+    {
+        private readonly Dictionary<string, string> _fontFileMap = new Dictionary<string, string>();
 
-        private bool findFondFile(ref string fileName)
+        private static bool FindFondFile(ref string fileName)
         {
             if (Path.GetExtension(fileName) != ".ttf") return false;
             string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), fileName);
@@ -24,60 +22,60 @@ namespace engenious.Pipeline
                 fileName = file;
                 return true;
             }
-            if (File.Exists(fileName)) return true;
-            return false;
+            return File.Exists(fileName);
         }
-		public FontConfigWindows()
-		{
-		    var fontKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts");
-		    if (fontKey == null)
-		        return;
-		    foreach (string fontName in fontKey.GetValueNames())
-		    {
-		        var value = fontKey.GetValue(fontName, null);
-		        if (value == null) continue;
-		        var file = value.ToString();
-		        if (findFondFile(ref file))
-		        {
-		            string name = fontName;
-		            if (name.EndsWith(" (TrueType)"))
-                        name = name.Substring(0, name.Length - " (TrueType)".Length);//TODO: better solution?
-		            fontFileMap.Add(name, file);
-		        }
-		    }
-		}
+
+        public FontConfigWindows()
+        {
+            var fontKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts");
+            if (fontKey == null)
+                return;
+            foreach (string fontName in fontKey.GetValueNames())
+            {
+                var value = fontKey.GetValue(fontName, null);
+                if (value == null) continue;
+                var file = value.ToString();
+                if (FindFondFile(ref file))
+                {
+                    string name = fontName;
+                    if (name.EndsWith(" (TrueType)"))
+                        name = name.Substring(0, name.Length - " (TrueType)".Length); //TODO: better solution?
+                    _fontFileMap.Add(name, file);
+                }
+            }
+        }
 
         #region implemented abstract members of FontConfig
-       
 
-        public override bool GetFontFile(string fontName, int fontSize, System.Drawing.FontStyle style,out string fileName)
+        public override bool GetFontFile(string fontName, int fontSize, FontStyle style, out string fileName)
         {
             fileName = null;
 
-            System.Drawing.Font fnt = new System.Drawing.Font(fontName, fontSize, style, System.Drawing.GraphicsUnit.Point);
+            var fnt = new Font(fontName, fontSize, style, GraphicsUnit.Point);
 
             var names = GetFontNames(fnt);
             foreach (var name in names)
             {
-                if (fontFileMap.TryGetValue(name.Name, out fileName))
+                if (_fontFileMap.TryGetValue(name.Name, out fileName))
                     break;
             }
             //Check if requested Font != Default Font
-            return System.Drawing.FontFamily.GenericSansSerif.Name == fnt.OriginalFontName;
+            return FontFamily.GenericSansSerif.Name == fnt.OriginalFontName;
         }
 
-        private List<NameRecord> GetFontNames(System.Drawing.Font font)
+        private List<NameRecord> GetFontNames(Font font)
         {
             return GetFontNames(font.ToHfont());
         }
+
         private List<NameRecord> GetFontNames(IntPtr hFont)
         {
             var fontNames = new List<NameRecord>();
-            IntPtr dc = GetDC(IntPtr.Zero);
+            var dc = GetDC(IntPtr.Zero);
 
             SelectObject(dc, hFont);
 
-            using (BinaryReader br = new BinaryReader(new MemoryStream(LoadFontMetricsNameTable(dc))))
+            using (var br = new BinaryReader(new MemoryStream(LoadFontMetricsNameTable(dc))))
             {
                 // Read selector (always = 0) to advance reader position by 2 bytes
 
@@ -91,12 +89,12 @@ namespace engenious.Pipeline
                 // Get the correct name record
                 for (ushort i = 0; i < records; i++)
                 {
-                    NameRecord nameRecord = new NameRecord(br);
+                    var nameRecord = new NameRecord(br);
                     if (nameRecord.IsWindowsUnicodeFullFontName)
                         fontNames.Add(nameRecord);
                 }
-                foreach(var record in fontNames)
-                    record.ReadName(br,offset);
+                foreach (var record in fontNames)
+                    record.ReadName(br, offset);
 
 
                 br.Close();
@@ -109,14 +107,19 @@ namespace engenious.Pipeline
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetDC(IntPtr hWnd);
+
         [DllImport("user32.dll")]
         private static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
         [DllImport("gdi32.dll", EntryPoint = "SelectObject")]
         private static extern IntPtr SelectObject([In] IntPtr hdc, [In] IntPtr hgdiobj);
+
         [DllImport("gdi32.dll")]
-        private static extern uint GetFontData(IntPtr hdc, uint dwTable, uint dwOffset, [Out] byte[] lpvBuffer, uint cbData);
+        private static extern uint GetFontData(IntPtr hdc, uint dwTable, uint dwOffset, [Out] byte[] lpvBuffer,
+            uint cbData);
 
         private const uint NameTableKey = 0x656D616E;
+
         /// <summary>
         /// Loads the font metrics name table as raw bytes from the font in the <paramref name="dc"/>.
         /// </summary>
@@ -136,6 +139,7 @@ namespace engenious.Pipeline
 
             return fontData;
         }
+
         /// <summary>
         /// Helper function to convert any <see cref="ushort"/> value in font metrics name table to little endian,
         ///  because all stored in big endian.
@@ -152,7 +156,6 @@ namespace engenious.Pipeline
             return value;
         }
 
-
         #endregion
 
         #region TTF NameRecord Class
@@ -163,17 +166,14 @@ namespace engenious.Pipeline
         /// </summary>
         private class NameRecord
         {
+            private readonly ushort _platformId;
+            private readonly ushort _encodingId;
+            private readonly ushort _nameId;
+            private readonly ushort _nameLength;
+            private readonly ushort _byteOffset;
 
-            private readonly ushort platformId;
-            private readonly ushort encodingId;
-            private readonly ushort nameId;
-            private ushort NameLength;
-            private ushort ByteOffset;
-
-            public ushort LanguageId { get; private set; }
+            private ushort LanguageId { get; set; }
             public string Name { get; private set; }
-
-
 
 
             /// <summary>
@@ -182,7 +182,7 @@ namespace engenious.Pipeline
             /// <value>
             ///     <c>true</c> if this <see cref="NameRecord"/> represents a Windows Unicode full font name; otherwise, <c>false</c>.
             /// </value>
-            internal bool IsWindowsUnicodeFullFontName => platformId == 3 && encodingId == 1 && nameId == 4;
+            internal bool IsWindowsUnicodeFullFontName => _platformId == 3 && _encodingId == 1 && _nameId == 4;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="NameRecord"/> class.
@@ -192,29 +192,29 @@ namespace engenious.Pipeline
             {
                 // Read the unsigned 16-bit integers and convert to little endian
 
-                platformId = ToLittleEndian(br.ReadUInt16());
-                encodingId = ToLittleEndian(br.ReadUInt16());
+                _platformId = ToLittleEndian(br.ReadUInt16());
+                _encodingId = ToLittleEndian(br.ReadUInt16());
 
                 // Only read to advance reader position by 2 bytes
 
                 LanguageId = ToLittleEndian(br.ReadUInt16());
 
-                nameId = ToLittleEndian(br.ReadUInt16());
-                NameLength = ToLittleEndian(br.ReadUInt16());
-                ByteOffset = ToLittleEndian(br.ReadUInt16());
+                _nameId = ToLittleEndian(br.ReadUInt16());
+                _nameLength = ToLittleEndian(br.ReadUInt16());
+                _byteOffset = ToLittleEndian(br.ReadUInt16());
             }
 
             internal void ReadName(BinaryReader br, int recordOffset)
             {
                 // Search the start position of the font name
 
-                int totalOffset = recordOffset + ByteOffset;
+                int totalOffset = recordOffset + _byteOffset;
                 br.BaseStream.Seek(totalOffset, SeekOrigin.Begin);
 
                 // Now read the amount of bytes specified in the name record
                 // and convert to a string
 
-                byte[] nameBytes = br.ReadBytes(NameLength);
+                byte[] nameBytes = br.ReadBytes(_nameLength);
                 Name = Encoding.GetEncoding(1201).GetString((nameBytes));
             }
 
@@ -227,12 +227,10 @@ namespace engenious.Pipeline
             public override string ToString()
             {
                 return
-                    $"Name = {Name ?? "{Not Available}"};NameRecord - Key; Platform ID = {platformId.ToString()}, Encoding ID = {encodingId.ToString()}, Name ID = {nameId.ToString()}";
+                    $"Name = {Name ?? "{Not Available}"};NameRecord - Key; Platform ID = {_platformId.ToString()}, Encoding ID = {_encodingId.ToString()}, Name ID = {_nameId.ToString()}";
             }
-
         }
 
         #endregion
     }
 }
-

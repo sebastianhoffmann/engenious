@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace engenious.Content.Pipeline
+﻿namespace engenious.Content.Pipeline
 {
     public class BuildMessageEventArgs
     {
@@ -14,12 +9,14 @@ namespace engenious.Content.Pipeline
             Error,
             Information
         }
-        public BuildMessageEventArgs(string filename,string message,BuildMessageType messageType)
+
+        public BuildMessageEventArgs(string filename, string message, BuildMessageType messageType)
         {
             FileName = filename;
             Message = message;
             MessageType = messageType;
         }
+
         public string FileName { get; private set; }
         public string Message { get; private set; }
         public BuildMessageType MessageType { get; private set; }

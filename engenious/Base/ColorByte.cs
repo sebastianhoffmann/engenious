@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
     public struct ColorByte
     {
-
         public ColorByte(byte r, byte g, byte b, byte a = 255)
         {
             this.r = r;
@@ -15,9 +12,8 @@ namespace engenious
         }
 
         public ColorByte(float r, float g, float b, float a = 1.0f)
-            : this((byte)(r * 255), (byte)(g * 255), (byte)(b * 255), (byte)(a * 255))
+            : this((byte) (r * 255), (byte) (g * 255), (byte) (b * 255), (byte) (a * 255))
         {
-            
         }
 
         public ColorByte(Color color, float a)
@@ -32,17 +28,17 @@ namespace engenious
 
         private byte r, g, b, a;
 
-        public byte R{ get { return r; } }
+        public byte R => r;
 
-        public byte G{ get { return g; } }
+        public byte G => g;
 
-        public byte B{ get { return b; } }
+        public byte B => b;
 
-        public byte A{ get { return a; } }
+        public byte A => a;
 
         public override int GetHashCode()
         {
-            return (int)(A << 24 | R << 16 | G << 8 | B);//TODO?
+            return (int) (A << 24 | R << 16 | G << 8 | B); //TODO?
         }
 
         public static implicit operator Color(ColorByte col)
@@ -51,4 +47,3 @@ namespace engenious
         }
     }
 }
-

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using engenious.Content.Serialization;
-using engenious.Content;
 
 namespace engenious.Content
 {
@@ -12,7 +11,6 @@ namespace engenious.Content
             : base(typeof(T).Namespace + "." + typeof(T).Name)
         {
         }
-			
     }
 
     [Serializable]
@@ -20,12 +18,12 @@ namespace engenious.Content
     {
         internal ContentFile(string type)
         {
-            this.FileType = type;
+            FileType = type;
         }
 
-        public string FileType{ get; private set; }
+        public string FileType { get; private set; }
 
-        public object Load(ContentManager manager, Stream stream,Type type)
+        public object Load(ContentManager manager, Stream stream, Type type)
         {
             ContentReader reader = new ContentReader(stream);
             string readName = reader.ReadString();
@@ -36,4 +34,3 @@ namespace engenious.Content
         }
     }
 }
-

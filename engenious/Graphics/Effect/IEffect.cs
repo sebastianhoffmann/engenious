@@ -1,21 +1,11 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public interface IEffect
     {
-        EffectParameterCollection Parameters {
-            get;
-        }
+        EffectParameterCollection Parameters { get; }
 
-        EffectTechniqueCollection Techniques {
-            get;
-        }
+        EffectTechniqueCollection Techniques { get; }
 
-        EffectTechnique CurrentTechnique {
-            get;
-            set;
-        }
+        EffectTechnique CurrentTechnique { get; set; }
     }
 }
-

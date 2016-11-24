@@ -2,12 +2,8 @@
 
 namespace engenious.Content.Serialization
 {
-	[AttributeUsageAttribute (AttributeTargets.Class)]
-	public sealed class ContentTypeWriterAttribute : Attribute
-	{
-		public ContentTypeWriterAttribute ()
-		{
-		}
-	}
+    [AttributeUsageAttribute(AttributeTargets.Class)]
+    public sealed class ContentTypeWriterAttribute : Attribute
+    {
+    }
 }
-

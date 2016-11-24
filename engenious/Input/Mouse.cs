@@ -1,61 +1,54 @@
 ﻿using System;
-using System.Reflection;
-using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace engenious.Input
 {
     public static class Mouse
     {
+        private static OpenTK.GameWindow _window;
+        private static float _deltaPrecise = 0;
 
-        private static OpenTK.GameWindow window;
-        static float deltaPrecise=0;
         static Mouse()
         {
-            if (!WrappingHelper.ValidateStructs<OpenTK.Input.MouseState,MouseState>())
+            if (!WrappingHelper.ValidateStructs<OpenTK.Input.MouseState, MouseState>())
                 throw new Exception("test");
         }
 
         internal static void UpdateWindow(OpenTK.GameWindow window)
         {
-            Mouse.window = window;
-            window.MouseWheel += delegate(object sender, OpenTK.Input.MouseWheelEventArgs e)
-            {
-                deltaPrecise-=(e.DeltaPrecise);
-            };
+            _window = window;
+            window.MouseWheel +=
+                delegate(object sender, OpenTK.Input.MouseWheelEventArgs e) { _deltaPrecise -= (e.DeltaPrecise); };
         }
-        public static unsafe MouseState GetState(int index)
+
+        public static MouseState GetState(int index)
         {
             return GetState();
             //TODO multiple mice
-            OpenTK.Input.MouseState state = OpenTK.Input.Mouse.GetState(index);
-            MouseState actual = *(MouseState*)(&state);
+            /*var state = OpenTK.Input.Mouse.GetState(index);
+            var actual = *(MouseState*)(&state);
             
-            actual.X = window.Mouse.X;
-            actual.Y = window.Mouse.Y;
-            return actual;
-
+            actual.X = _window.Mouse.X;
+            actual.Y = _window.Mouse.Y;
+            return actual;*/
         }
+
         public static unsafe MouseState GetState()
         {
-            OpenTK.Input.MouseState state = OpenTK.Input.Mouse.GetState();
-            MouseState actual = *(MouseState*)(&state);
-            actual.X = window.Mouse.X;
-            actual.Y = window.Mouse.Y;
-            actual.Scroll = new MouseScroll(actual.Scroll.X,deltaPrecise);//.Y = ;
+            var state = OpenTK.Input.Mouse.GetState();
+            var actual = *(MouseState*) (&state);
+            actual.X = _window.Mouse.X;
+            actual.Y = _window.Mouse.Y;
+            actual.Scroll = new MouseScroll(actual.Scroll.X, _deltaPrecise); //.Y = ;
             //deltaPrecise = 0;
             return actual;
-
         }
 
         public static void SetPosition(double x, double y)
         {
-            
-            var pt = window.PointToScreen(new System.Drawing.Point((int)x, (int)y));
-            x -= (int)x;
-            y -= (int)y;
+            var pt = _window.PointToScreen(new System.Drawing.Point((int) x, (int) y));
+            x -= (int) x;
+            y -= (int) y;
             OpenTK.Input.Mouse.SetPosition(pt.X + x, pt.Y + y);
         }
     }
 }
-

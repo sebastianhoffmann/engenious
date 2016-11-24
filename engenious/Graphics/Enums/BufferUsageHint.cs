@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public enum BufferUsageHint
     {
@@ -15,4 +13,3 @@ namespace engenious.Graphics
         DynamicCopy
     }
 }
-

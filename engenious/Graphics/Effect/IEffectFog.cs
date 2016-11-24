@@ -1,14 +1,10 @@
-﻿using System;
-using OpenTK;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
-	public interface IEffectFog
-	{
-		Vector3 FogColor{get;set;}
-		float FogStart{get;set;}
-		float FogEnd{get;set;}
-		bool FogEnabled{get;set;}
-	}
+    public interface IEffectFog
+    {
+        Vector3 FogColor { get; set; }
+        float FogStart { get; set; }
+        float FogEnd { get; set; }
+        bool FogEnabled { get; set; }
+    }
 }
-

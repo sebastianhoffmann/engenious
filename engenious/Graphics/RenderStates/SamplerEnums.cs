@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     public enum TextureWrapMode
     {
@@ -13,11 +11,10 @@ namespace engenious
         ClampToEdgeSgis = 33071,
         MirroredRepeat = 33648
     }
+
     public enum TextureFilter
     {
-        Nearest=0x2600,
-        Linear=0x2601,
-
+        Nearest = 0x2600,
+        Linear = 0x2601,
     }
 }
-

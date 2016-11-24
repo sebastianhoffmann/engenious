@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     public enum PixelFormat
     {
@@ -197,4 +195,3 @@ namespace engenious
         Four,
     }
 }
-

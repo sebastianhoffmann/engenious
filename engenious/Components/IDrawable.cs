@@ -1,14 +1,11 @@
-﻿using System;
-
-namespace engenious
+﻿namespace engenious
 {
     public interface IDrawable
     {
-        bool Visible{ get; }
+        bool Visible { get; }
 
-        int DrawOrder{ get; }
+        int DrawOrder { get; }
 
         void Draw(GameTime gameTime);
     }
 }
-

@@ -6,36 +6,38 @@ namespace engenious.Graphics
 {
     public class AnimationNode
     {
-        private bool sorted = false;
+        private bool _sorted = false;
 
-        public Node Node{ get; set; }
+        public Node Node { get; set; }
 
-        public List<AnimationFrame> Frames{ get; set; }
+        public List<AnimationFrame> Frames { get; set; }
 
         public void Sort()
         {
-            if (sorted)
+            if (_sorted)
                 return;
-            sorted = true;
+            _sorted = true;
             Frames = Frames.OrderBy(f => f.Frame).ToList();
         }
-        public bool Repeat{get;set;}=true;
-        private int lastF=0;
+
+        public bool Repeat { get; set; } = true;
+
         public void ApplyAnimation(float time, float maxTime)
         {
             Sort();
-            int frameIndex = Math.Max(Frames.FindIndex(f => f.Frame >= time)-1,0);
-            AnimationFrame frame = Frames[frameIndex];
-            AnimationFrame nextFrame=null;
-            if (Repeat){
+            int frameIndex = Math.Max(Frames.FindIndex(f => f.Frame >= time) - 1, 0);
+            var frame = Frames[frameIndex];
+            AnimationFrame nextFrame = null;
+            if (Repeat)
+            {
                 nextFrame = Frames[(frameIndex + 1) % Frames.Count];
             }
-            else if(frameIndex < Frames.Count-1)
+            else if (frameIndex < Frames.Count - 1)
                 nextFrame = Frames[frameIndex + 1];
             else
                 return;
-            
-            float diff = time-frame.Frame;
+
+            float diff = time - frame.Frame;
             float frameTime = nextFrame.Frame - frame.Frame;
 
             /*if (diff == 0)
@@ -43,7 +45,7 @@ namespace engenious.Graphics
                 Node.LocalTransform = frame.Transform.ToMatrix();
             }
             else if (diff > 0)*/
-            float percent=diff / frameTime;
+            float percent = diff / frameTime;
             if (Node.Name.Contains("$"))
             {
                 Console.WriteLine(frameIndex + " - " + percent);
@@ -57,4 +59,3 @@ namespace engenious.Graphics
         }
     }
 }
-

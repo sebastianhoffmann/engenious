@@ -1,5 +1,4 @@
 ﻿using System;
-using OpenTK;
 using System.Collections.Generic;
 
 namespace engenious
@@ -24,8 +23,8 @@ namespace engenious
         public bool Contains(Vector3 vec)
         {
             return vec.X >= Min.X && vec.X < Max.X &&
-            vec.Y >= Min.Y && vec.Y < Max.Y &&
-            vec.Z >= Min.Z && vec.Z < Max.Z;
+                   vec.Y >= Min.Y && vec.Y < Max.Y &&
+                   vec.Z >= Min.Z && vec.Z < Max.Z;
         }
 
         public bool Contains(BoundingBox box)
@@ -39,10 +38,12 @@ namespace engenious
             val1 = val2;
             val2 = tmp;
         }
+
         public bool Intersects(BoundingBox box)
         {
-            throw new NotImplementedException();//TODO: return (this.Max.X >= box.Min.X) && (this.Min.X <= box.Max.X)
+            throw new NotImplementedException(); //TODO: return (this.Max.X >= box.Min.X) && (this.Min.X <= box.Max.X)
         }
+
         public float? Intersects(Ray ray)
         {
             const float Epsilon = 1e-6f;
@@ -172,9 +173,12 @@ namespace engenious
         public Vector3[] GetCorners()
         {
             return new Vector3[]
-            { new Vector3(Min.X, Max.Y, Max.Z), Max, new Vector3(Max.X, Min.Y, Max.Z), new Vector3(Min.X, Min.Y, Max.Z),
-                new Vector3(Min.X, Max.Y, Min.Z), Max, new Vector3(Max.X, Min.Y, Min.Z), new Vector3(Min.X, Min.Y, Min.Z),
-            };//TODO: verify?
+            {
+                new Vector3(Min.X, Max.Y, Max.Z), Max, new Vector3(Max.X, Min.Y, Max.Z),
+                new Vector3(Min.X, Min.Y, Max.Z),
+                new Vector3(Min.X, Max.Y, Min.Z), Max, new Vector3(Max.X, Min.Y, Min.Z),
+                new Vector3(Min.X, Min.Y, Min.Z),
+            }; //TODO: verify?
         }
 
         public static BoundingBox CreateFromPoints(IEnumerable<Vector3> points)
@@ -186,7 +190,7 @@ namespace engenious
                 minX = Math.Min(minX, point.X);
                 minY = Math.Min(minY, point.Y);
                 minZ = Math.Min(minZ, point.Z);
-                                           
+
                 maxX = Math.Max(maxX, point.X);
                 maxY = Math.Max(maxY, point.Y);
                 maxZ = Math.Max(maxZ, point.Z);
@@ -218,7 +222,7 @@ namespace engenious
                 minX = Math.Min(box.Min.X, minX);
                 minY = Math.Min(box.Min.Y, minY);
                 minZ = Math.Min(box.Min.Z, minZ);
-                                    
+
                 maxX = Math.Max(box.Max.X, maxX);
                 maxY = Math.Max(box.Max.Y, maxY);
                 maxZ = Math.Max(box.Max.Z, maxZ);
@@ -227,4 +231,3 @@ namespace engenious
         }
     }
 }
-

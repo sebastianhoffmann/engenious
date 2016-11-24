@@ -1,28 +1,24 @@
-﻿using System;
-using OpenTK.Graphics.OpenGL4;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
-    public abstract class Texture:GraphicsResource
+    public abstract class Texture : GraphicsResource
     {
-        public Texture(GraphicsDevice graphicsDevice, int levelCount = 1, PixelInternalFormat format = PixelInternalFormat.Rgba8)
+        protected Texture(GraphicsDevice graphicsDevice, int levelCount = 1,
+            PixelInternalFormat format = PixelInternalFormat.Rgba8)
             : base(graphicsDevice)
         {
-            this.LevelCount = levelCount;
-            this.Format = format;
+            LevelCount = levelCount;
+            Format = format;
         }
 
-        private SamplerState samplerState;
-        public SamplerState SamplerState{
-            get{
-                return samplerState;
-            }
-            set{
-                if (value == null)
-                    samplerState = SamplerState.LinearWrap;
-                else
-                    samplerState = value;
-                SetSampler(samplerState);
+        private SamplerState _samplerState;
+
+        public SamplerState SamplerState
+        {
+            get { return _samplerState; }
+            set
+            {
+                _samplerState = value ?? SamplerState.LinearWrap;
+                SetSampler(_samplerState);
             }
         }
 
@@ -35,4 +31,3 @@ namespace engenious.Graphics
         internal abstract void Bind();
     }
 }
-

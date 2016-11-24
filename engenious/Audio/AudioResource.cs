@@ -8,7 +8,7 @@ namespace engenious.Audio
         {
         }
 
-        public bool IsDisposed{ get; private set; }
+        public bool IsDisposed { get; private set; }
 
         #region IDisposable implementation
 
@@ -20,4 +20,3 @@ namespace engenious.Audio
         #endregion
     }
 }
-

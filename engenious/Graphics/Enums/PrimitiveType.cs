@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public enum PrimitiveType
     {
@@ -29,4 +27,3 @@ namespace engenious.Graphics
         PatchesExt = 14
     }
 }
-

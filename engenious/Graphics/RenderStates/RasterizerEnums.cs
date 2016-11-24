@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace engenious.Graphics
+﻿namespace engenious.Graphics
 {
     public enum CullMode
     {
@@ -16,4 +14,3 @@ namespace engenious.Graphics
         Fill
     }
 }
-
