@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using ContentTool.Items;
 using engenious.Content.Pipeline;
 
 namespace ContentTool.Builder
@@ -121,7 +123,7 @@ namespace ContentTool.Builder
         /// <param name="contentFile"></param>
         /// <param name="importerContext"></param>
         /// <param name="processorContext"></param>
-        private void BuildFile(ContentFile contentFile,engenious.Content.Pipeline.ContentImporterContext importerContext,engenious.Content.Pipeline.ContentProcessorContext processorContext)
+        public Tuple<object,object> BuildFile(ContentFile contentFile,ContentImporterContext importerContext,ContentProcessorContext processorContext)
         {
             string importDir = System.IO.Path.GetDirectoryName(Project.File);
             string importFile = System.IO.Path.Combine(importDir, contentFile.getPath());
@@ -132,28 +134,28 @@ namespace ContentTool.Builder
 
             if (!cache.NeedsRebuild(importDir,outputPath,contentFile.getPath())){
                 RaiseBuildMessage(this, new BuildMessageEventArgs(contentFile.Name, "skipped!", BuildMessageEventArgs.BuildMessageType.Information));
-                return;
+                return null;
             }
             BuildInfo cacheInfo = new BuildInfo(importDir,contentFile.getPath(),GetDestinationFile(contentFile));
             var importer = contentFile.Importer;
             if (importer == null)
-                return;
+                return null;
             
             object importerOutput = importer.Import(importFile, importerContext);
             if (importerOutput == null)
-                return;
+                return null;
             
             cacheInfo.Dependencies.AddRange(importerContext.Dependencies);
             cache.AddDependencies(importDir,importerContext.Dependencies);
 
             engenious.Content.Pipeline.IContentProcessor processor = contentFile.Processor;
             if (processor == null)
-                return;
+                return new Tuple<object,object>(importerOutput,null);
 
             object processedData = processor.Process(importerOutput,importFile, processorContext);
 
             if (processedData == null)
-                return;
+                return new Tuple<object, object>(importerOutput, null);
             cacheInfo.Dependencies.AddRange(processorContext.Dependencies);
             cache.AddDependencies(importDir,processorContext.Dependencies);
 
@@ -171,6 +173,8 @@ namespace ContentTool.Builder
             cache.AddBuildInfo(cacheInfo);
             builtFiles[contentFile.getPath()]=contentFile;
             ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Build, contentFile), null, null);
+
+            return new Tuple<object, object>(importerOutput,processedData);
         }
 
         /// <summary>
@@ -194,7 +198,7 @@ namespace ContentTool.Builder
             }
         }
 
-        public void Build()
+        public void Build(ContentItem item = null)
         {
             if (Project == null)
                 return;
@@ -202,9 +206,13 @@ namespace ContentTool.Builder
             currentBuild = BuildStep.Build;
             BuildStatusChanged?.BeginInvoke(this, BuildStep.Build, null, null);
 
-            buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(BuildThread));
+            if(item == null)
+                buildingThread = new System.Threading.Thread(new System.Threading.ThreadStart(BuildThread));
+            else
+                buildingThread = new System.Threading.Thread(new ThreadStart(()=>BuildThread(item)));
             buildingThread.Start();
         }
+
         public void Rebuild()
         {
             if (Project == null)
@@ -250,7 +258,7 @@ namespace ContentTool.Builder
             IsBuilding = true;
             foreach (var cachedItem in cache.Files)
             {
-                var item = Project.getElement(cachedItem.Value.InputFile) as ContentFile;
+                var item = Project.GetElement(cachedItem.Value.InputFile) as ContentFile;
                 if (item != null)
                 {
                     ItemProgress?.BeginInvoke(this, new ItemProgressEventArgs(BuildStep.Clean, item), null, null);
@@ -264,6 +272,11 @@ namespace ContentTool.Builder
 
         private void BuildThread()
         {
+            BuildThread(Project);
+        }
+
+        private void BuildThread(ContentItem item)
+        {
             FailedBuilds = 0;
 
             IsBuilding = true;
@@ -276,7 +289,12 @@ namespace ContentTool.Builder
                 importerContext.BuildMessage += RaiseBuildMessage;
                 processorContext.BuildMessage += RaiseBuildMessage;
 
-                BuildDir(Project, importerContext, processorContext);
+                if(item == null)
+                    BuildDir(Project, importerContext, processorContext);
+                else if(item is ContentFolder)
+                    BuildDir((ContentFolder)item,importerContext,processorContext);
+                else if (item is ContentFile)
+                    BuildFile((ContentFile) item, importerContext, processorContext);
             }
             //System.Threading.Thread.Sleep(8000);
             cache.Save(GetCacheFile());

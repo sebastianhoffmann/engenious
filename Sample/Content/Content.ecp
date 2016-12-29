@@ -7,15 +7,17 @@
     <ContentFile>
       <Name>brick.jpg</Name>
       <Processor>BitmapProcessor</Processor>
+      <Importer>Bitmap Importer</Importer>
       <Settings>
-        <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
-        <MipMapCount>1</MipMapCount>
+        <AutoGenerateMipMaps>True</AutoGenerateMipMaps>
+        <MipMapCount>599</MipMapCount>
         <Format>1</Format>
       </Settings>
     </ContentFile>
     <ContentFile>
       <Name>test.spritefont</Name>
       <Processor>SpriteFontProcessor</Processor>
+      <Importer>SpriteFontImporter</Importer>
     </ContentFile>
   </Contents>
 </Content>
