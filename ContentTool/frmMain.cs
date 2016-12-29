@@ -9,21 +9,22 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ContentTool.Builder;
+using ContentTool.Commands;
+using ContentTool.Items;
+using engenious.Content.Pipeline;
+using engenious.Pipeline.Pipeline.Editors;
+
 namespace ContentTool
 {
     public partial class frmMain : Form
     {
-
-        //TODO: architecture
-        private string currentFile;
-
         private ContentProject currentProject;
 
-        private static string lastFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".engenious");
-
-        private ContentProject CurrentProject{
-            get{return currentProject;}
-            set{
+        private ContentProject CurrentProject
+        {
+            get { return currentProject; }
+            set
+            {
                 currentProject = value;
                 if (builder != null)
                 {
@@ -56,6 +57,19 @@ namespace ContentTool
             treeMap = new Dictionary<ContentItem, TreeNode>();
 
             treeContentFiles.NodeMouseClick += TreeContentFilesOnNodeMouseClick;
+
+            this.newFolderMenuItem.Click += (o, e) => AddNewFolder.Execute(GetSelectedItem(), CurrentProject.File);
+            this.existingFolderMenuItem.Click += (o,e) => AddExistingFolder.Execute(GetSelectedItem(), CurrentProject.File);
+            this.existingItemMenuItem.Click += (o, e) => AddExistingItem.Execute(GetSelectedItem(), CurrentProject.File);
+            this.deleteMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
+            this.deleteToolStripMenuItem.Click += (o,e) => DeleteItem.Execute(GetSelectedItem());
+            this.deleteToolStripMenuItem1.Click += (o, e) => DeleteItem.Execute(GetSelectedItem());
+            this.renameMenuItem.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
+            this.renameToolStripMenuItem.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
+            this.renameToolStripMenuItem1.Click += (o, e) => RenameItem.Execute(GetSelectedItem(), treeMap);
+            this.buildToolStripMenuItem.Click += (o, e) => BuildItem.Execute(GetSelectedItem(), builder);
+            this.buildToolStripMenuItem1.Click += (o, e) => BuildItem.Execute(GetSelectedItem(), builder);
+            this.buildToolStripMenuItem2.Click += (o, e) => BuildItem.Execute(GetSelectedItem(), builder);
         }
 
         void FrmMain_Load(object sender, System.EventArgs e)
@@ -69,57 +83,55 @@ namespace ContentTool
                 }
             }
 
-            if (File.Exists(lastFile))
-            {
-                var last = File.ReadAllText(lastFile);
-                if (File.Exists(last))
-                    OpenFile(last);
-
-            }
+            if (File.Exists(Program.Configuration.LastFile))
+                OpenFile(Program.Configuration.LastFile);
         }
 
         #region Build Events
 
         private void Builder_BuildMessage(object sender, engenious.Content.Pipeline.BuildMessageEventArgs e)
         {
-            Log(Program.MakePathRelative(e.FileName) + " " + e.Message, e.MessageType == engenious.Content.Pipeline.BuildMessageEventArgs.BuildMessageType.Error);
+
+            Log(Program.MakePathRelative(e.FileName) + " " + e.Message, e.MessageType);
+
         }
 
-        void Builder_ItemProgress (object sender, ItemProgressEventArgs e)
+        void Builder_ItemProgress(object sender, ItemProgressEventArgs e)
         {
-            string message = e.Item + " " +(e.BuildStep & (BuildStep.Build|BuildStep.Clean)).ToString().ToLower() + "ing ";
+            string message = e.Item + " " + (e.BuildStep & (BuildStep.Build | BuildStep.Clean)).ToString().ToLower() + "ing ";
 
-            bool error=false;
+            BuildMessageEventArgs.BuildMessageType type = BuildMessageEventArgs.BuildMessageType.Information;
 
             if ((e.BuildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
             {
                 message += "failed!";
-                error = true;
-            }else if ((e.BuildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
-            {
-                message +="finished!";
+                type = BuildMessageEventArgs.BuildMessageType.Error;
             }
-            Log(message,error);
+            else if ((e.BuildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+            {
+                message += "finished!";
+            }
+            Log(message, type);
         }
 
-        void Builder_BuildStatusChanged (object sender, BuildStep buildStep)
+        void Builder_BuildStatusChanged(object sender, BuildStep buildStep)
         {
-            string message = (buildStep & (BuildStep.Build|BuildStep.Clean)).ToString() + " ";
-            bool error=false;
+            string message = (buildStep & (BuildStep.Build | BuildStep.Clean)).ToString() + " ";
+            BuildMessageEventArgs.BuildMessageType type = BuildMessageEventArgs.BuildMessageType.Information;
             if ((buildStep & Builder.BuildStep.Abort) == Builder.BuildStep.Abort)
             {
                 message += "aborted!";
-                error = true;
-            }else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
+                type = BuildMessageEventArgs.BuildMessageType.Warning;
+            }
+            else if ((buildStep & Builder.BuildStep.Finished) == Builder.BuildStep.Finished)
             {
-                message +="finished!";
+                message += "finished!";
                 if (builder.FailedBuilds != 0)
                 {
                     message += " " + builder.FailedBuilds.ToString() + " files failed to build!";
-                    error = true;
                 }
             }
-            Log(message,error);
+            Log(message, type);
         }
 
         #endregion
@@ -153,7 +165,7 @@ namespace ContentTool
             {
                 case NotifyCollectionChangedAction.Add:
                     {
-                        var node = new TreeNode(item.Name){ Tag = item };
+                        var node = new TreeNode(item.Name) { Tag = item };
                         if (
                             item.Parent?.Contents?.FirstOrDefault(
                                 x =>
@@ -201,7 +213,7 @@ namespace ContentTool
                         else
                             parentNode.Nodes.Remove(node);
 
-                        node = new TreeNode(item.Name){ Tag = item };
+                        node = new TreeNode(item.Name) { Tag = item };
                         node.SelectedImageKey = node.ImageKey = GetImageKey(item);
                         treeMap.Add(item, node);
                         if (parentNode == null)
@@ -235,6 +247,19 @@ namespace ContentTool
         private void treeContentFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
             prpItem.SelectedObject = e.Node.Tag;
+            panel_editor.Controls.Clear();
+            ContentFile file =  e.Node.Tag as ContentFile;
+            if (file == null || file.Importer == null || file.Processor == null)
+                return;
+            var editorWrap = PipelineHelper.GetContentEditor(Path.GetExtension(file.Name), file.Importer.ExportType, file.Processor.ExportType);
+            if (editorWrap == null)
+                return;
+            var absPath = Path.Combine(Path.GetDirectoryName(CurrentProject.File), file.getPath());
+            var importValue = file.Importer.Import(absPath, new ContentImporterContext());
+            var processValue = file.Processor.Process(importValue, absPath,
+                new ContentProcessorContext());
+            editorWrap.Open(importValue, processValue);
+            panel_editor.Controls.Add(editorWrap.Editor.MainControl);
         }
 
         void TreeContentFiles_BeforeLabelEdit(object sender, System.Windows.Forms.NodeLabelEditEventArgs e)
@@ -291,11 +316,11 @@ namespace ContentTool
 
         void FileMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
-            bool fileOpened = !string.IsNullOrEmpty(currentFile) || CurrentProject != null;
+            bool fileOpened = CurrentProject != null;
             this.importMenuItem.Enabled = false;
             this.closeMenuItem.Enabled = this.saveAsMenuItem.Enabled = fileOpened;
             this.saveMenuItem.Enabled = fileOpened;//TODO änderungen?
-            
+
         }
 
 
@@ -311,7 +336,6 @@ namespace ContentTool
 
         void CloseMenuItem_Click(object sender, EventArgs e)
         {
-            currentFile = "";
             CloseFile();
 
         }
@@ -372,36 +396,12 @@ namespace ContentTool
         void BuildMainMenuItem_DropDownOpening(object sender, System.EventArgs e)
         {
             cleanMenuItem.Enabled = builder.CanClean;
-            rebuildMenuItem.Enabled = System.IO.File.Exists(currentFile) && cleanMenuItem.Enabled;
+            rebuildMenuItem.Enabled = System.IO.File.Exists(CurrentProject.File) && cleanMenuItem.Enabled;
         }
 
         #endregion
 
         #region Edit Menu
-
-        void DeleteMenuItem_Click(object sender, EventArgs e)
-        {
-            ContentItem item = GetSelectedItem();
-            DeleteItem(item);
-        }
-
-        void RenameMenuItem_Click(object sender, EventArgs e)
-        {
-            ContentItem item = GetSelectedItem();
-            RenameItem(item);
-        }
-
-        private void RenameItem(ContentItem item)
-        {
-            if (item is ContentProject)
-                return;
-            TreeNode node = null;
-            if (treeMap.TryGetValue(item, out node))
-            {
-
-                node.BeginEdit();
-            }
-        }
 
         void RedoMenuItem_Click(object sender, EventArgs e)
         {
@@ -413,39 +413,7 @@ namespace ContentTool
             throw new NotImplementedException();
         }
 
-        void ExistingFolderMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        void ExistingItemMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Multiselect = true;
-            ofd.Filter = "All files|*.*|Image files(.png;.bmp;.jpg)|*.png;*.bmp;*.jpg";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                ContentItem item = GetSelectedItem();
-                ContentFolder curFolder = item as ContentFolder;
-                if (curFolder == null)
-                    curFolder = item.Parent as ContentFolder;
-                if (curFolder == null)
-                    return;
-                string absolutePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
-                MakeDirectory(System.IO.Path.GetDirectoryName(currentFile), curFolder.getPath());
-                foreach (string file in ofd.FileNames)
-                {
-                    string destination = System.IO.Path.Combine(absolutePath, System.IO.Path.GetFileName(file));
-                    if (destination != file)
-                    {
-                        System.IO.File.Copy(file, destination);
-                    }
-                    curFolder.Contents.Add(new ContentFile(System.IO.Path.GetFileName(file), curFolder));
-                }
-                
-            }
-        }
-
+        
         void NewFolderMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -477,20 +445,9 @@ namespace ContentTool
 
         private void ContextMenu_Close(object sender, EventArgs e)
         {
-            currentFile = "";
             CloseFile();
         }
-
-        private void ContextMenu_Rename(object sender, EventArgs e)
-        {
-            var item = GetSelectedItem();
-            RenameItem(item);
-        }
-
-        private void ContextMenu_Delete(object sender, EventArgs e)
-        {
-            DeleteItem(GetSelectedItem());
-        }
+        
 
 
         #endregion
@@ -537,7 +494,7 @@ namespace ContentTool
                 string ext = System.IO.Path.GetExtension(item.Name);
                 if (!imgList.Images.ContainsKey(ext))
                 {
-                    string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(currentFile), item.getPath());
+                    string filePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(CurrentProject.File), item.getPath());
                     if (System.IO.File.Exists(filePath))
                         imgList.Images.Add(ext, System.Drawing.Icon.ExtractAssociatedIcon(filePath));
                 }
@@ -619,17 +576,7 @@ namespace ContentTool
 
             return GetItemFromNode(node);
         }
-
-        /// <summary>
-        /// Deletes an Item
-        /// </summary>
-        /// <param name="item"></param>
-        private void DeleteItem(ContentItem item)
-        {
-            var parent = item.Parent as ContentFolder;
-            parent.Contents.Remove(item);
-        }
-
+        
         #endregion
 
         #region File Operations
@@ -646,11 +593,10 @@ namespace ContentTool
                 if (MessageBox.Show("Your Project is currently Building." + message, "Close file", MessageBoxButtons.YesNo) == DialogResult.No)
                     return false;
 
-                builder.Build();
+                builder.Abort();
             }
 
             prpItem.SelectedObject = null;
-            currentFile = null;
             CurrentProject = null;
             RecalcTreeView();
             return true;
@@ -662,9 +608,8 @@ namespace ContentTool
         /// <param name="file"></param>
         private void SaveFile(string file)
         {
-            currentFile = file;
             CurrentProject.Name = file;
-            ContentProject.Save(file, CurrentProject);
+            CurrentProject.Save(file);
         }
 
         /// <summary>
@@ -673,7 +618,9 @@ namespace ContentTool
         /// <param name="file"></param>
         private void OpenFile(string file)
         {
-            currentFile = file;
+            Program.Configuration.LastFile = file;
+            Program.Configuration.Save();
+
             CurrentProject = ContentProject.Load(file);
             CurrentProject.CollectionChanged += CurrentProject_CollectionChanged;
             CurrentProject.PropertyChanged += CurrentProject_PropertyChanged;
@@ -700,12 +647,12 @@ namespace ContentTool
         /// </summary>
         private void Save()
         {
-            if (string.IsNullOrEmpty(currentFile) || !System.IO.File.Exists(currentFile))
+            if (string.IsNullOrEmpty(CurrentProject.File) || !System.IO.File.Exists(CurrentProject.File))
             {
                 SaveAs();
                 return;
             }
-            SaveFile(currentFile);
+            SaveFile(CurrentProject.File);
         }
 
         /// <summary>
@@ -715,7 +662,7 @@ namespace ContentTool
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Engenious Content Project(.ecp)|*.ecp";
-            sfd.FileName = currentFile;
+            sfd.FileName = CurrentProject.File;
             sfd.OverwritePrompt = true;
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -729,11 +676,11 @@ namespace ContentTool
         /// <returns></returns>
         private bool SaveFirst()
         {
-            if (string.IsNullOrEmpty(currentFile))
+            if (string.IsNullOrEmpty(CurrentProject.File))
             {
                 SaveMenuItem_Click(saveMenuItem, new EventArgs());
             }
-            return System.IO.File.Exists(currentFile);
+            return System.IO.File.Exists(CurrentProject.File);
         }
 
 
@@ -796,26 +743,36 @@ namespace ContentTool
         /// </summary>
         /// <param name="message"></param>
         /// <param name="error"></param>
-        private void Log(string message, bool error = false)
+        private void Log(string message, BuildMessageEventArgs.BuildMessageType type)
         {
             if (this.InvokeRequired)
             {
                 this.BeginInvoke(new MethodInvoker(delegate ()
                 {
-                    Log(message, error);
+                    Log(message, type);
                 }));
                 return;
             }
-            if (error)
+
+            switch (type)
             {
-                txtLog.SelectionColor = System.Drawing.Color.Red;
+
+                case BuildMessageEventArgs.BuildMessageType.Warning:
+                    txtLog.SelectionColor = System.Drawing.Color.Orange;
+                    break;
+                case BuildMessageEventArgs.BuildMessageType.Error:
+                    txtLog.SelectionColor = System.Drawing.Color.Red;
+                    break;
+                default:
+                    txtLog.SelectionColor = System.Drawing.Color.Black;
+                    break;
+
             }
+
             txtLog.AppendText(message + "\n");
             txtLog.ScrollToCaret();
-            if (error)
-            {
-                txtLog.SelectionColor = System.Drawing.Color.Black;
-            }
+
+
         }
 
     }

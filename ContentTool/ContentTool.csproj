@@ -46,28 +46,37 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs" />
+    <Compile Include="ToolConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddExistingFolder.cs" />
+    <Compile Include="Commands\AddExistingItem.cs" />
+    <Compile Include="Commands\AddNewFolder.cs" />
+    <Compile Include="Commands\BuildItem.cs" />
+    <Compile Include="Commands\DeleteItem.cs" />
+    <Compile Include="Commands\RenameItem.cs" />
+    <Compile Include="Items\ContentItemCollection.cs" />
     <Compile Include="Dialog\frmEditReferences.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialog\frmEditReferences.Designer.cs">
       <DependentUpon>frmEditReferences.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\ImporterEditor.cs" />
+    <Compile Include="Dialog\NewFolderDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\NewFolderDialog.Designer.cs">
+      <DependentUpon>NewFolderDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\ProcessorEditor.cs" />
     <Compile Include="Dialog\ReferenceCollectionEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ContentFile.cs" />
-    <Compile Include="ContentFolder.cs" />
-    <Compile Include="ContentProject.cs" />
-    <Compile Include="ContentItem.cs" />
-    <Compile Include="Dialog\frmAddFolder.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialog\frmAddFolder.Designer.cs">
-      <DependentUpon>Dialog\frmAddFolder.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Items\ContentFile.cs" />
+    <Compile Include="Items\ContentFolder.cs" />
+    <Compile Include="Items\ContentProject.cs" />
+    <Compile Include="Items\ContentItem.cs" />
     <Compile Include="ObservableList.cs" />
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -90,12 +99,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <None Include="..\libs\Assimp64.so">
+      <Link>Assimp64.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="Resources\Licenses.txt" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ContentPipeline\engenious.Pipeline.csproj">
       <Project>{9771E0FC-D752-4D7A-89E4-4F6FA2EC3C1D}</Project>
@@ -110,6 +122,9 @@
     <EmbeddedResource Include="Dialog\frmEditReferences.resx">
       <DependentUpon>frmEditReferences.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\NewFolderDialog.resx">
+      <DependentUpon>NewFolderDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,5 +138,15 @@
     <None Include="Resources\project.png">
       <LogicalName>project</LogicalName>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\libs\Assimp32.dll">
+      <Link>Assimp32.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libs\Assimp64.dll">
+      <Link>Assimp64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

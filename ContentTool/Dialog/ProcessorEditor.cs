@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using ContentTool.Items;
 
 namespace ContentTool.Dialog
 {
@@ -34,7 +35,7 @@ namespace ContentTool.Dialog
             var file = context.Instance as ContentFile;
 
             string ext = System.IO.Path.GetExtension(file.Name);
-            var baseType = PipelineHelper.GetImporterOutputType(ext);
+            var baseType = PipelineHelper.GetImporterOutputType(ext,file.ImporterName);
             lb.Items.AddRange(PipelineHelper.GetProcessors(baseType).ToArray());
             
 
