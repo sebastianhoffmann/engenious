@@ -19,5 +19,9 @@
       <Processor>SpriteFontProcessor</Processor>
       <Importer>SpriteFontImporter</Importer>
     </ContentFile>
+    <ContentFile>
+      <Name>simple.glsl</Name>
+      <Processor>EffectProcessor</Processor>
+    </ContentFile>
   </Contents>
 </Content>
