@@ -6,43 +6,48 @@ using System.Collections;
 
 namespace engenious.Graphics
 {
-	public sealed class EffectParameterCollection :IEnumerable<EffectParameter>
+	public sealed class EffectParameterCollection : IEnumerable<EffectParameter>
 	{
 		private Dictionary<string,EffectParameter> parameters;
-		private List<EffectParameter> parameterList;
+		public List<EffectParameter> ParameterList;
 
 		public EffectParameterCollection (EffectTechniqueCollection techniques)
 		{
-            ThreadingHelper.BlockOnUIThread(()=>{
-			parameters = new Dictionary<string, EffectParameter> ();
-			parameterList = new List<EffectParameter> ();
+		    using (Execute.OnUiThread)
+		    {
+		        parameters = new Dictionary<string, EffectParameter>();
+		        ParameterList = new List<EffectParameter>();
 
-			foreach (EffectTechnique technique in techniques) {
-				foreach (EffectPass pass in technique.Passes) {
-					pass.CacheParameters ();
+		        foreach (EffectTechnique technique in techniques.TechniqueList)
+		        {
+		            foreach (EffectPass pass in technique.Passes.PassesList)
+		            {
+		                pass.CacheParameters();
 
-					foreach (EffectPassParameter param in pass.Parameters) {
-						EffectParameter current = null;
-						if (!parameters.TryGetValue (param.Name, out current)) {
-							current = new EffectParameter (param.Name);
-							Add (current);
-						}
-						current.Add (param);
-					}
-				}
-			}
-            });
+		                foreach (EffectPassParameter param in pass.Parameters.ParameterList)
+		                {
+		                    EffectParameter current = null;
+		                    if (!parameters.TryGetValue(param.Name, out current))
+		                    {
+		                        current = new EffectParameter(param.Name);
+		                        Add(current);
+		                    }
+		                    current.Add(param);
+		                }
+		            }
+		        }
+		    }
 		}
 
 		internal void Add (EffectParameter parameter)
 		{
-			parameterList.Add (parameter);
+			ParameterList.Add (parameter);
 			parameters.Add (parameter.Name, parameter);
 		}
 
 		public EffectParameter this [int index] { 
 			get {
-				return parameterList [index];
+				return ParameterList [index];
 			} 
 		}
 
@@ -52,16 +57,16 @@ namespace engenious.Graphics
 			} 
 		}
 
-		IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-		{
-			return parameterList.GetEnumerator ();
-		}
-
-		public IEnumerator<EffectParameter> GetEnumerator ()
-		{
-			return parameterList.GetEnumerator ();
-		}
-
-	}
+        [Obsolete("Use member " + nameof(ParameterList))]
+        IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ParameterList.GetEnumerator();
+        }
+        [Obsolete("Use member " + nameof(ParameterList))]
+        public IEnumerator<EffectParameter> GetEnumerator()
+        {
+            return ParameterList.GetEnumerator();
+        }
+    }
 }
 
